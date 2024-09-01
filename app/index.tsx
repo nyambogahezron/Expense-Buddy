@@ -1,15 +1,27 @@
-import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
-import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import React, { useMemo, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-
+import BottomSheet from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Feather from '@expo/vector-icons/Feather';
 const { width, height } = Dimensions.get('window');
 
 export default function LandingPage() {
+  const snapPoints = useMemo(() => ['30%', '35%'], []);
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const handleClosePress = () => bottomSheetRef.current?.close();
+  const handleOpenPress = () => bottomSheetRef.current?.expand();
+
   return (
-    <SafeAreaView className='flex-1 justify-center items-center bg-gray-900'>
+    <GestureHandlerRootView className='flex-1 justify-center items-center bg-gray-900'>
       <LinearGradient
         className='absolute top-[-40px] right-[-60px] h-80 w-80 rounded-full'
         colors={['#EE401B', '#F1621B', '#F38D1B']}
@@ -22,7 +34,7 @@ export default function LandingPage() {
             width: width * 0.9,
             height: height * 0.25,
           }}
-          className='relative z-[999] ml-2 shadow-lg mb-10 mt-[-50px] rotate-[-4deg] rounded-2xl bg-[#070B11] opacity-80'
+          className='relative  ml-2 shadow-lg mb-10 mt-[-50px] rotate-[-4deg] rounded-2xl bg-[#070B11] opacity-80'
         >
           <View className='flex justify-center p-4 mx-4'>
             <View className='flex flex-row mt-2'>
@@ -46,7 +58,7 @@ export default function LandingPage() {
       <View className='flex flex-row gap-3 items-center justify-center'>
         <View className='flex items-center justify-center  h-24 top-[-20px]'>
           <Text className='font-bold text-white text-5xl italic mr-2 bg-orange-500 p-1 rounded-lg'>
-           Your
+            Your
           </Text>
         </View>
         <View>
@@ -63,7 +75,7 @@ export default function LandingPage() {
 
       {/* Next Button */}
       <TouchableOpacity
-        onPress={() => router.push('/(tabs)/')}
+        onPress={handleOpenPress}
         style={{ width: width * 0.9 }}
         className='flex items-center justify-center bg-white p-4 rounded-full mt-10'
       >
@@ -71,9 +83,49 @@ export default function LandingPage() {
           Get Started
         </Text>
       </TouchableOpacity>
+      {/* BottomSheet for login/register buttons */}
+
+      <BottomSheet
+        index={-1}
+        snapPoints={snapPoints}
+        ref={bottomSheetRef}
+        enablePanDownToClose={true}
+        handleIndicatorStyle={{ backgroundColor: '#fff' }}
+        backgroundStyle={{ backgroundColor: '#1B1F24' }}
+      >
+        <View className='relative z-[99991] p-4 items-center w-full'>
+          {/* close btn  */}
+          <View className='absolute top-0 right-0 mr-5 -mt-2'>
+            <TouchableWithoutFeedback onPress={handleClosePress}>
+              <Feather name='x' size={32} color='red' />
+            </TouchableWithoutFeedback>
+          </View>
+          {/* body  */}
+          <View className='mt-8'>
+            <TouchableOpacity
+              onPress={() => router.push('/(tabs)/')}
+              style={{ width: width * 0.9 }}
+              className='flex items-center justify-center bg-white p-4 rounded-full mt-4'
+            >
+              <Text className='text-black text-lg font-bold capitalize'>
+                Login
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => router.push('/(tabs)/')}
+              style={{ width: width * 0.9 }}
+              className='flex items-center justify-center bg-[#0079FB] p-4 rounded-full mt-4'
+            >
+              <Text className='text-white text-lg font-bold capitalize'>
+                Register
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </BottomSheet>
 
       {/* top bar mobile status bar */}
       <StatusBar style='light' backgroundColor='#161622' />
-    </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
