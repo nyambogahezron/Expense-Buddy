@@ -1,26 +1,77 @@
-import { View, Text, Button, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { Link, router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+
+const { width, height } = Dimensions.get('window');
 
 export default function LandingPage() {
   return (
-    <SafeAreaView className='bg-red-400 h-full'>
-      <ScrollView
-        contentContainerStyle={{
-          height: '100%',
-        }}
-      >
-        <View className='w-full min-h-[80vh] flex justify-center items-center  px-4'>
-          <Text>Welcome</Text>
-          <Button
-            onPress={() => router.push('/(tabs)/')}
-            title='Get Started'
-            color='#841584'
-          />
+    <SafeAreaView className='flex-1 justify-center items-center bg-gray-900'>
+      <LinearGradient
+        className='absolute top-[-40px] right-[-60px] h-80 w-80 rounded-full'
+        colors={['#EE401B', '#F1621B', '#F38D1B']}
+        start={[0, 0.2]}
+        end={[0.9, 0.5]}
+      />
+      <View>
+        <View
+          style={{
+            width: width * 0.9,
+            height: height * 0.25,
+          }}
+          className='relative z-[999] ml-2 shadow-lg mb-10 mt-[-50px] rotate-[-4deg] rounded-2xl bg-[#070B11] opacity-80'
+        >
+          <View className='flex justify-center p-4 mx-4'>
+            <View className='flex flex-row mt-2'>
+              <View className='w-14 h-14 rounded-full bg-[#EE401B] opacity-70'></View>
+              <View className='w-14 h-14 rounded-full bg-[#F38D1B] opacity-70 right-6'></View>
+            </View>
+            <Text className='text-white text-2xl font-bold mt-4'>
+              My Wallet
+            </Text>
+            <View className='flex flex-row justify-around mt-8 items-center'>
+              <Text className='p-1 text-white text-2xl'>***</Text>
+              <Text className=' p-1  text-white text-2xl'>***</Text>
+              <Text className=' p-1  text-white text-2xl'>***</Text>
+              <Text className=' p-1  text-white text-2xl'>1234</Text>
+            </View>
+          </View>
         </View>
-      </ScrollView>
+      </View>
+
+      {/* Title */}
+      <View className='flex flex-row gap-3 items-center justify-center'>
+        <View className='flex items-center justify-center  h-24 top-[-20px]'>
+          <Text className='font-bold text-white text-5xl italic mr-2 bg-orange-500 p-1 rounded-lg'>
+           Your
+          </Text>
+        </View>
+        <View>
+          <Text className='text-white text-4xl font-bold mb-2'>EXPENSE</Text>
+          <Text className='text-white text-4xl font-bold mb-10'>BUDDY</Text>
+        </View>
+      </View>
+
+      {/* Description */}
+      <Text className='text-gray-400 text-center px-10 mb-10 mt-2 text-[17px] tracking-wider'>
+        The right app to make it easy to manage your expenses on the go.
+        Personal Capital - Expensify
+      </Text>
+
+      {/* Next Button */}
+      <TouchableOpacity
+        onPress={() => router.push('/(tabs)/')}
+        style={{ width: width * 0.9 }}
+        className='flex items-center justify-center bg-white p-4 rounded-full mt-10'
+      >
+        <Text className='text-black text-lg font-bold capitalize'>
+          Get Started
+        </Text>
+      </TouchableOpacity>
+
       {/* top bar mobile status bar */}
       <StatusBar style='light' backgroundColor='#161622' />
     </SafeAreaView>
