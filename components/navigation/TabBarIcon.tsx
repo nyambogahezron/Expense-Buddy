@@ -14,7 +14,7 @@ export function TabBarIcon({ color, name, focused, style, iconName }: TabBarIcon
     <View className='flex items-center justify-center gap-2'>
       <Ionicons
         name={name}
-        size={28}
+        size={19}
         color={color}
         style={[{ marginBottom: -3 }, style]}
       />

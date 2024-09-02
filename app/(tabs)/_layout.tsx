@@ -4,6 +4,8 @@ import React from 'react';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { Ionicons } from '@expo/vector-icons';
+import { View } from 'react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -12,7 +14,7 @@ export default function TabLayout() {
     <Tabs
       sceneContainerStyle={{ backgroundColor: '#fff' }}
       screenOptions={{
-        tabBarActiveTintColor: '#292D32',
+        tabBarActiveTintColor: '#FF6737',
         // tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
         tabBarShowLabel: false,
@@ -60,12 +62,32 @@ export default function TabLayout() {
         options={{
           title: '',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? 'add-circle-sharp' : 'add-circle-sharp'}
-              color={color}
-              focused
-              iconName=''
-            />
+            <View
+              style={{
+                backgroundColor: `${focused ? '#FF6737' : '#FF6737'}`,
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+                borderRadius: 50,
+                height: 45,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Ionicons
+                size={28}
+                name='add-circle-sharp'
+                color='#fff'
+                className='font-pblack text-gray-900'
+                style={{
+                  marginTop: -5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: 0,
+                }}
+              />
+            </View>
           ),
         }}
       />
@@ -87,7 +109,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name='profile'
         options={{
-          title: 'Reports',
+          title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? 'person' : 'person-outline'}

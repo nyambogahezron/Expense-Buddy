@@ -23,23 +23,25 @@ export default function LandingPage() {
   return (
     <GestureHandlerRootView className='flex-1 justify-center items-center bg-gray-900'>
       <LinearGradient
-        className='absolute top-[-40px] right-[-60px] h-80 w-80 rounded-full'
+        className='absolute top-[-40px] right-[-60px] h-70 w-70 rounded-full'
         colors={['#EE401B', '#F1621B', '#F38D1B']}
         start={[0, 0.2]}
         end={[0.9, 0.5]}
       />
+
+      {/* card  */}
       <View>
         <View
           style={{
             width: width * 0.9,
             height: height * 0.25,
           }}
-          className='relative  ml-2 shadow-lg mb-10 mt-[-50px] rotate-[-4deg] rounded-2xl bg-[#070B11] opacity-80'
+          className='relative  ml-2 shadow-lg mb-10 mt-[60px] rotate-[-4deg] rounded-2xl bg-[#070B11] opacity-80'
         >
           <View className='flex justify-center p-4 mx-4'>
             <View className='flex flex-row mt-2'>
-              <View className='w-14 h-14 rounded-full bg-[#EE401B] opacity-70'></View>
-              <View className='w-14 h-14 rounded-full bg-[#F38D1B] opacity-70 right-6'></View>
+              <View className='w-12 h-12 rounded-full bg-[#EE401B] opacity-70'></View>
+              <View className='w-12 h-12 rounded-full bg-[#F38D1B] opacity-70 right-6'></View>
             </View>
             <Text className='text-white text-2xl font-bold mt-4'>
               My Wallet
@@ -68,7 +70,7 @@ export default function LandingPage() {
       </View>
 
       {/* Description */}
-      <Text className='text-gray-400 text-center px-10 mb-10 mt-2 text-[17px] tracking-wider'>
+      <Text className='text-gray-400 text-center px-10 mb-10 mt-2 text-[17px] tracking-wider font-psemibold'>
         The right app to make it easy to manage your expenses on the go.
         Personal Capital - Expensify
       </Text>
@@ -97,7 +99,7 @@ export default function LandingPage() {
           {/* close btn  */}
           <View className='absolute top-0 right-0 mr-5 -mt-2'>
             <TouchableWithoutFeedback onPress={handleClosePress}>
-              <Feather name='x' size={32} color='red' />
+              <Feather name='x' size={28} color='#de2c2c' />
             </TouchableWithoutFeedback>
           </View>
           {/* body  */}
