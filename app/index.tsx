@@ -23,7 +23,7 @@ export default function LandingPage() {
   return (
     <GestureHandlerRootView className='flex-1 justify-center items-center bg-gray-900'>
       <LinearGradient
-        className='absolute top-[-40px] right-[-60px] h-70 w-70 rounded-full'
+        className='absolute top-[-40px] right-[-60px] h-[260px] w-[260px] rounded-full'
         colors={['#EE401B', '#F1621B', '#F38D1B']}
         start={[0, 0.2]}
         end={[0.9, 0.5]}
@@ -127,7 +127,7 @@ export default function LandingPage() {
       </BottomSheet>
 
       {/* top bar mobile status bar */}
-      <StatusBar style='light' backgroundColor='#161622' />
+      <StatusBar style='light' backgroundColor='transparent' />
     </GestureHandlerRootView>
   );
 }

@@ -4,7 +4,7 @@ import React from 'react';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { View } from 'react-native';
 
 export default function TabLayout() {
@@ -19,13 +19,12 @@ export default function TabLayout() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: '#F5F5F5',
-          borderTopWidth: 1,
-          borderTopColor: '#232533',
+          backgroundColor: '#ffffff',
+          borderTopLeftRadius: 16,
+          borderTopRightRadius: 16,
+          marginBottom: -1,
           height: 70,
-          borderRadius: 25,
-          padding: 2,
-          marginTop: 0,
+          ...styles.shadow,
         },
       }}
     >
@@ -62,31 +61,14 @@ export default function TabLayout() {
         options={{
           title: '',
           tabBarIcon: ({ color, focused }) => (
-            <View
-              style={{
-                backgroundColor: `${focused ? '#FF6737' : '#FF6737'}`,
-                paddingHorizontal: 16,
-                paddingVertical: 12,
-                borderRadius: 50,
-                height: 45,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Ionicons
-                size={28}
-                name='add-circle-sharp'
-                color='#fff'
-                className='font-pblack text-gray-900'
-                style={{
-                  marginTop: -5,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: 0,
-                }}
-              />
+            <View className='relative flex items-center justify-center p-2 -mt-12  bg-[#f3f3f2] rounded-full w-18 h-18  '>
+              <View className='w-14 h-14 rounded-full bg-[#FF7F50] flex items-center justify-center  shadow-lg'>
+                <FontAwesome5
+                  name='plus'
+                  size={24}
+                  color={`${focused}? 'white' : 'black'`}
+                />
+              </View>
             </View>
           ),
         }}
@@ -123,3 +105,16 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+const styles = {
+  shadow: {
+    shadowColor: '#7F5DF0',
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.5,
+    elevation: 5,
+  },
+};
