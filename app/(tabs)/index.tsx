@@ -93,7 +93,7 @@ export default function HomeScreen() {
               <Text className='text-gray-300 font-pbold'>Tractions Costs</Text>
             </View>
           </View>
-          <View className='relative flex flex-row -ml-1 overflow-hidden -bottom-10 w-full bg-transparent h-3 rounded-full border border-gray-50 items-center'>
+          <View className='relative flex flex-row -ml-1 overflow-hidden -bottom-5 w-full bg-transparent h-3 rounded-full border border-gray-50 items-center'>
             <View className='bg-green-700 ' style={{ width: '50%' }}>
               <Text></Text>
             </View>
@@ -104,7 +104,7 @@ export default function HomeScreen() {
               <Text></Text>
             </View>
           </View>
-          <View className='mt-14 flex flex-row justify-between mr-5 p-1 items-center'>
+          <View className='mt-7 flex flex-row justify-between mr-5 p-1 items-center'>
             <View className='flex-row items-center gap-1'>
               <View className='bg-green-700 h-3 w-3 rounded-full'></View>
               <Text className='text-white font-bold'>50%</Text>

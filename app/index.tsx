@@ -97,9 +97,9 @@ export default function LandingPage() {
       >
         <View className='relative z-[99991] p-4 items-center w-full'>
           {/* close btn  */}
-          <View className='absolute top-0 right-0 mr-5 -mt-2'>
+          <View className='absolute top-0 right-0 mr-4 h-6 w-6 rounded-full bg-red-600'>
             <TouchableWithoutFeedback onPress={handleClosePress}>
-              <Feather name='x' size={28} color='#de2c2c' />
+              <Feather name='x' size={24} color='#f2f2f2' />
             </TouchableWithoutFeedback>
           </View>
           {/* body  */}

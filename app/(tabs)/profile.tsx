@@ -15,6 +15,9 @@ const Profile = () => {
           headerShown: true,
           headerTitleAlign: 'center',
           statusBarStyle: 'dark',
+          headerStyle: {
+            backgroundColor: '#fff',
+          },
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => router.back()}
@@ -40,7 +43,7 @@ const Profile = () => {
         }}
       />
       {/* Header and Profile Info */}
-      <View className='flex items-center mt-12 mb-8'>
+      <View className='flex items-center mb-8'>
         <View className='bg-white w-28 h-28 flex items-center justify-center rounded-full'>
           <Image
             source={{
@@ -55,7 +58,10 @@ const Profile = () => {
 
       {/* Account Settings Options */}
       <View className='px-4'>
-        <TouchableOpacity className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'>
+        <TouchableOpacity
+          className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
+          onPress={() => router.push('/(profile)/accountInfo')}
+        >
           <Ionicons name='person-outline' size={24} color='#6B7280' />
           <Text className='ml-4 text-gray-800'>Account Info</Text>
           <View className='absolute flex right-2'>
@@ -63,15 +69,21 @@ const Profile = () => {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'>
+        <TouchableOpacity
+          className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
+          onPress={() => router.push('/(profile)/security')}
+        >
           <Ionicons name='shield-checkmark-outline' size={24} color='#6B7280' />
-          <Text className='ml-4 text-gray-800'>Security Code</Text>
+          <Text className='ml-4 text-gray-800'>Security </Text>
           <View className='absolute flex right-2'>
             <Ionicons name='chevron-forward' size={24} color='#6B7280' />
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'>
+        <TouchableOpacity
+          className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
+          onPress={() => router.push('/(profile)/privacy')}
+        >
           <Ionicons name='lock-closed-outline' size={24} color='#6B7280' />
           <Text className='ml-4 text-gray-800'>Privacy Policy</Text>
           <View className='absolute flex right-2'>
@@ -79,7 +91,10 @@ const Profile = () => {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'>
+        <TouchableOpacity
+          className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
+          onPress={() => router.push('/(profile)/settings')}
+        >
           <Ionicons name='settings-outline' size={24} color='#6B7280' />
           <Text className='ml-4 text-gray-800'>Settings</Text>
           <View className='absolute flex right-2'>
@@ -87,7 +102,10 @@ const Profile = () => {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity className='flex-row items-center bg-white rounded-lg px-4 py-3'>
+        <TouchableOpacity
+          className='flex-row items-center bg-white rounded-lg px-4 py-3'
+          onPress={() => router.push('/(tabs)/')}
+        >
           <Ionicons name='log-out-outline' size={24} color='#EF4444' />
           <Text className='ml-4 text-red-600'>Logout</Text>
         </TouchableOpacity>
