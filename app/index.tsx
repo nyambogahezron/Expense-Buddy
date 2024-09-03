@@ -127,7 +127,10 @@ export default function LandingPage() {
       </BottomSheet>
 
       {/* top bar mobile status bar */}
-      <StatusBar style='light' backgroundColor='transparent' />
+      <StatusBar
+        style='light'
+        backgroundColor='transparent'
+      />
     </GestureHandlerRootView>
   );
 }

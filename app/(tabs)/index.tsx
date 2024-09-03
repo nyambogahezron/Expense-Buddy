@@ -132,7 +132,7 @@ export default function HomeScreen() {
             Transactions
           </Text>
           <TouchableOpacity onPress={() => router.push('/(tabs)/explore')}>
-            <View className='flex-row items-center'>
+            <View className='flex-row items-center mr-2'>
               <Text className='text-[15px] font-semibold  text-gray-600'>
                 View All
               </Text>
