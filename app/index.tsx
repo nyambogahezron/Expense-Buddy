@@ -96,14 +96,9 @@ export default function LandingPage() {
         backgroundStyle={{ backgroundColor: '#1B1F24' }}
       >
         <View className='relative z-[99991] p-4 items-center w-full'>
-          {/* close btn  */}
-          <View className='absolute top-0 right-0 mr-4 h-6 w-6 rounded-full bg-red-600'>
-            <TouchableWithoutFeedback onPress={handleClosePress}>
-              <Feather name='x' size={24} color='#f2f2f2' />
-            </TouchableWithoutFeedback>
-          </View>
+          
           {/* body  */}
-          <View className='mt-8'>
+          <View className='mt-4'>
             <TouchableOpacity
               onPress={() => router.push('/(tabs)/')}
               style={{ width: width * 0.9 }}

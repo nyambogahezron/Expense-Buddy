@@ -43,7 +43,7 @@ const Profile = () => {
         }}
       />
       {/* Header and Profile Info */}
-      <View className='flex items-center mb-8'>
+      <View className='flex items-center mb-8 mt-1'>
         <View className='bg-white w-28 h-28 flex items-center justify-center rounded-full'>
           <Image
             source={{

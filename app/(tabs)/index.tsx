@@ -67,7 +67,7 @@ export default function HomeScreen() {
             width: width * 0.95,
             height: height * 0.23,
           }}
-          className='relative p-4 bg-[#fff] rounded-xl shadow-md -mt-8 '
+          className='relative p-4 bg-[#fff] rounded-xl shadow-md mt-2 '
         >
           <LinearGradient
             colors={['#787BE2', '#E2999A']}
