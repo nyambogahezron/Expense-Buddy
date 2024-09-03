@@ -1,12 +1,15 @@
 import { TransactionProps } from '@/Types';
 
+
+
 const transactions: TransactionProps[] = [
   {
     id: 1,
-    title: 'Dribbble Pro',
+    title: 'Dribbble Pro Subscription',
     date: '18 Sep, 2024',
-    amount: '15.00',
+    amount: '14.00',
     icon: 'D',
+    iconColor: '#FFA500', 
     type: 'expense',
     category: {
       id: 11,
@@ -19,10 +22,11 @@ const transactions: TransactionProps[] = [
   },
   {
     id: 2,
-    title: 'Apple Sales',
+    title: 'Apple Sales investments',
     date: '18 Sep, 2024',
     amount: '100.00',
     icon: 'A',
+    iconColor: '#FF4500', 
     type: 'income',
     category: {
       id: 10,
@@ -35,10 +39,11 @@ const transactions: TransactionProps[] = [
   },
   {
     id: 3,
-    title: 'Google Inc.',
+    title: 'Google payments',
     date: '18 Sep, 2024',
     amount: '145.00',
     icon: 'G',
+    iconColor: '#FF6347', 
     type: 'expense',
     category: {
       id: 11,
@@ -55,6 +60,7 @@ const transactions: TransactionProps[] = [
     date: '02, July, 2024',
     amount: '3304.00',
     icon: 'A',
+    iconColor: '#FF0000', 
     type: 'income',
     category: {
       id: 10,
@@ -71,6 +77,7 @@ const transactions: TransactionProps[] = [
     date: '18 Sep, 2024',
     amount: '145.00',
     icon: 'M',
+    iconColor: '#FF69B4', 
     type: 'expense',
     category: {
       id: 11,
@@ -87,6 +94,7 @@ const transactions: TransactionProps[] = [
     date: '5 May, 2024',
     amount: '145.00',
     icon: 'F',
+    iconColor: '#FF1493', 
     type: 'income',
     category: {
       id: 11,
@@ -103,6 +111,7 @@ const transactions: TransactionProps[] = [
     date: '18 Sep, 2024',
     amount: '145.00',
     icon: 'T',
+    iconColor: '#3030cc', 
     type: 'expense',
     category: {
       id: 6,
@@ -119,6 +128,7 @@ const transactions: TransactionProps[] = [
     date: '18 Sep, 2024',
     amount: '145.00',
     icon: 'I',
+    iconColor: '#FF4500', 
     type: 'income',
     category: {
       id: 5,
@@ -135,6 +145,7 @@ const transactions: TransactionProps[] = [
     date: '18 Sep, 2024',
     amount: '145.00',
     icon: 'L',
+    iconColor: '#FFA500', 
     type: 'income',
     category: {
       id: 11,
@@ -151,6 +162,7 @@ const transactions: TransactionProps[] = [
     date: '18 Sep, 2024',
     amount: '145.00',
     icon: 'S',
+    iconColor: '#FF4500', 
     type: 'income',
     category: {
       id: 4,
@@ -167,6 +179,7 @@ const transactions: TransactionProps[] = [
     date: '18 Sep, 2024',
     amount: '145.00',
     icon: 'P',
+    iconColor: '#FF6347', 
     type: 'expense',
     category: {
       id: 7,
@@ -183,6 +196,7 @@ const transactions: TransactionProps[] = [
     date: '4 Aug, 2024',
     amount: '145.00',
     icon: 'R',
+    iconColor: '#FF0000', 
     type: 'expense',
     category: {
       id: 11,
@@ -199,6 +213,7 @@ const transactions: TransactionProps[] = [
     date: '18 Sep, 2024',
     amount: '145.00',
     icon: 'T',
+    iconColor: '#FF69B4', 
     type: 'expense',
     category: {
       id: 11,
@@ -215,6 +230,7 @@ const transactions: TransactionProps[] = [
     date: '1 Sep, 2024',
     amount: '15.00',
     icon: 'W',
+    iconColor: '#FF1493', 
     type: 'income',
     category: {
       id: 11,

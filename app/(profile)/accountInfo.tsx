@@ -14,27 +14,31 @@ import { Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-const { width, height } = Dimensions.get('window');
+
+const { width } = Dimensions.get('window');
 
 export default function AccountInfo() {
   const [email, setEmail] = React.useState('johndoe@gmail.com');
   const [name, setName] = React.useState('John Doe');
   const snapPoints = useMemo(() => ['20%', '25%'], []);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const handleClosePress = () => bottomSheetRef.current?.close();
   const handleOpenPress = () => bottomSheetRef.current?.expand();
+
+  // form submission handler
   const HandleSubmit = (e: GestureResponderEvent): void => {
     e.preventDefault();
     console.log(email, name);
   };
+
   return (
     <GestureHandlerRootView className='bg-gray-100 flex flex-1 px-2'>
+      <StatusBar backgroundColor='#fff' barStyle='dark-content' />
       <Stack.Screen
         options={{
           title: 'Account Info',
           headerShown: true,
           headerTitleAlign: 'center',
-          statusBarStyle: 'dark',
+          statusBarStyle: 'light',
           headerStyle: {
             backgroundColor: '#fff',
           },
@@ -139,16 +143,15 @@ export default function AccountInfo() {
               className='flex items-center justify-center bg-orange-600 p-4 rounded-full mt-4'
             >
               <View className='flex flex-row items-center gap-1'>
-              <Text className='text-white text-[16px] font-bold capitalize'>
-                Upload Picture
-              </Text>
-              <Feather name='upload' size={20} color='#fff' />
+                <Text className='text-white text-[16px] font-bold capitalize'>
+                  Upload Picture
+                </Text>
+                <Feather name='upload' size={20} color='#fff' />
               </View>
             </TouchableOpacity>
           </View>
         </View>
       </BottomSheet>
-      <StatusBar backgroundColor='#fff' barStyle='dark-content' />
     </GestureHandlerRootView>
   );
 }
