@@ -7,13 +7,13 @@ import {
   Dimensions,
   GestureResponderEvent,
   TouchableWithoutFeedback,
-  StatusBar,
 } from 'react-native';
 import React, { useMemo, useRef } from 'react';
 import { Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { StatusBar } from 'expo-status-bar';
 
 const { width } = Dimensions.get('window');
 
@@ -32,7 +32,7 @@ export default function AccountInfo() {
 
   return (
     <GestureHandlerRootView className='bg-gray-100 flex flex-1 px-2'>
-      <StatusBar backgroundColor='#fff' barStyle='dark-content' />
+      <StatusBar style='light' backgroundColor='transparent' />
       <Stack.Screen
         options={{
           title: 'Account Info',
