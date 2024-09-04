@@ -1,9 +1,18 @@
 import { TransactionProps } from '@/Types';
-import { Text, View } from 'react-native';
+import { router } from 'expo-router';
+import { Text, TouchableOpacity, View } from 'react-native';
 const userCurrency = 'Ksh';
 
 const HomeTransactionCard = ({ item }: { item: TransactionProps }) => (
-  <View className='flex-row justify-between items-center bg-gray-200 p-4 mx-2 rounded-xl mb-2'>
+  <TouchableOpacity
+    onPress={() =>
+      router.push({
+        pathname: '/(transactions)/details',
+        params: { item: JSON.stringify(item) },
+      })
+    }
+    className='flex-row justify-between items-center bg-gray-200 p-4 mx-2 rounded-xl mb-2 z-50'
+  >
     <View className='flex-row items-center'>
       <View
         className='flex items-center justify-center h-12 w-12 rounded-full mr-3'
@@ -15,7 +24,9 @@ const HomeTransactionCard = ({ item }: { item: TransactionProps }) => (
       </View>
       <View>
         <Text className='text-[16px] font-semibold'>
-          {item.title.length > 16 ? item.title.slice(0, 13) +'...' : item.title}
+          {item.title.length > 16
+            ? item.title.slice(0, 13) + '...'
+            : item.title}
         </Text>
         <Text className='text-gray-500'>{item.date}</Text>
       </View>
@@ -32,7 +43,7 @@ const HomeTransactionCard = ({ item }: { item: TransactionProps }) => (
         {'+' + item.transactionFee}
       </Text>
     </View>
-  </View>
+  </TouchableOpacity>
 );
 
 export default HomeTransactionCard;

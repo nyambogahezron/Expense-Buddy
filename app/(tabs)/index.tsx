@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
-  ScrollView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -23,6 +22,7 @@ export default function HomeScreen() {
   const transactionsData = transactions.slice(0, 8);
   return (
     <SafeAreaView className='flex-1 bg-gray-100 px-2'>
+      <StatusBar style='light' backgroundColor='#161622' />
       {/* Header */}
       <Stack.Screen
         options={{
@@ -144,7 +144,7 @@ export default function HomeScreen() {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           data={transactionsData}
-          renderItem={HomeTransactionCard}
+          renderItem={({ item }) => <HomeTransactionCard item={item} />}
           keyExtractor={(item) => item.id.toString()}
           ListFooterComponent={
             <View>
@@ -162,8 +162,6 @@ export default function HomeScreen() {
           }
         />
       </>
-
-      <StatusBar style='light' backgroundColor='#161622' />
     </SafeAreaView>
   );
 }
