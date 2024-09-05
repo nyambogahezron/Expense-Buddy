@@ -96,10 +96,10 @@ export default function LandingPage() {
         backgroundStyle={{ backgroundColor: '#1B1F24' }}
       >
         <View className='relative z-[99991] p-4 items-center w-full'>
-          
           {/* body  */}
           <View className='mt-4'>
             <TouchableOpacity
+              activeOpacity={0.6}
               onPress={() => router.push('/(tabs)/')}
               style={{ width: width * 0.9 }}
               className='flex items-center justify-center bg-white p-4 rounded-full mt-4'
@@ -109,6 +109,7 @@ export default function LandingPage() {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              activeOpacity={0.6}
               onPress={() => router.push('/(tabs)/')}
               style={{ width: width * 0.9 }}
               className='flex items-center justify-center bg-[#0079FB] p-4 rounded-full mt-4'
@@ -122,10 +123,7 @@ export default function LandingPage() {
       </BottomSheet>
 
       {/* top bar mobile status bar */}
-      <StatusBar
-        style='light'
-        backgroundColor='transparent'
-      />
+      <StatusBar style='light' backgroundColor='transparent' />
     </GestureHandlerRootView>
   );
 }

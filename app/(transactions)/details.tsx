@@ -16,14 +16,16 @@ export default function TransactionDetails() {
   const { item } = useLocalSearchParams();
   const transaction: TransactionProps =
     typeof item === 'string' ? JSON.parse(item) : null;
+  const { amount, date, transactionFee, description, type, category } =
+    transaction;
 
   const transactionDetails = [
-    { label: 'Amount', value: transaction.amount },
-    { label: 'Date', value: transaction.date },
-    { label: 'Transaction Fee', value: transaction.transactionFee },
-    { label: 'Description', value: transaction.description },
-    { label: 'Transaction Type', value: transaction.type },
-    { label: 'Transaction Category', value: transaction.category.name },
+    { label: 'Amount', value: amount },
+    { label: 'Date', value: date },
+    { label: 'Transaction Fee', value: transactionFee },
+    { label: 'Description', value: description },
+    { label: 'Transaction Type', value: type },
+    { label: 'Transaction Category', value: category.name },
   ];
 
   return (
