@@ -100,7 +100,7 @@ export default function LandingPage() {
           <View className='mt-4'>
             <TouchableOpacity
               activeOpacity={0.6}
-              onPress={() => router.push('/(tabs)/')}
+              onPress={() => router.push('/(auth)/login')}
               style={{ width: width * 0.9 }}
               className='flex items-center justify-center bg-white p-4 rounded-full mt-4'
             >
