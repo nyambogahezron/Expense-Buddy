@@ -13,7 +13,7 @@ import { router, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { ExternalLink } from '@/components/ExternalLink';
-const { width, height } = Dimensions.get('window');
+const  width  = Dimensions.get('window').width;
 const Profile = () => {
   return (
     <SafeAreaView className='flex-1 bg-gray-100'>
@@ -44,7 +44,7 @@ const Profile = () => {
           headerRight: () => (
             <TouchableOpacity className='bg-white bg-opacity-50 rounded-lg p-1 py-2'>
               <View className='bg-gray-200 mr-2 p-2 rounded-lg'>
-                <Ionicons name='settings-outline' size={22} />
+                <Ionicons name='log-out-outline' size={22}  />
               </View>
             </TouchableOpacity>
           ),
@@ -55,7 +55,7 @@ const Profile = () => {
         showsVerticalScrollIndicator={false}
       >
         {/* Header and Profile Info */}
-        <View className='flex items-center mb-8 mt-1'>
+        <View className='flex items-center mb-8 mt-5'>
           <View className='bg-white w-28 h-28 flex items-center justify-center rounded-full'>
             <Image
               source={{
@@ -75,10 +75,10 @@ const Profile = () => {
             className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
             onPress={() => router.push('/(profile)/settings')}
           >
-            <Ionicons name='settings-outline' size={24} color='#6B7280' />
+            <Ionicons name='settings-outline' size={22} color='#6B7280' />
             <Text className='ml-4 text-gray-800'>Settings</Text>
             <View className='absolute flex right-2'>
-              <Ionicons name='chevron-forward' size={24} color='#6B7280' />
+              <Ionicons name='chevron-forward' size={22} color='#6B7280' />
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -86,10 +86,10 @@ const Profile = () => {
             className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
             onPress={() => router.push('/(profile)/accountInfo')}
           >
-            <Ionicons name='person-outline' size={24} color='#6B7280' />
+            <Ionicons name='person-outline' size={22} color='#6B7280' />
             <Text className='ml-4 text-gray-800'>Account Info</Text>
             <View className='absolute flex right-2'>
-              <Ionicons name='chevron-forward' size={24} color='#6B7280' />
+              <Ionicons name='chevron-forward' size={22} color='#6B7280' />
             </View>
           </TouchableOpacity>
           <View className='mb-4 flex items-center justify-center'>
@@ -101,14 +101,14 @@ const Profile = () => {
                 <View className='flex-row items-center '>
                   <Ionicons
                     name='lock-closed-outline'
-                    size={24}
+                    size={22}
                     color='#6B7280'
                   />
 
                   <Text className='ml-4 text-gray-800  '>Privacy Policy</Text>
                 </View>
                 <View className='absolute flex right-2'>
-                  <Ionicons name='chevron-forward' size={24} color='#6B7280' />
+                  <Ionicons name='chevron-forward' size={22} color='#6B7280' />
                 </View>
               </View>
             </ExternalLink>
@@ -119,7 +119,7 @@ const Profile = () => {
             className='flex-row items-center bg-white rounded-lg px-4 py-3'
             onPress={() => router.push('/(tabs)/')}
           >
-            <Ionicons name='log-out-outline' size={24} color='#EF4444' />
+            <Ionicons name='log-out-outline' size={22} color='#EF4444' />
             <Text className='ml-4 text-red-600'>Logout</Text>
           </TouchableOpacity>
         </View>

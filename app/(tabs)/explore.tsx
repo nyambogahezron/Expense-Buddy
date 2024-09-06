@@ -1,102 +1,111 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform } from 'react-native';
+import React from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
+import { router, Stack } from 'expo-router';
+import { Feather, Ionicons } from '@expo/vector-icons';
+import { transactions } from '@/Data';
+import HomeTransactionCard from '@/components/HomeTransactionsCard';
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const width = Dimensions.get('window').width;
+export default function HomeScreen() {
+  const [category, setCategory] = React.useState('All');
+  const [data, setData] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const [sectionItems, setSectionItems] = React.useState(10);
 
-export default function TabTwoScreen() {
+  const transactionsData = transactions.slice(0, 10);
+
+  const handleLoadMore = () => {};
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage} />}>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText> library
-          to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
+    <SafeAreaView className='flex-1 bg-gray-100 px-2'>
+      <StatusBar style='light' backgroundColor='#161622' />
+      {/* Header */}
+      <Stack.Screen
+        options={{
+          title: 'Explore',
+          headerShown: true,
+          headerTitleAlign: 'center',
+          statusBarStyle: 'dark',
+          headerStyle: {
+            backgroundColor: '#fff',
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.back()}
+              className='bg-white bg-opacity-50 rounded-lg p-1 py-2 '
+            >
+              <View className='bg-gray-200 ml-2 p-2 rounded-lg'>
+                <Feather name='arrow-left' size={22} />
+              </View>
+            </TouchableOpacity>
           ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+          headerTitleStyle: {
+            color: '#333',
+            fontSize: 20,
+            fontWeight: 'bold',
+          },
+          headerRight: () => (
+            <TouchableOpacity activeOpacity={0.5} onPress={()=> router.push('/(profile)/settings')} className='bg-white bg-opacity-50 rounded-lg p-1 py-2'>
+              <View className='bg-gray-200 mr-2 p-2 rounded-lg'>
+                <Ionicons name='settings-outline' size={22} />
+              </View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <View>
+        <View className='flex-row items-center justify-center gap-2 mt-4 mb-4'>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            className='flex items-center text-lg font-psemibold p-3 rounded-lg bg-blue-500'
+            style={{ width: width * 0.42 }}
+          >
+            <Text className='text-white'>Income</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            className='flex items-center text-lg font-psemibold p-3 rounded-lg bg-red-500'
+            style={{ width: width * 0.42 }}
+          >
+            <Text className='text-white'>Expense</Text>
+          </TouchableOpacity>
+        </View>
+        {/* Transactions */}
+        <View className='flex-row justify-between mt-4 mb-4'>
+          <Text className='text-[16px] font-pbold ml-2 text-gray-800'>
+            Transactions
+          </Text>
+        </View>
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          data={transactionsData}
+          renderItem={({ item }) => <HomeTransactionCard item={item} />}
+          keyExtractor={(item) => item.id.toString()}
+          ListFooterComponent={
+            <View>
+              <TouchableOpacity activeOpacity={0.6} onPress={handleLoadMore}>
+                <View className='flex-row items-center justify-center bg-gray-200 h-10 w-full mr-3 rounded-md mt-2 mb-4'>
+                  <View className='flex-row items-center gap-2'>
+                    <Text className='text-sm font-semibold  text-gray-600'>
+                      Load more
+                    </Text>
+                    <ActivityIndicator />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+          }
+        />
+      </View>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-});
