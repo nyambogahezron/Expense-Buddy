@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useRef } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'react-native';
 import { Stack } from 'expo-router';
@@ -7,8 +7,16 @@ import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from '@/hooks/useThemeProvider';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 export default function Settings() {
+  const { theme, toggleTheme } = useTheme();
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const handleOpenPress = () => bottomSheetRef.current?.expand();
+
   return (
     <SafeAreaView className='bg-gray-100 flex flex-1 px-2'>
       <GestureHandlerRootView>
@@ -49,7 +57,7 @@ export default function Settings() {
             <TouchableOpacity
               activeOpacity={0.7}
               className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
-              onPress={() => router.push('/(profile)/settings')}
+              onPress={handleOpenPress}
             >
               <Ionicons
                 name='color-palette-outline'
@@ -132,7 +140,69 @@ export default function Settings() {
               </TouchableOpacity>
             </View>
           </View>
+          <ThemedView className='p-5'>
+            <ThemedText lightColor='red' darkColor='blue'>
+              Hello
+            </ThemedText>
+          </ThemedView>
+
+          <TouchableOpacity
+            activeOpacity={0.7}
+            className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
+            onPress={toggleTheme}
+          >
+            <Ionicons name='log-out-outline' size={22} color='#EF4444' />
+            <Text className='ml-4 text-red-600 font-bold'>Theme</Text>
+          </TouchableOpacity>
         </ScrollView>
+
+        {/* theme toggle bottom sheet  */}
+        <BottomSheet
+          snapPoints={['25%', '40%']}
+          ref={bottomSheetRef}
+          index={-1}
+          enablePanDownToClose={true}
+          handleIndicatorStyle={{ backgroundColor: '#fff' }}
+          backgroundStyle={{ backgroundColor: '#1B1F24' }}
+        >
+          <View className=' w-full h-full p-4'>
+            <Text className='text-white text-lg font-bold'>Choose Theme</Text>
+            <View className='flex items-center justify-between mt-4'>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                className={`bg-gray-100 rounded-lg p-4 w-full mt-4 items-center  ${
+                  theme === 'light' ? 'border-2 border-green-700' : ''
+                }`}
+                onPress={() => toggleTheme()}
+              >
+                <View className='fex flex-row gap-3 mr-6 items-center'>
+                  <View
+                    className={`w-6 h-6 rounded-full bg-white border-2 border-neutral-600 ${
+                      theme === 'light' ? 'bg-green-700' : 'bg-white'
+                    }`}
+                  ></View>
+                  <Text className='text-gray-800 text-lg font-bold'>Light</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                className={`bg-gray-100 rounded-lg p-4 w-full mt-4 items-center  ${
+                  theme === 'dark' ? 'border-2 border-green-700' : ''
+                }`}
+                onPress={() => toggleTheme()}
+              >
+                <View className='fex flex-row gap-3 mr-6 items-center'>
+                  <View
+                    className={`w-6 h-6 rounded-full bg-white border-2 border-neutral-600 ${
+                      theme === 'dark' ? 'bg-green-700' : 'bg-white'
+                    }`}
+                  ></View>
+                  <Text className='text-gray-800 text-lg font-bold'>Dark</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </BottomSheet>
       </GestureHandlerRootView>
     </SafeAreaView>
   );

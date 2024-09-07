@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
-  Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,10 +17,8 @@ import HomeHeader from '@/components/HomeHeader';
 import TransactionHeader from '@/components/TransactionHeader';
 import EmptyListCard from '@/components/EmptyListCard';
 
-const width = Dimensions.get('window').width;
 
 export default function HomeScreen() {
-  const userCurrency = 'Ksh';
   const transactionsData = transactions.slice(0, 8);
   return (
     <SafeAreaView className='flex-1 bg-gray-100 px-2'>
