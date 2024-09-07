@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState,useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,26 +12,24 @@ import { StatusBar } from 'expo-status-bar';
 import { router, Stack } from 'expo-router';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { transactions } from '@/Data';
-import HomeTransactionCard from '@/components/HomeTransactionsCard';
-import ExploreStatistics from '@/components/ExploreStatistics';
-
-type TransactionCategoryProps = 'income' | 'expense' | 'All';
-
-type TransactionProps = {
-  id: number;
-  category: TransactionCategoryProps;
-  // Add other properties as needed
-};
+import TransactionCard from '@/components/TransactionsCard';
+import TransactionHeader from '@/components/TransactionHeader';
+import { TransactionProps } from '@/Types';
+import EmptyListCard from '@/components/EmptyListCard';
 
 const width = Dimensions.get('window').width;
+type categoryType = 'All' | 'income' | 'expense';
 
 export default function HomeScreen() {
-  const [category, setCategory] = React.useState<TransactionCategoryProps>('All');
-  const [data, setData] = React.useState<TransactionProps[]>([]);
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [sectionItems, setSectionItems] = React.useState<number>(10);
+  const [category, setCategory] = useState<categoryType>('All');
+  const [data, setData] = useState<TransactionProps[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [sectionItems, setSectionItems] = useState(10);
 
-  const transactionsData: TransactionProps[] = transactions.slice(0, sectionItems);
+  const transactionsData: TransactionProps[] = transactions.slice(
+    0,
+    sectionItems
+  );
 
   const handleLoadMore = () => {
     setLoading(true);
@@ -40,19 +38,24 @@ export default function HomeScreen() {
     setLoading(false);
   };
 
-  const filterData = (category: TransactionCategoryProps) => {
-    if (category === 'All') {
+  const filterData = (category: categoryType) => {
+    setData([]);
+    setLoading(true);
+    if (category.toString() === 'All') {
       setData(transactionsData);
+      setLoading(false);
     } else {
       const filteredData: TransactionProps[] = transactions.filter(
-        (item) => item.category === category
+        (item) => item.type === category.toString()
       );
       setData(filteredData.slice(0, sectionItems));
+      setLoading(false);
     }
   };
 
-  React.useEffect(() => {
-    filterData(category);
+  useEffect(() => {
+    setLoading(true);
+    filterData(category as categoryType);
   }, [sectionItems, category]);
 
   return (
@@ -95,47 +98,83 @@ export default function HomeScreen() {
           ),
         }}
       />
-      <View>
-        {/* <ExploreStatistics /> */}
-        <View className='flex-row items-center justify-center gap-2 mt-1 mb-2'>
-          <TouchableOpacity
-            onPress={() => {
-              setCategory('income');
-              filterData('income');
-            }}
-            activeOpacity={0.6}
-            className='flex items-center text-lg font-psemibold p-3 rounded-lg bg-blue-500'
-            style={{ width: width * 0.42 }}
-          >
-            <Text className='text-white'>Income</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setCategory('expense');
-              filterData('expense');
-            }}
-            activeOpacity={0.6}
-            className='flex items-center text-lg font-psemibold p-3 rounded-lg bg-red-500'
-            style={{ width: width * 0.42 }}
-          >
-            <Text className='text-white'>Expense</Text>
-          </TouchableOpacity>
-        </View>
-        <View className='flex-row justify-between mt-4 mb-4'>
-          <Text className='text-[16px] font-pbold ml-2 text-gray-800'>
-            Transactions
-          </Text>
-        </View>
+      <View className='-mt-8'>
+        {/* transactions list  */}
         <FlatList
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-          data={data.length === 0 ? transactionsData : data}
-          renderItem={({ item }) => <HomeTransactionCard item={item} />}
+          data={data}
+          initialNumToRender={10}
+          renderItem={({ item }) => (
+            <TransactionCard item={item} isLoading={loading} />
+          )}
           keyExtractor={(item) => item.id.toString()}
+          ListHeaderComponentStyle={{ marginTop: 10 }}
+          ListHeaderComponent={
+            <View>
+              <View className='flex-row justify-center gap-0'>
+                <TouchableOpacity
+                  onPress={() => {
+                    setCategory('All');
+                    filterData('All');
+                  }}
+                  className={`p-4 rounded-l-full w-1/3 items-center ${
+                    category === 'All' ? 'bg-orange-500' : 'bg-white'
+                  }`}
+                >
+                  <Text
+                    className={`text-black font-bold ${
+                      category === 'All' ? 'text-white' : ''
+                    }`}
+                  >
+                    All
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setCategory('income');
+                    filterData('income');
+                  }}
+                  className={`bg-white p-4 border-l border-r border-gray-200 w-1/3 items-center ${
+                    category === 'income' ? 'bg-orange-500' : 'bg-white'
+                  }`}
+                >
+                  <Text
+                    className={`text-black font-bold ${
+                      category === 'income' ? 'text-white' : ''
+                    }`}
+                  >
+                    Income
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setCategory('expense');
+                    filterData('expense');
+                  }}
+                  className={`p-4 rounded-r-full w-1/3 items-center ${
+                    category === 'expense' ? 'bg-orange-500' : 'bg-white'
+                  }`}
+                >
+                  <Text
+                    className={`text-black font-bold ${
+                      category === 'expense' ? 'text-white' : ''
+                    }`}
+                  >
+                    Expenses
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <TransactionHeader viewMore={false} />
+            </View>
+          }
           ListFooterComponent={
-            <View className='mb-28'>
+            <View className='flex-row items-center justify-center mb-5'>
               <TouchableOpacity activeOpacity={0.6} onPress={handleLoadMore}>
-                <View className='flex-row items-center justify-center bg-gray-200 h-10 w-full mr-3 rounded-md mt-2 mb-4'>
+                <View
+                  className='flex-row items-center justify-center bg-gray-200 h-10 rounded-md mt-2 mb-4'
+                  style={{ width: width * 0.86 }}
+                >
                   <View className='flex-row items-center gap-2'>
                     <Text className='text-sm font-semibold  text-gray-600'>
                       Load more
@@ -146,6 +185,7 @@ export default function HomeScreen() {
               </TouchableOpacity>
             </View>
           }
+          ListEmptyComponent={<EmptyListCard />}
         />
       </View>
     </SafeAreaView>

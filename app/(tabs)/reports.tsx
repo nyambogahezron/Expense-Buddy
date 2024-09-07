@@ -1,7 +1,6 @@
-// screens/Statistics.js
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { BarChart } from 'react-native-chart-kit';
+import { BarChart, PieChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
@@ -28,6 +27,56 @@ const chartConfig = {
   decimalPlaces: 0,
   labelColor: () => '#6B7280',
 };
+
+const pieData = [
+  {
+    name: 'Seoul',
+    population: 21500000,
+    color: 'rgba(131, 167, 234, 1)',
+    legendFontColor: '#7F7F7F',
+    legendFontSize: 15,
+  },
+  {
+    name: 'Toronto',
+    population: 2800000,
+    color: '#F00',
+    legendFontColor: '#7F7F7F',
+    legendFontSize: 15,
+  },
+  {
+    name: 'Beijing',
+    population: 527612,
+    color: 'red',
+    legendFontColor: '#7F7F7F',
+    legendFontSize: 15,
+  },
+  {
+    name: 'New York',
+    population: 8538000,
+    color: '#ffffff',
+    legendFontColor: '#7F7F7F',
+    legendFontSize: 15,
+  },
+  {
+    name: 'Moscow',
+    population: 11920000,
+    color: 'rgb(0, 0, 255)',
+    legendFontColor: '#7F7F7F',
+    legendFontSize: 15,
+  },
+];
+
+const PieChartConfig = {
+  backgroundGradientFrom: '#1E2923',
+  backgroundGradientFromOpacity: 0,
+  backgroundGradientTo: '#08130D',
+  backgroundGradientToOpacity: 0.5,
+  color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+  strokeWidth: 2,
+  barPercentage: 0.5,
+  useShadowColorFromDataset: false,
+};
+const width = Dimensions.get('window').width;
 
 const Statistics = () => {
   return (
@@ -84,6 +133,39 @@ const Statistics = () => {
           </View>
         </View>
         <Text className='text-red-600 font-bold'>- $1550</Text>
+      </View>
+      <View className='flex-row justify-between bg-green-100 p-4 rounded-lg mb-4'>
+        <View className='flex-row items-center'>
+          <View className='bg-red-200 p-3 rounded-full mr-4'>
+            <Text>🛒</Text>
+          </View>
+          <View>
+            <Text className='font-bold text-gray-800'>Shopping</Text>
+            <Text className='text-gray-500'>30 Apr 2022</Text>
+          </View>
+        </View>
+        <Text className='text-red-600 font-bold'>- $1550</Text>
+      </View>
+
+      <View>
+        <Text>Top Five Transactions</Text>
+        {/* PieChart Graph */}
+        <View
+          className='flex items-center justify-center mb-4'
+          style={{ width: width * 0.9 }}
+        >
+          <PieChart
+            data={pieData}
+            width={width}
+            height={150}
+            chartConfig={PieChartConfig}
+            accessor={'population'}
+            backgroundColor={'transparent'}
+            paddingLeft={'-5'}
+            center={[10, 10]}
+            absolute
+          />
+        </View>
       </View>
     </ScrollView>
   );
