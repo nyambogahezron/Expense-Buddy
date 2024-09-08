@@ -64,7 +64,7 @@ export default function TransactionDetails() {
         className='flex flex-1 mb-8'
       >
         {/* Title  */}
-        <View className='flex flex-row items-center bg-white rounded-sm h-10 w-full mt-5 mb-8'>
+        <View className='flex flex-row items-center bg-white rounded-sm h-12 w-full mt-5 mb-8'>
           <View
             className='flex items-center justify-center h-12 w-12 rounded-full mr-3 p-2'
             style={{

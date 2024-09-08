@@ -98,7 +98,7 @@ export default function HomeScreen() {
           ),
         }}
       />
-      <View className='-mt-8'>
+      <View>
         {/* transactions list  */}
         <FlatList
           showsHorizontalScrollIndicator={false}

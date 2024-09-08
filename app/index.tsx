@@ -17,7 +17,6 @@ const { width, height } = Dimensions.get('window');
 export default function LandingPage() {
   const snapPoints = useMemo(() => ['30%', '35%'], []);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const handleClosePress = () => bottomSheetRef.current?.close();
   const handleOpenPress = () => bottomSheetRef.current?.expand();
 
   return (

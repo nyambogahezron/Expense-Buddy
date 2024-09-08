@@ -33,7 +33,8 @@ const TransactionCategories: TransactionCategoryProps[] = [
   },
   {
     id: 7,
-    name: 'Other',
+
+    name: 'Online Services Subscription',
     icon: 'other',
   },
   {
@@ -53,9 +54,13 @@ const TransactionCategories: TransactionCategoryProps[] = [
   },
   {
     id: 11,
-    name: 'Online Services Subscription',
+    name: 'Clothing',
+    icon: 'investment',
+  },
+  {
+    id: 12,
+    name: 'Other',
     icon: 'other',
   },
-  
 ];
 export default TransactionCategories;
