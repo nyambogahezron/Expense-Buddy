@@ -109,7 +109,7 @@ export default function HomeScreen() {
             <TransactionCard item={item} isLoading={loading} />
           )}
           keyExtractor={(item) => item.id.toString()}
-          ListHeaderComponentStyle={{ marginTop: 10 }}
+          ListHeaderComponentStyle={{ marginTop: 1 }}
           ListHeaderComponent={
             <View>
               <View className='flex-row justify-center gap-0'>

@@ -8,7 +8,7 @@ export default function HomeHeader() {
   const userCurrency = 'Ksh';
 
   return (
-    <View className='py-5 mt-6'>
+    <View className='mt-1'>
       <View
         style={{
           width: width * 0.95,

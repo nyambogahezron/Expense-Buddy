@@ -3,7 +3,6 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import React, { useMemo, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
@@ -11,7 +10,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import Feather from '@expo/vector-icons/Feather';
 const { width, height } = Dimensions.get('window');
 
 export default function LandingPage() {

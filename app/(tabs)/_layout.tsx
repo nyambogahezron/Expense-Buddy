@@ -65,8 +65,8 @@ export default function TabLayout() {
               <View className='w-14 h-14 rounded-full bg-[#FF7F50] flex items-center justify-center  shadow-lg'>
                 <FontAwesome5
                   name='plus'
-                  size={24}
-                  color={`${focused ? 'white' : 'black'}`}
+                  size={20}
+                  color={`${focused ? 'white' : '#333'}`}
                 />
               </View>
             </View>
