@@ -1,9 +1,4 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import React, { useMemo, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -67,10 +62,14 @@ export default function LandingPage() {
       </View>
 
       {/* Description */}
-      <Text className='text-gray-400 text-center px-10 mb-10 mt-2 text-[17px] tracking-wider font-psemibold'>
-        The right app to make it easy to manage your expenses on the go.
-        Personal Capital - Expensify
-      </Text>
+      <View className='flex items-center mb-10 '>
+        <Text className='text-white text-center px-6 mb-1 mt-2 text-[17px] tracking-widest font-psemibold'>
+          The right app to make it easy to manage your expenses on the go.
+        </Text>
+        <Text className='text-white italic font-bold text-[17px]'>
+          Personal Capital Expensify
+        </Text>
+      </View>
 
       {/* Next Button */}
       <TouchableOpacity

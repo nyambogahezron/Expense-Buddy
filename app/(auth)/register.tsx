@@ -11,16 +11,18 @@ import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function Login() {
+export default  function Register(){
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [username, setUsername] = useState<string>('');
 
   const handleSubmission = () => {
     console.log('Username:', username);
     console.log('Email:', email);
     console.log('Password', password);
+    console.log('Confirm Password', confirmPassword);
   };
 
   return (
@@ -34,9 +36,9 @@ export default function Login() {
         {/* Logo and Title */}
         <View className='items-center mb-12'>
           <Ionicons name='shield-outline' size={50} color='#1E3A8A' />
-          <Text className='text-xl font-bold text-white mt-4'>Login</Text>
+          <Text className='text-xl font-bold text-white mt-4'>Register</Text>
           <Text className='text-sm text-white mt-2'>
-            Login now to get started.
+            Register now to get started.
           </Text>
         </View>
 
@@ -82,15 +84,15 @@ export default function Login() {
             />
           </TouchableOpacity>
         </View>
-
-        {/* Forgot Password */}
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => router.push('/(auth)/forgotPassword')}
-          className='mb-8'
-        >
-          <Text className='text-blue-600 text-right'>Forget password?</Text>
-        </TouchableOpacity>
+        {/* Password Input */}
+        <View className='mb-6 relative'>
+          <Text className='text-white mb-2 font-bold'>Confirm Password</Text>
+          <TextInput
+            placeholder='Confirm Password'
+            className='bg-gray-300 p-4 rounded-lg text-black font-bold'
+            onChangeText={(text) => setConfirmPassword(text)}
+          />
+        </View>
 
         {/* Login Button */}
         <TouchableOpacity
@@ -98,20 +100,22 @@ export default function Login() {
           onPress={handleSubmission}
           className='bg-blue-600 p-4 rounded-full items-center'
         >
-          <Text className='text-white text-lg font-bold'>Login</Text>
+          <Text className='text-white text-lg font-bold'>Register</Text>
         </TouchableOpacity>
 
-        {/* Signup Option */}
+        {/* SignIn Option */}
         <View className='flex-row justify-center mt-8 mb-3'>
-          <Text className='text-gray-500'>Don’t have an account? </Text>
+          <Text className='text-gray-500'>Already have an account? </Text>
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => router.push('/(auth)/register')}
+            onPress={() => router.push('/(auth)/login')}
           >
-            <Text className='text-blue-600 font-bold'>Signup</Text>
+            <Text className='text-blue-600 font-bold'>Signin</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
+
+
