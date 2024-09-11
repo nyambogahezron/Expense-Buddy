@@ -14,12 +14,9 @@ export default function HomeHeader() {
           width: width * 0.95,
           height: height * 0.23,
         }}
-        className='relative p-4 bg-[#fff] rounded-xl shadow-md  '
+        className='relative p-4 bg-[#131313] rounded-xl shadow-md  '
       >
-        <LinearGradient
-          colors={['#787BE2', '#E2999A']}
-          className='absolute top-0 left-0 right-0 bottom-0 rounded-xl'
-        />
+        
         <View className='flex flex-row justify-between -ml-1 px-1 mt-1'>
           <View>
             <Text className='text-xl font-bold text-green-700'>
@@ -37,7 +34,7 @@ export default function HomeHeader() {
             <Text className='text-blue-700 text-xl font-bold'>
               {userCurrency + '.'}14.00
             </Text>
-            <Text className='text-gray-300 font-pbold'>Tractions Costs</Text>
+            <Text className='text-gray-300 font-pbold'>Tractions </Text>
           </View>
         </View>
         <View className='relative flex flex-row -ml-1 overflow-hidden -bottom-5 w-full bg-transparent h-3 rounded-full border border-gray-50 items-center'>
@@ -65,10 +62,10 @@ export default function HomeHeader() {
             <Text className='text-white font-bold'>10%</Text>
           </View>
         </View>
-        <View className='absolute bottom-1 right-4 flex items-end'>
+        <View className='absolute bottom-3 right-4 flex items-end'>
           <View className='flex flex-row mt-2 w-full'>
-            <View className='w-8 h-8 rounded-full bg-[#EE401B] opacity-70'></View>
-            <View className='w-8 h-8 rounded-full bg-[#F38D1B] opacity-70 right-3'></View>
+            <View className='w-10 h-10 rounded-full bg-[#EE401B] opacity-70'></View>
+            <View className='w-10 h-10 rounded-full bg-[#F38D1B] opacity-70 right-3'></View>
           </View>
         </View>
       </View>

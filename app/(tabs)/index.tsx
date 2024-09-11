@@ -81,7 +81,7 @@ export default function HomeScreen() {
                 <TouchableOpacity
                   onPress={() => router.push('/(tabs)/explore')}
                 >
-                  <View className='flex-row items-center justify-center bg-gray-200 h-10 w-full mr-3 rounded-full mt-4 mb-4'>
+                  <View className='flex-row items-center justify-center bg-gray-200 h-12 w-full mr-3 rounded-full mt-4 mb-4'>
                     <View className='flex-row items-center'>
                       <Text className='text-[15px] font-semibold  text-gray-600'>
                         View All

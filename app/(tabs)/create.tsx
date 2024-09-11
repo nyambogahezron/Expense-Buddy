@@ -13,13 +13,15 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import { StatusBar } from 'expo-status-bar';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Stack } from 'expo-router';
 import { router } from 'expo-router';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-const { width, height } = Dimensions.get('window');
 import TransactionCategories from '@/Data/TransactionsTypes';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TransactionCategoryProps } from '@/Types';
+import CustomButton from '@/components/CustomButton';
+
+const width = Dimensions.get('window').width;
 
 export default function AddExpense() {
   const [id, setId] = useState(1);
@@ -309,16 +311,12 @@ export default function AddExpense() {
           contentContainerStyle={{ alignItems: 'center' }}
           ListHeaderComponent={
             <View>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                className='bg-orange-600 p-3 rounded-full items-center justify-center my-5'
-                onPress={() => router.push('/(tabs)/create')}
-                style={{
-                  width: width * 0.9,
-                }}
-              >
-                <Text className='text-white text-lg'>New Category</Text>
-              </TouchableOpacity>
+              <CustomButton
+                title='New Category'
+                handleOpenPress={() => router.push('/(tabs)/create')}
+                customStyles='bg-orange-600 my-5 p-3'
+                textStyles='text-white text-lg'
+              />
             </View>
           }
         />

@@ -1,16 +1,16 @@
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import React, { useMemo, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import CustomButton from '@/components/CustomButton';
 const { width, height } = Dimensions.get('window');
 
 export default function LandingPage() {
   const snapPoints = useMemo(() => ['30%', '35%'], []);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const handleOpenPress = () => bottomSheetRef.current?.expand();
 
   return (
     <GestureHandlerRootView className='flex-1 justify-center items-center bg-gray-900'>
@@ -71,16 +71,12 @@ export default function LandingPage() {
         </Text>
       </View>
 
-      {/* Next Button */}
-      <TouchableOpacity
-        onPress={handleOpenPress}
-        style={{ width: width * 0.9 }}
-        className='flex items-center justify-center bg-white p-4 rounded-full mt-10'
-      >
-        <Text className='text-black text-lg font-bold capitalize'>
-          Get Started
-        </Text>
-      </TouchableOpacity>
+      <CustomButton
+        title='Get Started'
+        handleOpenPress={() => bottomSheetRef.current?.expand()}
+        customStyles='bg-orange-600 mt-10'
+        textStyles='text-white'
+      />
       {/* BottomSheet for login/register buttons */}
 
       <BottomSheet
@@ -89,31 +85,23 @@ export default function LandingPage() {
         ref={bottomSheetRef}
         enablePanDownToClose={true}
         handleIndicatorStyle={{ backgroundColor: '#fff' }}
-        backgroundStyle={{ backgroundColor: '#1B1F24' }}
+        backgroundStyle={{ backgroundColor: '#1B1F24', alignItems: 'center' }}
       >
-        <View className='relative z-[99991] p-4 items-center w-full'>
+        <View className='relative z-[99991] px-4 items-center w-full h-full justify-center'>
           {/* body  */}
-          <View className='mt-4'>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              onPress={() => router.push('/(auth)/login')}
-              style={{ width: width * 0.9 }}
-              className='flex items-center justify-center bg-white p-4 rounded-full mt-4'
-            >
-              <Text className='text-black text-lg font-bold capitalize'>
-                Login
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              onPress={() => router.push('/(tabs)/')}
-              style={{ width: width * 0.9 }}
-              className='flex items-center justify-center bg-[#0079FB] p-4 rounded-full mt-4'
-            >
-              <Text className='text-white text-lg font-bold capitalize'>
-                Register
-              </Text>
-            </TouchableOpacity>
+          <View className='-mt-4'>
+            <CustomButton
+              title='Login'
+              handleOpenPress={() => router.push('/(auth)/login')}
+              customStyles='bg-white mt-1'
+              textStyles='text-black font-bold'
+            />
+            <CustomButton
+              title='Register'
+              handleOpenPress={() => router.push('/(tabs)/')}
+              customStyles='bg-[#0079FB] mt-4'
+              textStyles='text-white font-bold'
+            />
           </View>
         </View>
       </BottomSheet>

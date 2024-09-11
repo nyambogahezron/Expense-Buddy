@@ -1,11 +1,12 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { Feather, FontAwesome5} from '@expo/vector-icons';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
+import React from 'react';
 import { router, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import TransactionCategories from '@/Data/TransactionsTypes';
+import { Feather, FontAwesome5 } from '@expo/vector-icons';
+import { Text } from 'react-native';
 
-const Statistics = () => {
+export default function CategoriesDetails() {
   return (
     <SafeAreaView className='flex-1 bg-white'>
       <StatusBar style='light' backgroundColor='#161622' />
@@ -50,36 +51,10 @@ const Statistics = () => {
             ),
           }}
         />
-        <View className='px-3'>
-          {/* Expense Detail */}
-          <View className='my-3'>
-            <Text className='ml-2 text-lg text-black font-bold'>
-              Categories
-            </Text>
-          </View>
-          {TransactionCategories.map((item) => {
-            const { id, name, icon } = item;
-            return (
-              <View
-                key={id}
-                className={`flex-row justify-between bg-gray-100 p-4 rounded-lg mb-4 
-                }`}
-              >
-                <View className='flex-row items-center'>
-                  <View className='bg-white p-3 rounded-full mr-4'>
-                    <Text>🛒</Text>
-                  </View>
-                  <View>
-                    <Text className='font-bold text-gray-800'>{name}</Text>
-                  </View>
-                </View>
-              </View>
-            );
-          })}
+        <View>
+          <Text>Categories</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
-};
-
-export default Statistics;
+}
