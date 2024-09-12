@@ -10,7 +10,7 @@ import { transactions } from '@/Data';
 import TransactionCategories from '@/Data/TransactionsTypes';
 import { TransactionProps } from '@/Types';
 import { data, chartConfig, pieData, PieChartConfig } from '@/Data/ChartsData';
-import { CustomButton } from '@/components';
+import CategoryCard from '@/components/CategoryCard';
 
 const width = Dimensions.get('window').width;
 const Statistics = () => {
@@ -221,20 +221,17 @@ const Statistics = () => {
           {TransactionCategories.slice(0, 5).map((item) => {
             const { id, name, icon } = item;
             return (
-              <View
-                key={id}
-                className={`flex-row justify-between bg-gray-100 p-4 rounded-lg mb-4 
-                }`}
-              >
-                <View className='flex-row items-center'>
-                  <View className='bg-white p-3 rounded-full mr-4'>
-                    <Text>🛒</Text>
-                  </View>
-                  <View>
-                    <Text className='font-bold text-gray-800'>{name}</Text>
-                  </View>
-                </View>
-              </View>
+              <CategoryCard
+                handleOnPress={() =>
+                  router.push({
+                    pathname: '/modals/categoriesDetails',
+                    params: { item: JSON.stringify(item) },
+                  })
+                }
+                id={id}
+                name={name}
+                icon={icon}
+              />
             );
           })}
 

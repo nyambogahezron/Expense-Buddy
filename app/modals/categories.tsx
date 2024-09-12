@@ -1,13 +1,27 @@
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { Feather, FontAwesome5} from '@expo/vector-icons';
+import { Feather, FontAwesome5 } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import TransactionCategories from '@/Data/TransactionsTypes';
+import CategoryCard from '@/components/CategoryCard';
+import { useMemo, useRef, useState } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import BottomSheet from '@gorhom/bottom-sheet';
+import { CustomButton } from '@/components';
 
 const Statistics = () => {
+  const [isPress, setIsPressed] = useState<boolean>(false);
+  const [PressedItem, setPressedItem] = useState<number | null>();
+  const snapPoints = useMemo(() => ['30%', '35%'], []);
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const handleOpenBottomSheet = () => bottomSheetRef.current?.expand();
+  const handlePressHold = (item: number) => {
+    setIsPressed(!isPress);
+    setPressedItem(item);
+  };
+
   return (
-    <SafeAreaView className='flex-1 bg-white'>
+    <GestureHandlerRootView className='flex-1 bg-white'>
       <StatusBar style='light' backgroundColor='#161622' />
       <ScrollView
         showsHorizontalScrollIndicator={false}
@@ -44,7 +58,7 @@ const Statistics = () => {
                 className='bg-white bg-opacity-50 rounded-lg p-1 py-2'
               >
                 <View className='bg-gray-200 mr-2 p-2 rounded-lg'>
-                  <FontAwesome5 name='plus' size={22} color='#333' />
+                  <FontAwesome5 name='plus' size={21} color='#333' />
                 </View>
               </TouchableOpacity>
             ),
@@ -60,25 +74,53 @@ const Statistics = () => {
           {TransactionCategories.map((item) => {
             const { id, name, icon } = item;
             return (
-              <View
-                key={id}
-                className={`flex-row justify-between bg-gray-100 p-4 rounded-lg mb-4 
-                }`}
-              >
-                <View className='flex-row items-center'>
-                  <View className='bg-white p-3 rounded-full mr-4'>
-                    <Text>🛒</Text>
-                  </View>
-                  <View>
-                    <Text className='font-bold text-gray-800'>{name}</Text>
-                  </View>
-                </View>
-              </View>
+              <CategoryCard
+                handleOnPress={() =>
+                  router.push({
+                    pathname: '/modals/categoriesDetails',
+                    params: { item: JSON.stringify(item) },
+                  })
+                }
+                id={id}
+                name={name}
+                icon={icon}
+                setIsPressed={setIsPressed}
+                isPress={isPress}
+                handlePressHold={handleOpenBottomSheet}
+                PressedItem={PressedItem}
+              />
             );
           })}
         </View>
       </ScrollView>
-    </SafeAreaView>
+      <View>
+        <BottomSheet
+          index={-1}
+          snapPoints={snapPoints}
+          ref={bottomSheetRef}
+          enablePanDownToClose={true}
+          handleIndicatorStyle={{ backgroundColor: '#fff' }}
+          backgroundStyle={{ backgroundColor: '#1B1F24', alignItems: 'center' }}
+        >
+          <View className='relative z-[99991] px-4 items-center w-full h-full justify-center'>
+            <View className='-mt-4'>
+              <CustomButton
+                title='Edit'
+                handleOpenPress={() => console.log('edit')}
+                customStyles='bg-white mt-1'
+                textStyles='text-black font-bold'
+              />
+              <CustomButton
+                title='Delete'
+                handleOpenPress={() => console.log('delete')}
+                customStyles='bg-[#0079FB] mt-4'
+                textStyles='text-white font-bold'
+              />
+            </View>
+          </View>
+        </BottomSheet>
+      </View>
+    </GestureHandlerRootView>
   );
 };
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native';
 import { router, Stack } from 'expo-router';
-import { Feather, FontAwesome } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { TextInput } from 'react-native';
 import { CustomButton } from '@/components';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -44,17 +44,6 @@ export default function CreateCategory() {
               fontSize: 20,
               fontWeight: 'bold',
             },
-            headerRight: () => (
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => router.push('/modals/EditCategory')}
-                className='bg-white bg-opacity-50 rounded-lg p-1 py-2'
-              >
-                <View className='bg-gray-200 mr-2 p-2 rounded-lg'>
-                  <FontAwesome name='edit' size={22} color='black' />
-                </View>
-              </TouchableOpacity>
-            ),
           }}
         />
         <ScrollView className='mt-[20%]'>

@@ -24,8 +24,8 @@ export default function Login() {
   };
 
   return (
-    <SafeAreaView className='flex-1 bg-[#070B11] px-5 w-full justify-center'>
-      <StatusBar style='light' backgroundColor='transparent' />
+    <SafeAreaView className='flex-1 bg-[#fff] px-5 w-full justify-center'>
+      <StatusBar style='dark' backgroundColor='transparent' />
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -34,40 +34,40 @@ export default function Login() {
         {/* Logo and Title */}
         <View className='items-center mb-12'>
           <Ionicons name='shield-outline' size={50} color='#1E3A8A' />
-          <Text className='text-xl font-bold text-white mt-4'>Login</Text>
-          <Text className='text-sm text-white mt-2'>
+          <Text className='text-xl font-pbold text-black mt-4'>Login</Text>
+          <Text className='text-sm text-black mt-2 font-pbold'>
             Login now to get started.
           </Text>
         </View>
 
         {/* username Input */}
-        <View className='mb-6'>
-          <Text className='text-white mb-2 font-bold'>Username</Text>
+        <View className='mb-3'>
+          <Text className='text-black ml-1 mb-2 font-bold'>Username</Text>
           <TextInput
             placeholder='John Doe'
-            className='bg-gray-300 p-4 rounded-lg text-black font-bold'
+            className='bg-gray-200 p-4 rounded-lg text-black font-bold'
             keyboardType='email-address'
             onChangeText={(text) => setUsername(text)}
           />
         </View>
 
         {/* Email Input */}
-        <View className='mb-6'>
-          <Text className='text-white mb-2 font-bold'>Email</Text>
+        <View className='mb-3'>
+          <Text className='text-black ml-1 mb-2 font-bold'>Email</Text>
           <TextInput
             placeholder='hi@gmail.com'
-            className='bg-gray-300 p-4 rounded-lg text-black font-bold'
+            className='bg-gray-200 p-4 rounded-lg text-black font-bold'
             keyboardType='email-address'
             onChangeText={(text) => setEmail(text)}
           />
         </View>
 
         {/* Password Input */}
-        <View className='mb-6 relative'>
-          <Text className='text-white mb-2 font-bold'>Password</Text>
+        <View className='mb-3 relative'>
+          <Text className='text-black ml-1 mb-2 font-bold'>Password</Text>
           <TextInput
             placeholder='Password'
-            className='bg-gray-300 p-4 rounded-lg text-black font-bold'
+            className='bg-gray-200 p-4 rounded-lg text-black font-bold'
             secureTextEntry={!passwordVisible}
             onChangeText={(text) => setPassword(text)}
           />
@@ -96,7 +96,7 @@ export default function Login() {
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={handleSubmission}
-          className='bg-blue-600 p-4 rounded-full items-center'
+          className='bg-orange-600 p-4 rounded-full items-center'
         >
           <Text className='text-white text-lg font-bold'>Login</Text>
         </TouchableOpacity>

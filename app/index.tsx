@@ -13,7 +13,7 @@ export default function LandingPage() {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   return (
-    <GestureHandlerRootView className='flex-1 justify-center items-center bg-gray-900'>
+    <GestureHandlerRootView className='flex-1 justify-center items-center bg-[#161622]'>
       <LinearGradient
         className='absolute top-[-40px] right-[-60px] h-[260px] w-[260px] rounded-full'
         colors={['#EE401B', '#F1621B', '#F38D1B']}
@@ -63,10 +63,10 @@ export default function LandingPage() {
 
       {/* Description */}
       <View className='flex items-center mb-10 '>
-        <Text className='text-white text-center px-6 mb-1 mt-2 text-[17px] tracking-widest font-psemibold'>
+        <Text className='text-white text-center px-6 mb-1 mt-2 text-[16px] tracking-widest font-pbold '>
           The right app to make it easy to manage your expenses on the go.
         </Text>
-        <Text className='text-white italic font-bold text-[17px]'>
+        <Text className='text-white font-pbold text-[16px]'>
           Personal Capital Expensify
         </Text>
       </View>
