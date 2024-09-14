@@ -4,21 +4,17 @@ import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import TransactionCategories from '@/Data/TransactionsTypes';
 import CategoryCard from '@/components/CategoryCard';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { CustomButton } from '@/components';
+import CategoryActionCard from '@/components/CategoryActionCard';
 
 const Statistics = () => {
-  const [isPress, setIsPressed] = useState<boolean>(false);
-  const [PressedItem, setPressedItem] = useState<number | null>();
   const snapPoints = useMemo(() => ['30%', '35%'], []);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const handleOpenBottomSheet = () => bottomSheetRef.current?.expand();
-  const handlePressHold = (item: number) => {
-    setIsPressed(!isPress);
-    setPressedItem(item);
-  };
+  const handleOpenPress = () => bottomSheetRef.current?.expand();
+  const handleClosePress = () => bottomSheetRef.current?.close();
 
   return (
     <GestureHandlerRootView className='flex-1 bg-white'>
@@ -75,19 +71,17 @@ const Statistics = () => {
             const { id, name, icon } = item;
             return (
               <CategoryCard
+                key={id}
                 handleOnPress={() =>
                   router.push({
                     pathname: '/modals/categoriesDetails',
                     params: { item: JSON.stringify(item) },
                   })
                 }
+                handleOpenPress={handleOpenPress}
                 id={id}
                 name={name}
                 icon={icon}
-                setIsPressed={setIsPressed}
-                isPress={isPress}
-                handlePressHold={handleOpenBottomSheet}
-                PressedItem={PressedItem}
               />
             );
           })}
@@ -120,6 +114,23 @@ const Statistics = () => {
           </View>
         </BottomSheet>
       </View>
+      {/* actions BottomSheet */}
+      <BottomSheet
+        index={-1}
+        snapPoints={snapPoints}
+        ref={bottomSheetRef}
+        enablePanDownToClose={true}
+        handleIndicatorStyle={{ backgroundColor: '#fff' }}
+        backgroundStyle={{
+          backgroundColor: '#1B1F24',
+          alignItems: 'center',
+          borderRadius: 0,
+        }}
+      >
+        <View>
+          <CategoryActionCard handleClosePress={handleClosePress} />
+        </View>
+      </BottomSheet>
     </GestureHandlerRootView>
   );
 };

@@ -113,7 +113,8 @@ export default function AddExpense() {
 
   return (
     <GestureHandlerRootView className='flex-1 bg-white'>
-      <StatusBar style='light' backgroundColor='#161622' />
+      <StatusBar style='dark' backgroundColor='#f2f2f2' />
+
       <Stack.Screen
         options={{
           title: 'Add Transaction',

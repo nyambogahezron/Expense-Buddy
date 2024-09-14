@@ -1,24 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { BarChart, PieChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { transactions } from '@/Data';
 import TransactionCategories from '@/Data/TransactionsTypes';
 import { TransactionProps } from '@/Types';
 import { data, chartConfig, pieData, PieChartConfig } from '@/Data/ChartsData';
 import CategoryCard from '@/components/CategoryCard';
+import BottomSheet from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import CategoryActionCard from '@/components/CategoryActionCard';
 
 const width = Dimensions.get('window').width;
-const Statistics = () => {
+
+export default function Statistics() {
   const [activeCategory, setActiveCategory] = useState<'income' | 'expense'>(
     'income'
   );
   const [Transactions, setTransactions] = useState<TransactionProps[]>([]);
 
+  const snapPoints = useMemo(() => ['30%', '35%'], []);
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const handleOpenPress = () => bottomSheetRef.current?.expand();
+  const handleClosePress = () => bottomSheetRef.current?.close();
+
+  // get top five transactions
   useEffect(() => {
     const filteredTransactions: TransactionProps[] = transactions
       .filter(
@@ -33,9 +42,11 @@ const Statistics = () => {
     setActiveCategory(category);
     console.log(activeCategory);
   };
+
   return (
-    <SafeAreaView className='flex-1 bg-white'>
-      <StatusBar style='light' backgroundColor='#161622' />
+    <GestureHandlerRootView className='flex-1 bg-white'>
+      <StatusBar style='dark' backgroundColor='#f2f2f2' />
+
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
@@ -99,7 +110,7 @@ const Statistics = () => {
 
             {/* Statistics */}
             <View className='my-3 items-center'>
-              <Text className='text-lg font-bold text-gray-800 mb-5'>
+              <Text className='text-sm font-bold text-gray-800 mb-5'>
                 Statistics
               </Text>
               <Text className='text-sm text-gray-500'>Apr 01 - Apr 30</Text>
@@ -222,12 +233,14 @@ const Statistics = () => {
             const { id, name, icon } = item;
             return (
               <CategoryCard
+                key={id}
                 handleOnPress={() =>
                   router.push({
                     pathname: '/modals/categoriesDetails',
                     params: { item: JSON.stringify(item) },
                   })
                 }
+                handleOpenPress={handleOpenPress}
                 id={id}
                 name={name}
                 icon={icon}
@@ -254,8 +267,23 @@ const Statistics = () => {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
-  );
-};
 
-export default Statistics;
+      {/* actions BottomSheet */}
+      <BottomSheet
+        detached={true}
+        index={-1}
+        snapPoints={snapPoints}
+        ref={bottomSheetRef}
+        enablePanDownToClose={true}
+        handleIndicatorStyle={{ backgroundColor: '#fff' }}
+        backgroundStyle={{
+          backgroundColor: '#1B1F24',
+          alignItems: 'center',
+          borderRadius: 0,
+        }}
+      >
+        <CategoryActionCard handleClosePress={handleClosePress} />
+      </BottomSheet>
+    </GestureHandlerRootView>
+  );
+}

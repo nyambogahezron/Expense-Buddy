@@ -17,6 +17,7 @@ const  width  = Dimensions.get('window').width;
 const Profile = () => {
   return (
     <SafeAreaView className='flex-1 bg-gray-100'>
+      <StatusBar style='dark' backgroundColor='#f2f2f2' />
       <Stack.Screen
         options={{
           title: 'Profile',
@@ -44,7 +45,7 @@ const Profile = () => {
           headerRight: () => (
             <TouchableOpacity className='bg-white bg-opacity-50 rounded-lg p-1 py-2'>
               <View className='bg-gray-200 mr-2 p-2 rounded-lg'>
-                <Ionicons name='log-out-outline' size={22}  />
+                <Ionicons name='log-out-outline' size={22} />
               </View>
             </TouchableOpacity>
           ),
@@ -124,7 +125,6 @@ const Profile = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <StatusBar style='light' backgroundColor='#161622' />
     </SafeAreaView>
   );
 };
