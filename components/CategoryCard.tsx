@@ -17,6 +17,7 @@ export default function CategoryCard({
   handleOnPress,
   id,
   name,
+  icon,
   handleOpenPress,
 }: CategoryCardProps) {
   return (
@@ -32,7 +33,7 @@ export default function CategoryCard({
         className='flex-row items-center'
       >
         <View className='bg-white p-3 rounded-full mr-4'>
-          <Text>🛒</Text>
+          <Text>{icon ? icon : name.charAt(0)}</Text>
         </View>
         <View>
           <Text className='font-bold text-gray-800'>{name}</Text>

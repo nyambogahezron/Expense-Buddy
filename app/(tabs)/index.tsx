@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router, Stack } from 'expo-router';
@@ -15,7 +10,7 @@ import HomeTransactionCard from '@/components/TransactionsCard';
 import HomeHeader from '@/components/HomeHeader';
 import TransactionHeader from '@/components/TransactionHeader';
 import EmptyListCard from '@/components/EmptyListCard';
-
+import LoadMoreBtn from '@/components/LoadMoreBtn';
 
 export default function HomeScreen() {
   const transactionsData = transactions.slice(0, 8);
@@ -78,18 +73,10 @@ export default function HomeScreen() {
           ListFooterComponent={
             <View>
               {transactionsData && transactionsData.length > 0 && (
-                <TouchableOpacity
-                  onPress={() => router.push('/(tabs)/explore')}
-                >
-                  <View className='flex-row items-center justify-center bg-gray-200 h-12 w-full mr-3 rounded-full mt-4 mb-4'>
-                    <View className='flex-row items-center'>
-                      <Text className='text-[15px] font-semibold  text-gray-600'>
-                        View All
-                      </Text>
-                      <Ionicons name='chevron-forward' size={18} color='#000' />
-                    </View>
-                  </View>
-                </TouchableOpacity>
+                <LoadMoreBtn
+                  handleOnPress={() => router.push('/(tabs)/explore')}
+                  title='View All'
+                />
               )}
             </View>
           }

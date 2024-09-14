@@ -4,63 +4,63 @@ const TransactionCategories: TransactionCategoryProps[] = [
   {
     id: 1,
     name: 'Food',
-    icon: 'food',
+    icon: '🍜',
   },
   {
     id: 2,
     name: 'Transport',
-    icon: 'transport',
+    icon: '🚗',
   },
   {
     id: 3,
     name: 'Home',
-    icon: 'home',
+    icon: '🏠',
   },
   {
     id: 4,
     name: 'Health',
-    icon: 'health',
+    icon: '🚑',
   },
   {
     id: 5,
     name: 'Entertainment',
-    icon: 'entertainment',
+    icon: '🎬',
   },
   {
     id: 6,
     name: 'Shopping',
-    icon: 'shopping',
+    icon: '🛍️',
   },
   {
     id: 7,
-
     name: 'Online Services Subscription',
-    icon: 'other',
+    icon: '💻',
   },
   {
     id: 8,
     name: 'Salary',
-    icon: 'salary',
+    icon: '💰',
   },
   {
     id: 9,
     name: 'Business',
-    icon: 'business',
+    icon: '🏢',
   },
   {
     id: 10,
     name: 'Investment',
-    icon: 'investment',
+    icon: '📈',
   },
   {
     id: 11,
     name: 'Clothing',
-    icon: 'investment',
+    icon: '👔',
   },
   {
     id: 12,
     name: 'Other',
-    icon: 'other',
+    icon: '❓',
   },
 ];
+
 export default TransactionCategories;

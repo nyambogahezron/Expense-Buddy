@@ -3,7 +3,6 @@ type TransactionProps = {
   title: string;
   date: string;
   amount: string;
-  icon?: string;
   iconColor?:
     | '#FFA500'
     | '#FF4500'

@@ -55,7 +55,7 @@ export default function AddExpense() {
       >
         <View className='flex-row items-center'>
           <View className='bg-[#fff] p-3 rounded-full mr-4'>
-            <Text>🛒</Text>
+            <Text>{item.icon ? item.icon : item.name.charAt(0)}</Text>
           </View>
           <View>
             <Text className='font-bold text-gray-800'>{item.name}</Text>
@@ -309,7 +309,7 @@ export default function AddExpense() {
           data={TransactionCategories}
           keyExtractor={(i) => i.id.toString()}
           renderItem={CategoryCard}
-          contentContainerStyle={{ alignItems: 'center' }}
+          contentContainerStyle={{ alignItems: 'center', padding: 0 }}
           ListHeaderComponent={
             <View>
               <CustomButton

@@ -1,12 +1,5 @@
-import { useState,useEffect } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  Dimensions,
-  ActivityIndicator,
-} from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router, Stack } from 'expo-router';
@@ -16,8 +9,8 @@ import TransactionCard from '@/components/TransactionsCard';
 import TransactionHeader from '@/components/TransactionHeader';
 import { TransactionProps } from '@/Types';
 import EmptyListCard from '@/components/EmptyListCard';
+import LoadMoreBtn from '@/components/LoadMoreBtn';
 
-const width = Dimensions.get('window').width;
 type categoryType = 'All' | 'income' | 'expense';
 
 export default function HomeScreen() {
@@ -169,21 +162,7 @@ export default function HomeScreen() {
             </View>
           }
           ListFooterComponent={
-            <View className='flex-row items-center justify-center mb-5'>
-              <TouchableOpacity activeOpacity={0.6} onPress={handleLoadMore}>
-                <View
-                  className='flex-row items-center justify-center bg-gray-200 h-10 rounded-md mt-2 mb-4'
-                  style={{ width: width * 0.86 }}
-                >
-                  <View className='flex-row items-center gap-2'>
-                    <Text className='text-sm font-semibold  text-gray-600'>
-                      Load more
-                    </Text>
-                    {loading && <ActivityIndicator />}
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
+            <LoadMoreBtn handleOnPress={handleLoadMore} title='Load More' />
           }
           ListEmptyComponent={<EmptyListCard />}
         />
