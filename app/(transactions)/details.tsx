@@ -30,7 +30,7 @@ export default function TransactionDetails() {
 
   return (
     <GestureHandlerRootView className='bg-gray-100 flex flex-1 px-2'>
-      <StatusBar style='light' backgroundColor='#161622' />
+      <StatusBar backgroundColor='#ffffff' style='dark' />
       <Stack.Screen
         options={{
           title: 'Transaction Details',
@@ -74,7 +74,7 @@ export default function TransactionDetails() {
             }}
           >
             <Text className='text-lg font-bold text-white italic'>
-              {transaction.icon}
+              {transaction.category.icon}
             </Text>
           </View>
 

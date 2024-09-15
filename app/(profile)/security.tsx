@@ -1,16 +1,16 @@
 import { View, Text } from 'react-native';
 import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StatusBar } from 'react-native';
 import { Stack } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { Feather, Ionicons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
 
 export default function Settings() {
   return (
     <GestureHandlerRootView className='bg-gray-100 flex flex-1 px-2'>
-      <StatusBar backgroundColor='#fff' barStyle='dark-content' />
+      <StatusBar backgroundColor='#ffffff' style='dark' />
       <Stack.Screen
         options={{
           title: 'Account Info',

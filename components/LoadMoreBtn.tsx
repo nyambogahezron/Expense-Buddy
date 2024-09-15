@@ -11,7 +11,7 @@ export default function LoadMoreBtn({
   title,
 }: LoadMoreBtnProps) {
   return (
-    <TouchableOpacity onPress={handleOnPress}>
+    <TouchableOpacity activeOpacity={0.7} onPress={handleOnPress}>
       <View className='flex-row items-center justify-center bg-gray-200 h-12 w-full mr-3 rounded-lg mt-4 mb-4'>
         <View className='flex-row items-center justify-between w-full px-2'>
           <Text className='text-[15px] font-semibold  text-gray-600 ml-2'>

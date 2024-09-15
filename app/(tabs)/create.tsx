@@ -113,7 +113,7 @@ export default function AddExpense() {
 
   return (
     <GestureHandlerRootView className='flex-1 bg-white'>
-      <StatusBar style='dark' backgroundColor='#f2f2f2' />
+      <StatusBar style='dark' backgroundColor='#ffffff' />
 
       <Stack.Screen
         options={{
@@ -152,7 +152,7 @@ export default function AddExpense() {
           ),
         }}
       />
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View className='mb-5'>
           {/* transaction form  */}
 

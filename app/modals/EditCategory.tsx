@@ -18,7 +18,7 @@ export default function EditCategory() {
   };
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar style='light' backgroundColor='#161622' />
+      <StatusBar backgroundColor='#ffffff' style='dark' />
       <SafeAreaView className='flex-1 bg-gray-100 w-full h-full justify-center'>
         <Stack.Screen
           options={{

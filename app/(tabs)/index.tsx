@@ -61,15 +61,15 @@ export default function HomeScreen() {
           data={transactionsData}
           renderItem={({ item }) => <HomeTransactionCard item={item} />}
           keyExtractor={(item) => item.id.toString()}
-          ListHeaderComponent={
-            <View>
-              {/* Card */}
-              <HomeHeader />
+          // ListHeaderComponent={
+          //   <View>
+          //     {/* Card */}
+          //     {/* <HomeHeader /> */}
 
-              {/* Transactions header */}
-              <TransactionHeader viewMore={true} />
-            </View>
-          }
+          //     {/* Transactions header */}
+          //     <TransactionHeader viewMore={true} />
+          //   </View>
+          // }
           ListFooterComponent={
             <View>
               {transactionsData && transactionsData.length > 0 && (

@@ -1,11 +1,11 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
-
+import React, { useEffect } from 'react';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { View } from 'react-native';
+import { authenticateAsync } from 'expo-local-authentication';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();

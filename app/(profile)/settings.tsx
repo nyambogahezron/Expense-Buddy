@@ -1,16 +1,16 @@
 import { View, Text, ScrollView } from 'react-native';
 import React, { useRef } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StatusBar } from 'react-native';
 import { Stack } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from '@/hooks/useThemeProvider';
+import { useTheme } from '@/context/ThemeProvider';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import BottomSheet from '@gorhom/bottom-sheet';
+import { StatusBar } from 'expo-status-bar';
 
 export default function Settings() {
   const { theme, toggleTheme } = useTheme();
@@ -19,8 +19,9 @@ export default function Settings() {
 
   return (
     <SafeAreaView className='bg-gray-100 flex flex-1 px-2'>
+      <StatusBar backgroundColor='#ffffff' style='dark' />
       <GestureHandlerRootView>
-        <StatusBar backgroundColor='#fff' barStyle='dark-content' />
+        <StatusBar backgroundColor='#ffffff' style='dark' />
         <Stack.Screen
           options={{
             title: 'Settings',

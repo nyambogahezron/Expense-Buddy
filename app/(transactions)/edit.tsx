@@ -42,7 +42,7 @@ export default function EditTransaction() {
 
   return (
     <GestureHandlerRootView className='bg-gray-100 flex flex-1 px-2'>
-      <StatusBar style='light' backgroundColor='#161622' />
+      <StatusBar backgroundColor='#ffffff' style='dark' />
       <Stack.Screen
         options={{
           title: 'Edit Transaction',
@@ -86,7 +86,7 @@ export default function EditTransaction() {
             }}
           >
             <Text className='text-lg font-bold text-white italic'>
-              {initialTransaction.icon}
+              {initialTransaction.category.icon}
             </Text>
           </View>
 
@@ -161,7 +161,7 @@ export default function EditTransaction() {
           <View className='bg-white p-4 rounded-lg text-black'>
             <TextInput
               value={typeF}
-              onChangeText={setType}
+              onChangeText={() => setType.toString()}
               className='text-[14.3px] capitalize font-pregular'
             />
           </View>
@@ -182,7 +182,7 @@ export default function EditTransaction() {
 
         {/* Save btn  */}
         <TouchableOpacity
-        activeOpacity={0.5}
+          activeOpacity={0.5}
           onPress={handleSave}
           style={{ width: width * 0.9 }}
           className='flex items-center justify-center bg-orange-600 p-3 rounded-full '

@@ -14,8 +14,8 @@ import { Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 
 const { width } = Dimensions.get('window');
 
@@ -34,8 +34,8 @@ export default function AccountInfo() {
 
   return (
     <SafeAreaView className='bg-gray-100 flex flex-1 px-2'>
+      <StatusBar backgroundColor='#ffffff' style='dark' />
       <GestureHandlerRootView>
-        <StatusBar style='light' backgroundColor='transparent' />
         <Stack.Screen
           options={{
             title: 'Account Info',

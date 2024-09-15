@@ -24,7 +24,7 @@ export default function CategoryCard({
     <TouchableOpacity
       activeOpacity={0.7}
       key={id}
-      className={`flex-row items-center justify-between bg-gray-100 p-4 rounded-lg mb-4 
+      className={`flex-row items-center justify-between bg-gray-100 p-4 rounded-lg mb-1 
                 }`}
     >
       <TouchableOpacity

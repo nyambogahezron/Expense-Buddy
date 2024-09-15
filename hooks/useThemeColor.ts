@@ -1,5 +1,5 @@
 import { Colors } from '@/constants/Colors';
-import { useTheme } from './useThemeProvider';
+import { useTheme } from '../context/ThemeProvider';
 
 type Theme = 'light' | 'dark';
 

@@ -17,7 +17,7 @@ const  width  = Dimensions.get('window').width;
 const Profile = () => {
   return (
     <SafeAreaView className='flex-1 bg-gray-100'>
-      <StatusBar style='dark' backgroundColor='#f2f2f2' />
+      <StatusBar style='dark' backgroundColor='#ffffff' />
       <Stack.Screen
         options={{
           title: 'Profile',

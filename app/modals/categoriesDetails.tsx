@@ -27,7 +27,7 @@ export default function CategoriesDetails() {
 
   return (
     <SafeAreaView className='flex-1 bg-white'>
-      <StatusBar style='light' backgroundColor='#161622' />
+      <StatusBar backgroundColor='#ffffff' style='dark' />
       <Stack.Screen
         options={{
           title: 'Category Details',

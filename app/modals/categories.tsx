@@ -18,7 +18,7 @@ const Statistics = () => {
 
   return (
     <GestureHandlerRootView className='flex-1 bg-white'>
-      <StatusBar style='light' backgroundColor='#161622' />
+      <StatusBar backgroundColor='#ffffff' style='dark' />
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}

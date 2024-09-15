@@ -13,6 +13,7 @@ import CategoryCard from '@/components/CategoryCard';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import CategoryActionCard from '@/components/CategoryActionCard';
+import LoadMoreBtn from '@/components/LoadMoreBtn';
 
 const width = Dimensions.get('window').width;
 
@@ -45,7 +46,7 @@ export default function Statistics() {
 
   return (
     <GestureHandlerRootView className='flex-1 bg-white'>
-      <StatusBar style='dark' backgroundColor='#f2f2f2' />
+      <StatusBar style='dark' backgroundColor='#ffffff' />
 
       <ScrollView
         showsHorizontalScrollIndicator={false}
@@ -175,7 +176,7 @@ export default function Statistics() {
               return (
                 <View
                   key={id}
-                  className={`flex-row justify-between bg-red-100 p-4 rounded-lg mb-4 ${
+                  className={`flex-row justify-between bg-red-100 p-4 rounded-lg mb-1 ${
                     type === 'expense' ? 'bg-red-50' : 'bg-green-50'
                   }`}
                 >
@@ -198,6 +199,11 @@ export default function Statistics() {
                 </View>
               );
             })}
+
+            <LoadMoreBtn
+              title='View All'
+              handleOnPress={() => router.push('/(tabs)/explore')}
+            />
           </View>
 
           <View className='my-3'>
@@ -248,23 +254,10 @@ export default function Statistics() {
             );
           })}
 
-          <View className='items-center'>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              onPress={() => router.push('/modals/categories')}
-            >
-              <View
-                className='flex-row items-center justify-center bg-gray-200 h-10 rounded-md mt-2 mb-4'
-                style={{ width: width * 0.86 }}
-              >
-                <View className='flex-row items-center gap-2'>
-                  <Text className='text-sm font-semibold  text-gray-600'>
-                    View All
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          </View>
+          <LoadMoreBtn
+            title='View All'
+            handleOnPress={() => router.push('/modals/categories')}
+          />
         </View>
       </ScrollView>
 

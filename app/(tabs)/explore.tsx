@@ -53,7 +53,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView className='flex-1 bg-gray-100 px-2'>
-      <StatusBar style='dark' backgroundColor='#f2f2f2' />
+      <StatusBar style='dark' backgroundColor='#ffffff' />
       <Stack.Screen
         options={{
           title: 'Explore',
