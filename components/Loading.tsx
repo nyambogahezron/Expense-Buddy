@@ -1,11 +1,9 @@
-import { View } from 'react-native';
-import React from 'react';
-import * as Progress from 'react-native-progress';
+import { ActivityIndicator, View } from 'react-native';
 
 export default function Loading() {
   return (
     <View className='flex flex-1 items-center justify-center'>
-      <Progress.CircleSnail size={80} color={['red', 'green', 'blue']} />
+      <ActivityIndicator size='large' color='#00ff00' />
     </View>
   );
 }

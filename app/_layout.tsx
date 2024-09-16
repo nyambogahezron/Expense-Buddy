@@ -6,11 +6,13 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { ThemeProvider } from '@/context/ThemeProvider';
+import GlobalProvider, { useGlobalContext } from '@/context/GlobalProvider';
+import LockScreen from '../components/lockScreen';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+function RootLayoutContent() {
   const colorScheme = useColorScheme();
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -24,18 +26,27 @@ export default function RootLayout() {
     'Poppins-SemiBold': require('../assets/fonts/Poppins-SemiBold.ttf'),
     'Poppins-Thin': require('../assets/fonts/Poppins-Thin.ttf'),
   });
-  // Check if fonts are loaded
+
+  const { isUnlocked, authenticate } = useGlobalContext();
 
   useEffect(() => {
     if (error) throw error;
-    if (loaded) SplashScreen.hideAsync();
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
   }, [loaded, error]);
+
+  useEffect(() => {
+    if (!isUnlocked) {
+      authenticate();
+    }
+  }, [isUnlocked]);
 
   if (!loaded) return null;
 
-  useEffect(() => {
-    console.log('auth');
-  }, []);
+  if (!isUnlocked) {
+    return <LockScreen />;
+  }
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -52,5 +63,13 @@ export default function RootLayout() {
         <Stack.Screen name='+not-found' />
       </Stack>
     </ThemeProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <GlobalProvider>
+      <RootLayoutContent />
+    </GlobalProvider>
   );
 }

@@ -13,13 +13,22 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Allow $(PRODUCT_NAME) to use Face ID to unlock Secret Info."
+      },
+      "bundleIdentifier": "com.hezron.expensebuddy"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
+      ],
+      "package": "com.hezron.expensebuddy"
     },
     "web": {
       "bundler": "metro",
@@ -31,12 +40,21 @@
       [
         "expo-local-authentication",
         {
-          "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID to unlock Secret Info."
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID to unlock Application."
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "4bd05ca0-6192-4078-8a9e-7dbc861b5429"
+      }
+    },
+    "owner": "hezron"
   }
 }
