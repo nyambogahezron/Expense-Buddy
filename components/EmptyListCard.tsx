@@ -1,17 +1,25 @@
 import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import React from 'react';
 import { router } from 'expo-router';
+import { ThemedText, ThemedView } from '@/components/Themed';
 
 const width = Dimensions.get('window').width;
 type title = { title?: string };
 
 export default function EmptyListCard({ title = 'No Transactions' }: title) {
   return (
-    <View className='flex justify-center items-center mt-10'>
+    <ThemedView className='flex justify-center items-center mt-10'>
       <View className='my-8'>
-        <Text className='text-4xl font-pbold text-yellow-500'>Oops<Text className='text-4xl text-red-600'>!</Text></Text>
+        <Text className='text-4xl font-pbold text-yellow-500'>
+          Oops<Text className='text-4xl text-red-600'>!</Text>
+        </Text>
       </View>
-      <Text className='text-gray-500 font-bold text-xl'>{title}</Text>
+      <ThemedText
+        lightColor='#6b7280'
+        className='text-gray-500 font-bold text-xl'
+      >
+        {title}
+      </ThemedText>
 
       <TouchableOpacity
         activeOpacity={0.6}
@@ -22,12 +30,12 @@ export default function EmptyListCard({ title = 'No Transactions' }: title) {
           style={{ width: width * 0.89 }}
         >
           <View className='flex-row items-center'>
-            <Text className='text-[15px] font-semibold  text-white'>
+            <ThemedText className='text-[15px] font-semibold  text-white'>
               Add Transactions
-            </Text>
+            </ThemedText>
           </View>
         </View>
       </TouchableOpacity>
-    </View>
+    </ThemedView>
   );
 }

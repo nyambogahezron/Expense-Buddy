@@ -7,7 +7,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { ThemeProvider } from '@/context/ThemeProvider';
 import GlobalProvider, { useGlobalContext } from '@/context/GlobalProvider';
-import LockScreen from '../components/lockScreen';
+import LockScreen from '../components/LockScreen';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -50,18 +50,23 @@ function RootLayoutContent() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name='index' options={{ headerShown: false }} />
-        <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-        <Stack.Screen name='(auth)' options={{ headerShown: false }} />
-        <Stack.Screen name='(profile)' options={{ headerShown: false }} />
-        <Stack.Screen
-          name='modals'
-          options={{ headerShown: false, presentation: 'modal' }}
-        />
-        <Stack.Screen name='(transactions)' options={{ headerShown: false }} />
-        <Stack.Screen name='+not-found' />
-      </Stack>
+      <GlobalProvider>
+        <Stack>
+          <Stack.Screen name='index' options={{ headerShown: false }} />
+          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+          <Stack.Screen name='(auth)' options={{ headerShown: false }} />
+          <Stack.Screen name='(profile)' options={{ headerShown: false }} />
+          <Stack.Screen
+            name='modals'
+            options={{ headerShown: false, presentation: 'modal' }}
+          />
+          <Stack.Screen
+            name='(transactions)'
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name='+not-found' />
+        </Stack>
+      </GlobalProvider>
     </ThemeProvider>
   );
 }

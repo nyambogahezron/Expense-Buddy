@@ -1,45 +1,61 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, TouchableOpacity, FlatList, useColorScheme } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { HelloWave } from '@/components/HelloWave';
 import { transactions } from '@/Data';
 import HomeTransactionCard from '@/components/TransactionsCard';
-import HomeHeader from '@/components/HomeHeader';
-import TransactionHeader from '@/components/TransactionHeader';
 import EmptyListCard from '@/components/EmptyListCard';
 import LoadMoreBtn from '@/components/LoadMoreBtn';
 
+import {
+  ThemedText,
+  ThemedSafeAreaView,
+  ThemedView,
+} from '@/components/Themed';
+import { Colors } from '@/constants/Colors';
+import { useTheme } from '@/context/ThemeProvider';
+import TransactionHeader from '@/components/TransactionHeader';
+
 export default function HomeScreen() {
   const transactionsData = transactions.slice(0, 8);
+  const colorScheme = useColorScheme();
+  const { theme } = useTheme();
+
   return (
-    <SafeAreaView className='flex-1 bg-gray-100 px-2'>
-      <StatusBar style='dark' backgroundColor='#f2f2f2' />
+    <ThemedSafeAreaView className='flex-1 px-2'>
+      <StatusBar
+        style={theme === 'light' ? 'dark' : 'light'}
+        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+      />
       {/* Header */}
       <Stack.Screen
         options={{
           headerShown: true,
           headerShadowVisible: false,
           headerTitle: '',
-          headerStyle: { backgroundColor: '#f2f2f2' },
+          headerStyle: {
+            backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
+          },
           headerLeft: () => (
-            <View className='ml-2 p-2'>
+            <ThemedView className='ml-2 p-2'>
               <View className='flex mb-1 mt-2'>
                 <View className='flex flex-row'>
-                  <Text style={{ fontSize: 15 }}>Welcome Back!</Text>
+                  <ThemedText style={{ fontSize: 15 }}>
+                    Welcome Back!
+                  </ThemedText>
                   <HelloWave />
                 </View>
-                <Text className='text-lg font-bold'>John Doe</Text>
+                <ThemedText className='text-lg font-bold'>John Doe</ThemedText>
               </View>
-            </View>
+            </ThemedView>
           ),
           headerRight: () => (
             <TouchableOpacity
               onPress={() => router.push('/profile')}
               style={{
-                backgroundColor: '#fff',
+                backgroundColor: Colors[colorScheme ?? 'light'].text,
                 padding: 8,
                 borderRadius: 50,
                 shadowColor: '#171717',
@@ -54,22 +70,14 @@ export default function HomeScreen() {
           ),
         }}
       />
-      <View className='-mt-7'>
+      <View className='-mt-6'>
         <FlatList
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           data={transactionsData}
-          renderItem={({ item }) => <HomeTransactionCard item={item} />}
           keyExtractor={(item) => item.id.toString()}
-          // ListHeaderComponent={
-          //   <View>
-          //     {/* Card */}
-          //     {/* <HomeHeader /> */}
-
-          //     {/* Transactions header */}
-          //     <TransactionHeader viewMore={true} />
-          //   </View>
-          // }
+          renderItem={({ item }) => <HomeTransactionCard item={item} />}
+          ListHeaderComponent={<TransactionHeader viewMore={true} />}
           ListFooterComponent={
             <View>
               {transactionsData && transactionsData.length > 0 && (
@@ -83,6 +91,6 @@ export default function HomeScreen() {
           ListEmptyComponent={<EmptyListCard />}
         />
       </View>
-    </SafeAreaView>
+    </ThemedSafeAreaView>
   );
 }

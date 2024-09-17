@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { StatusBar } from 'expo-status-bar';
 import { router, Stack } from 'expo-router';
 import { Feather, Ionicons } from '@expo/vector-icons';
@@ -10,6 +10,8 @@ import TransactionHeader from '@/components/TransactionHeader';
 import { TransactionProps } from '@/Types';
 import EmptyListCard from '@/components/EmptyListCard';
 import LoadMoreBtn from '@/components/LoadMoreBtn';
+import { useTheme } from '@/context/ThemeProvider';
+import { ThemedSafeAreaView, ThemedView } from '@/components/Themed';
 
 type categoryType = 'All' | 'income' | 'expense';
 
@@ -18,6 +20,7 @@ export default function HomeScreen() {
   const [data, setData] = useState<TransactionProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [sectionItems, setSectionItems] = useState(10);
+  const { theme } = useTheme();
 
   const transactionsData: TransactionProps[] = transactions.slice(
     0,
@@ -52,37 +55,42 @@ export default function HomeScreen() {
   }, [sectionItems, category]);
 
   return (
-    <SafeAreaView className='flex-1 bg-gray-100 px-2'>
-      <StatusBar style='dark' backgroundColor='#ffffff' />
+    <ThemedSafeAreaView className='flex-1 px-2'>
+      <StatusBar
+        style={theme === 'light' ? 'dark' : 'light'}
+        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+      />
       <Stack.Screen
         options={{
           title: 'Explore',
           headerShown: true,
           headerTitleAlign: 'center',
-          statusBarStyle: 'dark',
+          headerTitleStyle: {
+            color: theme === 'light' ? '#333' : '#fff',
+            fontSize: 20,
+            fontWeight: 'bold',
+          },
           headerStyle: {
-            backgroundColor: '#fff',
+            backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
           },
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => router.back()}
-              className='bg-white bg-opacity-50 rounded-lg p-1 py-2 '
+              className={`bg-opacity-50 rounded-lg p-1 py-2 ${
+                theme === 'light' ? 'bg-white' : 'bg-[#070B11]'
+              }`}
             >
               <View className='bg-gray-200 ml-2 p-2 rounded-lg'>
                 <Feather name='arrow-left' size={22} />
               </View>
             </TouchableOpacity>
           ),
-          headerTitleStyle: {
-            color: '#333',
-            fontSize: 20,
-            fontWeight: 'bold',
-          },
+
           headerRight: () => (
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => router.push('/(profile)/settings')}
-              className='bg-white bg-opacity-50 rounded-lg p-1 py-2'
+              className={` bg-opacity-50 rounded-lg p-1 py-2 {theme === 'light' ? 'bg-white' : 'bg-[#070B11]'}`}
             >
               <View className='bg-gray-200 mr-2 p-2 rounded-lg'>
                 <Ionicons name='settings-outline' size={22} />
@@ -91,7 +99,7 @@ export default function HomeScreen() {
           ),
         }}
       />
-      <View>
+      <ThemedView>
         {/* transactions list  */}
         <FlatList
           showsHorizontalScrollIndicator={false}
@@ -104,9 +112,10 @@ export default function HomeScreen() {
           keyExtractor={(item) => item.id.toString()}
           ListHeaderComponentStyle={{ marginTop: 1 }}
           ListHeaderComponent={
-            <View>
-              <View className='flex-row justify-center gap-0'>
+            <ThemedView>
+              <ThemedView className='flex-row justify-center gap-0'>
                 <TouchableOpacity
+                  activeOpacity={0.7}
                   onPress={() => {
                     setCategory('All');
                     filterData('All');
@@ -124,6 +133,7 @@ export default function HomeScreen() {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                  activeOpacity={0.7}
                   onPress={() => {
                     setCategory('income');
                     filterData('income');
@@ -141,6 +151,7 @@ export default function HomeScreen() {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                  activeOpacity={0.7}
                   onPress={() => {
                     setCategory('expense');
                     filterData('expense');
@@ -157,16 +168,16 @@ export default function HomeScreen() {
                     Expenses
                   </Text>
                 </TouchableOpacity>
-              </View>
+              </ThemedView>
               <TransactionHeader viewMore={false} />
-            </View>
+            </ThemedView>
           }
           ListFooterComponent={
             <LoadMoreBtn handleOnPress={handleLoadMore} title='Load More' />
           }
           ListEmptyComponent={<EmptyListCard />}
         />
-      </View>
-    </SafeAreaView>
+      </ThemedView>
+    </ThemedSafeAreaView>
   );
 }

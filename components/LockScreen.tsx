@@ -1,7 +1,11 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+  Feather,
+  FontAwesome5,
+  MaterialCommunityIcons,
+} from '@expo/vector-icons';
 import { useGlobalContext } from '@/context/GlobalProvider';
 
 import Animated, {
@@ -43,7 +47,6 @@ export default function LockScreen() {
   }, [code]);
 
   const onNumberPress = (number: number) => {
-    // impactAsync(ImpactFeedbackStyle.Light);
     setCode([...code, number]);
   };
 
@@ -53,15 +56,19 @@ export default function LockScreen() {
   return (
     <SafeAreaProvider className='flex flex-1 bg-white'>
       <View>
-        <Text style={styles.greeting}>Welcome Back John Doe</Text>
+        <View className='flex items-center justify-center w-full mx-auto mt-12'>
+          <Feather name='lock' size={35} color='black' />
+          <Text className='flex items-center  font-bold mt-2 text-xl'>
+            Unlock Application
+          </Text>
+        </View>
         <Animated.View style={[styles.codeView, animationStyles]}>
           {codeLength.map((_, index) => (
             <View
+              className={`w-7 h-7 rounded-full border-4 border-gray-500 bg-white ${
+                code[index] ? 'bg-blue-600 border-green-600' : 'bg-white'
+              }`}
               key={index}
-              style={{
-                ...styles.codeEmpty,
-                backgroundColor: code[index] ? 'blue' : 'lightgray',
-              }}
             />
           ))}
         </Animated.View>
@@ -108,11 +115,12 @@ export default function LockScreen() {
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
           >
             <TouchableOpacity
+              className='p-3 bg-gray-100 rounded-full w-14 h-14 items-center justify-center'
               onPress={() => {
                 authenticate();
               }}
             >
-              <FontAwesome5 name='fingerprint' size={30} color='gray' />
+              <FontAwesome5 name='fingerprint' size={32} color='gray' />
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => onNumberPress(0)}>
@@ -120,8 +128,11 @@ export default function LockScreen() {
             </TouchableOpacity>
 
             <View style={{ minWidth: 30 }}>
-              {code.length === 0 && (
-                <TouchableOpacity onPress={() => numberBackspace()}>
+              {code.length > 0 && (
+                <TouchableOpacity
+                  className='p-3 bg-gray-100 rounded-full w-14 h-14 items-center justify-center'
+                  onPress={() => numberBackspace()}
+                >
                   <MaterialCommunityIcons
                     name='backspace-outline'
                     size={26}
@@ -141,30 +152,26 @@ export default function LockScreen() {
 }
 
 const styles = StyleSheet.create({
-  greeting: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: 80,
-    alignSelf: 'center',
-  },
   codeView: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 20,
-    marginVertical: 100,
-  },
-  codeEmpty: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    gap: 15,
+    marginVertical: 90,
   },
   numberView: {
-    marginHorizontal: 80,
-    gap: 60,
+    marginHorizontal: 50,
+    gap: 40,
+    marginTop: -40,
   },
   number: {
     fontSize: 32,
     fontWeight: 'bold',
+    backgroundColor: '#f2f2f2',
+    padding: 10,
+    borderRadius: 50,
+    width: 60,
+    height: 60,
+    textAlign: 'center',
   },
 });

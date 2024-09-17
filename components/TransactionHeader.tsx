@@ -2,23 +2,30 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { ThemedText } from './Themed';
+import { useTheme } from '@/context/ThemeProvider';
 
 export default function TransactionHeader({ viewMore }: { viewMore: boolean }) {
+  const { theme } = useTheme();
   return (
     <View className='flex-row justify-between mt-4 mb-4'>
-      <Text className='text-[16px] font-pbold ml-2 text-gray-800'>
+      <ThemedText className='text-[16px] font-pbold ml-2 text-gray-800'>
         Transactions
-      </Text>
+      </ThemedText>
       {viewMore && (
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => router.push('/(tabs)/explore')}
         >
           <View className='flex-row items-center mr-2'>
-            <Text className='text-[15px] font-semibold  text-gray-600'>
+            <ThemedText className='text-[15px] font-semibold '>
               View All
-            </Text>
-            <Ionicons name='chevron-forward' size={18} color='#000' />
+            </ThemedText>
+            <Ionicons
+              name='chevron-forward'
+              size={18}
+              color={theme === 'light' ? '#000' : '#fff'}
+            />
           </View>
         </TouchableOpacity>
       )}

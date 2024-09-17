@@ -5,12 +5,11 @@ import { Stack } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/context/ThemeProvider';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { StatusBar } from 'expo-status-bar';
+import { ThemedSafeAreaView, ThemedText, ThemedView } from '@/components/Themed';
+import OptionContainer from '@/components/OptionContainer';
 
 export default function Settings() {
   const { theme, toggleTheme } = useTheme();
@@ -18,23 +17,27 @@ export default function Settings() {
   const handleOpenPress = () => bottomSheetRef.current?.expand();
 
   return (
-    <SafeAreaView className='bg-gray-100 flex flex-1 px-2'>
-      <StatusBar backgroundColor='#ffffff' style='dark' />
+    <ThemedSafeAreaView className='flex-1 '>
+      <StatusBar
+        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+        style={theme === 'light' ? 'dark' : 'light'}
+      />
       <GestureHandlerRootView>
-        <StatusBar backgroundColor='#ffffff' style='dark' />
         <Stack.Screen
           options={{
             title: 'Settings',
             headerShown: true,
             headerTitleAlign: 'center',
-            statusBarStyle: 'light',
             headerStyle: {
-              backgroundColor: '#fff',
+              backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
             },
             headerLeft: () => (
               <TouchableOpacity
                 onPress={() => router.back()}
-                className='bg-white bg-opacity-50 rounded-lg p-1 py-2 '
+                style={{
+                  backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
+                }}
+                className='bg-opacity-50 rounded-lg p-1 py-2 '
               >
                 <View className='bg-gray-200 ml-2 p-2 rounded-lg'>
                   <Feather name='arrow-left' size={22} />
@@ -42,7 +45,7 @@ export default function Settings() {
               </TouchableOpacity>
             ),
             headerTitleStyle: {
-              color: '#333',
+              color: theme === 'light' ? '#333' : '#fff',
               fontSize: 20,
               fontWeight: 'bold',
             },
@@ -52,49 +55,57 @@ export default function Settings() {
         <ScrollView
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-          className='flex flex-1'
+          className='flex flex-1 px-3'
         >
-          <View className='mt-5'>
+          <ThemedView>
+            <OptionContainer
+              title='Theme'
+              icon='color-palette-outline'
+              handleOnPress={() => handleOpenPress()}
+            />
             <TouchableOpacity
               activeOpacity={0.7}
-              className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
-              onPress={handleOpenPress}
-            >
-              <Ionicons
-                name='color-palette-outline'
-                size={22}
-                color='#6B7280'
-              />
-              <Text className='ml-4 text-gray-800'>Theme</Text>
-              <View className='absolute flex right-2'>
-                <Ionicons name='chevron-forward' size={22} color='#6B7280' />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
+              className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
+                theme === 'light' ? 'bg-white' : 'bg-[#1c1c1e]'
+              }`}
               onPress={() => router.push('/(profile)/settings')}
             >
               <Feather name='lock' size={22} color='#6B7280' />
-              <Text className='ml-4 text-gray-800'>Lock Screen</Text>
+              <Text
+                className={`ml-4 ${
+                  theme === 'light' ? 'text-gray-800' : 'text-gray-200'
+                }`}
+              >
+                Lock Screen
+              </Text>
               <View className='absolute flex right-2'>
                 <Ionicons name='chevron-forward' size={22} color='#6B7280' />
               </View>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.7}
-              className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
+              className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
+                theme === 'light' ? 'bg-white' : 'bg-[#1c1c1e]'
+              }`}
               onPress={() => router.push('/(profile)/settings')}
             >
               <MaterialIcons name='password' size={22} color='#6B7280' />
-              <Text className='ml-4 text-gray-800'>Change Password</Text>
+              <Text
+                className={`ml-4 ${
+                  theme === 'light' ? 'text-gray-800' : 'text-gray-200'
+                }`}
+              >
+                Change Password
+              </Text>
               <View className='absolute flex right-2'>
                 <Ionicons name='chevron-forward' size={22} color='#6B7280' />
               </View>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.7}
-              className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
+              className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
+                theme === 'light' ? 'bg-white' : 'bg-[#1c1c1e]'
+              }`}
               onPress={() => router.push('/(profile)/settings')}
             >
               <MaterialIcons
@@ -102,21 +113,41 @@ export default function Settings() {
                 size={22}
                 color='#6B7280'
               />
-              <Text className='ml-4 text-gray-800'>Currency</Text>
+              <Text
+                className={`ml-4 ${
+                  theme === 'light' ? 'text-gray-800' : 'text-gray-200'
+                }`}
+              >
+                Currency
+              </Text>
               <View className='absolute flex right-2'>
                 <Ionicons name='chevron-forward' size={22} color='#6B7280' />
               </View>
             </TouchableOpacity>
 
             {/* danger zone  */}
-            <View className='relative border border-red-100 p-2 bg-red-50 rounded-lg mt-8'>
-              <Text className='top-0 text-red-700 font-bold -ml-2 -mt-8 mb-4 bg-white w-28 p-3 rounded-sm'>
+            <View
+              className={`relative border p-2 rounded-lg mt-8 ${
+                theme === 'light'
+                  ? 'border-red-100 bg-red-50'
+                  : 'border-red-700 '
+              }`}
+            >
+              <Text
+                className={`top-0 font-bold -ml-2 -mt-8 mb-4 w-28 p-3 rounded-sm ${
+                  theme === 'light'
+                    ? 'text-red-700 bg-white'
+                    : 'text-red-200 bg-[#1c1c1e]'
+                }`}
+              >
                 Danger Zone
               </Text>
 
               <TouchableOpacity
                 activeOpacity={0.7}
-                className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
+                className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
+                  theme === 'light' ? 'bg-white' : 'bg-[#1c1c1e]'
+                }`}
                 onPress={() => router.push('/(tabs)/')}
               >
                 <Ionicons name='log-out-outline' size={22} color='#EF4444' />
@@ -124,7 +155,9 @@ export default function Settings() {
               </TouchableOpacity>
               <TouchableOpacity
                 activeOpacity={0.7}
-                className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
+                className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
+                  theme === 'light' ? 'bg-white' : 'bg-[#1c1c1e]'
+                }`}
                 onPress={() => router.push('/(profile)/settings')}
               >
                 <MaterialIcons
@@ -140,21 +173,7 @@ export default function Settings() {
                 </View>
               </TouchableOpacity>
             </View>
-          </View>
-          <ThemedView className='p-5'>
-            <ThemedText lightColor='red' darkColor='blue'>
-              Hello
-            </ThemedText>
           </ThemedView>
-
-          <TouchableOpacity
-            activeOpacity={0.7}
-            className='flex-row items-center bg-white rounded-lg px-4 py-3 mb-4'
-            onPress={toggleTheme}
-          >
-            <Ionicons name='log-out-outline' size={22} color='#EF4444' />
-            <Text className='ml-4 text-red-600 font-bold'>Theme</Text>
-          </TouchableOpacity>
         </ScrollView>
 
         {/* theme toggle bottom sheet  */}
@@ -170,41 +189,47 @@ export default function Settings() {
             <Text className='text-white text-lg font-bold'>Choose Theme</Text>
             <View className='flex items-center justify-between mt-4'>
               <TouchableOpacity
+                style={{
+                  backgroundColor: theme === 'light' ? '#f2f2f2' : '#1c1c1e',
+                }}
                 activeOpacity={0.7}
-                className={`bg-gray-100 rounded-lg p-4 w-full mt-4 items-center  ${
+                className={`rounded-lg p-4 w-full mt-4 items-center  ${
                   theme === 'light' ? 'border-2 border-green-700' : ''
                 }`}
                 onPress={() => toggleTheme()}
               >
-                <View className='fex flex-row gap-3 mr-6 items-center'>
+                <View className='flex w-full flex-row justify-between'>
+                  <ThemedText className=' text-lg font-bold'>Light</ThemedText>
                   <View
                     className={`w-6 h-6 rounded-full bg-white border-2 border-neutral-600 ${
                       theme === 'light' ? 'bg-green-700' : 'bg-white'
                     }`}
                   ></View>
-                  <Text className='text-gray-800 text-lg font-bold'>Light</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
+               style={{
+                  backgroundColor: theme === 'light' ? '#f2f2f2' : '#1c1c1e',
+                }}
                 activeOpacity={0.7}
-                className={`bg-gray-100 rounded-lg p-4 w-full mt-4 items-center  ${
+                className={`rounded-lg p-4 w-full mt-4 items-center  ${
                   theme === 'dark' ? 'border-2 border-green-700' : ''
                 }`}
                 onPress={() => toggleTheme()}
               >
-                <View className='fex flex-row gap-3 mr-6 items-center'>
+                <View className='flex w-full flex-row justify-between'>
+                  <ThemedText className='text-lg font-bold'>Dark</ThemedText>
                   <View
                     className={`w-6 h-6 rounded-full bg-white border-2 border-neutral-600 ${
                       theme === 'dark' ? 'bg-green-700' : 'bg-white'
                     }`}
                   ></View>
-                  <Text className='text-gray-800 text-lg font-bold'>Dark</Text>
                 </View>
               </TouchableOpacity>
             </View>
           </View>
         </BottomSheet>
       </GestureHandlerRootView>
-    </SafeAreaView>
+    </ThemedSafeAreaView>
   );
 }

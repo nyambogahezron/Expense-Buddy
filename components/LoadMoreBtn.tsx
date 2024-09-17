@@ -1,6 +1,8 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { ThemedText, ThemedView } from './Themed';
+import { useTheme } from '@/context/ThemeProvider';
 type LoadMoreBtnProps = {
   handleOnPress: () => void;
   title: string;
@@ -10,16 +12,21 @@ export default function LoadMoreBtn({
   handleOnPress,
   title,
 }: LoadMoreBtnProps) {
+  const { theme } = useTheme();
   return (
     <TouchableOpacity activeOpacity={0.7} onPress={handleOnPress}>
-      <View className='flex-row items-center justify-center bg-gray-200 h-12 w-full mr-3 rounded-lg mt-4 mb-4'>
+      <ThemedView className='flex-row items-center justify-center h-12 w-full mr-3 rounded-lg border-red-50 border-2 mt-4 mb-4 px-2'>
         <View className='flex-row items-center justify-between w-full px-2'>
-          <Text className='text-[15px] font-semibold  text-gray-600 ml-2'>
+          <ThemedText className='text-[15px] font-semibold  text-gray-600 ml-4'>
             {title}
-          </Text>
-          <Ionicons name='chevron-forward' size={20} color='#000' />
+          </ThemedText>
+          <Ionicons
+            name='chevron-forward'
+            size={20}
+            color={theme === 'light' ? '#333' : '#fff'}
+          />
         </View>
-      </View>
+      </ThemedView>
     </TouchableOpacity>
   );
 }

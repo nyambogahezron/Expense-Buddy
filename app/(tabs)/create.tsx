@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
+import { Entypo, Feather, Ionicons } from '@expo/vector-icons';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
@@ -20,6 +20,9 @@ import TransactionCategories from '@/Data/TransactionsTypes';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TransactionCategoryProps } from '@/Types';
 import CustomButton from '@/components/CustomButton';
+import { useTheme } from '@/context/ThemeProvider';
+import { ThemedText } from '@/components/Themed';
+import CustomTextInput from '@/components/CustomTextInput';
 
 const width = Dimensions.get('window').width;
 
@@ -35,6 +38,8 @@ export default function AddExpense() {
   const [transactionFee, setTransactionFee] = useState(0.0);
   const [description, setDescription] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const { theme } = useTheme();
 
   const snapPoints = useMemo(() => ['30%', '80%'], []);
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -61,7 +66,7 @@ export default function AddExpense() {
             <Text className='font-bold text-gray-800'>{item.name}</Text>
           </View>
         </View>
-        <AntDesign name='checkcircleo' size={20} color='green' />
+        <Entypo name='circle' size={24} color='green' />
       </TouchableOpacity>
     ),
     []
@@ -112,22 +117,30 @@ export default function AddExpense() {
   };
 
   return (
-    <GestureHandlerRootView className='flex-1 bg-white'>
-      <StatusBar style='dark' backgroundColor='#ffffff' />
+    <GestureHandlerRootView
+      className='flex-1'
+      style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#070B11' }}
+    >
+      <StatusBar
+        style={theme === 'light' ? 'dark' : 'light'}
+        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+      />
 
       <Stack.Screen
         options={{
           title: 'Add Transaction',
           headerShown: true,
           headerTitleAlign: 'center',
-          statusBarStyle: 'dark',
+          statusBarStyle: theme === 'light' ? 'dark' : 'light',
           headerStyle: {
-            backgroundColor: '#fff',
+            backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
           },
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => router.back()}
-              className='bg-white bg-opacity-50 rounded-lg p-1 py-2 '
+              className={`bg-opacity-50 rounded-lg p-1 py-2 ${
+                theme === 'light' ? 'bg-white' : 'bg-[#070B11]'
+              }`}
             >
               <View className='bg-gray-200 ml-2 p-2 rounded-lg'>
                 <Feather name='arrow-left' size={22} />
@@ -135,7 +148,7 @@ export default function AddExpense() {
             </TouchableOpacity>
           ),
           headerTitleStyle: {
-            color: '#333',
+            color: theme === 'light' ? '#333' : '#fff',
             fontSize: 20,
             fontWeight: 'bold',
           },
@@ -143,7 +156,9 @@ export default function AddExpense() {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => router.push('/(profile)/settings')}
-              className='bg-white bg-opacity-50 rounded-lg p-1 py-2'
+              className={`bg-opacity-50 rounded-lg p-1 py-2 ${
+                theme === 'light' ? 'bg-white' : 'bg-[#070B11]'
+              }`}
             >
               <View className='bg-gray-200 mr-2 p-2 rounded-lg'>
                 <Ionicons name='settings-outline' size={22} />
@@ -158,60 +173,51 @@ export default function AddExpense() {
 
           <View className='mt-5 px-4'>
             {/* Title */}
-            <View className='mb-2'>
-              <Text className='text-gray-600 font-pbold text-lg ml-2 mb-1'>
-                Title
-              </Text>
-              <View className='bg-gray-100 p-4 rounded-lg flex-row justify-between items-center mb-4'>
-                <TextInput
-                  className='text-sm flex-1'
-                  placeholder='Enter Title'
-                  value={title}
-                  onChangeText={setTitle}
-                />
-              </View>
-            </View>
+            <CustomTextInput
+              title='Title'
+              value={title}
+              setTitle={setTitle}
+              placeholder='Enter Title'
+            />
             {/* category */}
             <View className='mb-4'>
-              <Text className='text-gray-600 font-pbold text-lg'>Category</Text>
-              <View className='flex-row justify-between items-center bg-gray-100 p-4 mt-2 px-4 py-2 rounded-lg'>
+              <ThemedText className='font-pbold '>Category</ThemedText>
+              <View className='relative h-12 flex-row justify-between items-center bg-gray-100 p-4 mt-2 px-4 py-2 rounded-lg'>
                 <Text className='text-gray-600'>{selectedCategory}</Text>
                 <TouchableOpacity
                   activeOpacity={0.7}
                   onPress={handleOpenPress}
-                  className='bg-blue-500 p-2 rounded-lg'
+                  className='absolute bg-blue-500 p-3 h-12  rounded-r-lg right-0 items-center justify-center'
                 >
-                  <Text className='text-white'>Choose</Text>
+                  <ThemedText className='font-bold'>Choose</ThemedText>
                 </TouchableOpacity>
               </View>
             </View>
 
             {/* Amount  */}
             <View className='mb-3'>
-              <Text className='text-gray-600 font-pbold text-lg ml-2 mb-1'>
-                Amount
-              </Text>
-              <View className='bg-gray-100 p-4 rounded-lg flex-row justify-between items-center mb-4'>
+              <ThemedText className='font-pbold ml-2 mb-1'>Amount</ThemedText>
+              <View className='relative bg-gray-100 p-4 h-12 rounded-lg flex-row justify-between items-center mb-4'>
                 <TextInput
-                  className='text-sm flex-1'
+                  className='text-sm flex-1 font-psemibold h-12'
                   placeholder='Enter Amount'
                   keyboardType='numeric'
                   value={amount}
                   onChangeText={setAmount}
                 />
-                <View className=''>
-                  <Text className='text-sm text-gray-600 font-bold'>KSH</Text>
+                <View className='absolute bg-blue-500 p-3 h-12  rounded-r-lg right-0 items-center justify-center'>
+                  <ThemedText className='text-sm  font-bold'>KSH</ThemedText>
                 </View>
               </View>
             </View>
             {/* transaction fee */}
             <View className='mb-3'>
-              <Text className='text-gray-600 font-pbold text-lg ml-2 mb-1'>
+              <ThemedText className='font-pbold ml-2 mb-1'>
                 Transaction Fee
-              </Text>
+              </ThemedText>
               <View className='bg-gray-100 p-4 rounded-lg flex-row justify-between items-center mb-4'>
                 <TextInput
-                  className='text-sm flex-1'
+                  className='text-sm flex-1 font-psemibold'
                   placeholder='Enter Type'
                   value={transactionFee.toString()}
                   onChangeText={(text) =>
@@ -223,9 +229,9 @@ export default function AddExpense() {
             </View>
             {/* Type */}
             <View className='mb-3'>
-              <Text className='text-gray-600 font-pbold text-lg ml-2 mb-1'>
+              <ThemedText className='font-pbold ml-2 mb-1'>
                 Transaction Type
-              </Text>
+              </ThemedText>
               <View className='bg-gray-100 py-1 px-2 rounded-lg flex-row justify-between items-center mb-4'>
                 <TextInput
                   className='text-sm flex-1'
@@ -246,16 +252,14 @@ export default function AddExpense() {
 
             {/* Date Picker */}
             <View className='mb-3'>
-              <Text className='text-gray-600 font-pbold text-lg ml-2 mb-1'>
-                Date
-              </Text>
-              <View className='flex-row justify-between items-center bg-gray-100 p-4 rounded-lg mb-4'>
-                <Text>{date.toDateString()}</Text>
+              <ThemedText className='font-pbold l-2 mb-1'>Date</ThemedText>
+              <View className='flex-row justify-between h-12 items-center bg-gray-100 p-4 rounded-lg mb-4'>
+                <Text className='font-psemibold'>{date.toDateString()}</Text>
                 <TouchableOpacity
-                  className='bg-blue-500 p-2 rounded-lg'
+                  className='absolute bg-blue-500 p-3 h-12  rounded-r-lg right-0 items-center justify-center'
                   onPress={() => setShowDatePicker(true)}
                 >
-                  <Text className='text-white'>Today</Text>
+                  <ThemedText>Today</ThemedText>
                 </TouchableOpacity>
                 {showDatePicker && (
                   <DateTimePicker
@@ -270,9 +274,9 @@ export default function AddExpense() {
 
             {/* Description Input */}
             <View className='mb-3'>
-              <Text className='text-gray-600 font-pbold text-lg ml-2 mb-1'>
+              <ThemedText className='font-pbold ml-2 mb-1'>
                 Description
-              </Text>
+              </ThemedText>
               <View className='bg-gray-100 p-4 rounded-lg'>
                 <TextInput
                   className='text-gray-800'
@@ -303,7 +307,9 @@ export default function AddExpense() {
         ref={bottomSheetRef}
         enablePanDownToClose={true}
         handleIndicatorStyle={{ backgroundColor: '#fff' }}
-        backgroundStyle={{ backgroundColor: '#070B11' }}
+        backgroundStyle={{
+          backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
+        }}
       >
         <BottomSheetFlatList
           data={TransactionCategories}

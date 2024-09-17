@@ -5,25 +5,28 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { View } from 'react-native';
-import { authenticateAsync } from 'expo-local-authentication';
+import { useTheme } from '@/context/ThemeProvider';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { theme } = useTheme();
+console.log('theme', theme);
+console.log('colorScheme', colorScheme);
+
+
 
   return (
     <Tabs
-      sceneContainerStyle={{ backgroundColor: '#fff' }}
       screenOptions={{
-        tabBarActiveTintColor: '#FF6737',
-        // tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].textPrimary,
+        headerShadowVisible: false,
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: '#ffffff',
-          borderTopLeftRadius: 16,
-          borderTopRightRadius: 16,
-          marginBottom: -1,
+          backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
           height: 70,
+          borderTopWidth: 0,
           ...styles.shadow,
         },
       }}
@@ -60,8 +63,13 @@ export default function TabLayout() {
         name='create'
         options={{
           title: '',
-          tabBarIcon: ({ color, focused }) => (
-            <View className='relative flex items-center justify-center p-2 -mt-12  bg-[#f3f3f2] rounded-full w-18 h-18  '>
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                backgroundColor: theme === 'light' ? '#f3f3f3' : '#333',
+              }}
+              className='relative flex items-center justify-center p-2 -mt-12 rounded-full w-18 h-18  '
+            >
               <View className='w-14 h-14 rounded-full bg-[#FF7F50] flex items-center justify-center  shadow-lg'>
                 <FontAwesome5
                   name='plus'

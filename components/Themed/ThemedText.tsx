@@ -5,11 +5,13 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
   darkColor?: string;
+  className?: string; // For tailwindcss
   type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
 };
 
 export function ThemedText({
   style,
+  className,
   lightColor,
   darkColor,
   type = 'default',
@@ -19,6 +21,7 @@ export function ThemedText({
 
   return (
     <Text
+      className={className}
       style={[
         { color },
         type === 'default' ? styles.default : undefined,
