@@ -17,7 +17,6 @@ const ThemeContext = createContext<any>(null);
 const getPreferredTheme = async (): Promise<'light' | 'dark' | null> => {
   try {
     const theme = await AsyncStorage.getItem('preferredTheme');
-    console.log('theme from storage', theme);
     return theme as 'light' | 'dark' | null;
   } catch (error) {
     console.error('Failed to load preferred theme from storage', error);

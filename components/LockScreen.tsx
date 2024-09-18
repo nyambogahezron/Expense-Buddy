@@ -54,11 +54,11 @@ export default function LockScreen() {
     setCode(code.slice(0, -1));
   };
   return (
-    <SafeAreaProvider className='flex flex-1 bg-white'>
+    <SafeAreaProvider className='flex flex-1 bg-[#161622]'>
       <View>
-        <View className='flex items-center justify-center w-full mx-auto mt-12'>
-          <Feather name='lock' size={35} color='black' />
-          <Text className='flex items-center  font-bold mt-2 text-xl'>
+        <View className='flex items-center justify-center w-full mx-auto mt-24'>
+          <Feather name='lock' size={35} color='#fff' />
+          <Text className='text-white flex items-center  font-bold mt-2 text-xl'>
             Unlock Application
           </Text>
         </View>
@@ -115,12 +115,12 @@ export default function LockScreen() {
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
           >
             <TouchableOpacity
-              className='p-3 bg-gray-100 rounded-full w-14 h-14 items-center justify-center'
+              className='p-3 bg-[#1E1E2C] rounded-full w-14 h-14 items-center justify-center'
               onPress={() => {
                 authenticate();
               }}
             >
-              <FontAwesome5 name='fingerprint' size={32} color='gray' />
+              <FontAwesome5 name='fingerprint' size={32} color='#fff' />
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => onNumberPress(0)}>
@@ -130,19 +130,19 @@ export default function LockScreen() {
             <View style={{ minWidth: 30 }}>
               {code.length > 0 && (
                 <TouchableOpacity
-                  className='p-3 bg-gray-100 rounded-full w-14 h-14 items-center justify-center'
+                  className='p-3 bg-[#1E1E2C] rounded-full w-14 h-14 items-center justify-center'
                   onPress={() => numberBackspace()}
                 >
                   <MaterialCommunityIcons
                     name='backspace-outline'
                     size={26}
-                    color='gray'
+                    color='#fff'
                   />
                 </TouchableOpacity>
               )}
             </View>
           </View>
-          <Text className='items-center justify-center text-blue-700 font-bold mx-auto bottom-10 mt-5'>
+          <Text className='items-center justify-center text-blue-700 font-bold mx-auto bottom-10 mt-10'>
             Forgot passcode?
           </Text>
         </View>
@@ -157,17 +157,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 15,
-    marginVertical: 90,
+    marginVertical: 70,
   },
   numberView: {
-    marginHorizontal: 50,
+    marginHorizontal: 55,
     gap: 40,
-    marginTop: -40,
+    marginTop: -30,
   },
   number: {
     fontSize: 32,
     fontWeight: 'bold',
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#1E1E2C',
+    color: '#fff',
     padding: 10,
     borderRadius: 50,
     width: 60,

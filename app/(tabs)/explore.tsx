@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
-
 import { StatusBar } from 'expo-status-bar';
 import { router, Stack } from 'expo-router';
 import { Feather, Ionicons } from '@expo/vector-icons';
