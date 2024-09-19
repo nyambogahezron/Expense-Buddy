@@ -51,7 +51,7 @@ export default function Settings() {
         <ScrollView
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-          className='flex flex-1 px-3'
+          className='flex flex-1 px-3 mt-4'
         >
           <ThemedView>
             <OptionContainer

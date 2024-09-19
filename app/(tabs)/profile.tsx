@@ -104,7 +104,7 @@ const Profile = () => {
             <ExternalLink href='https://nyambogahezron.vercel.app'>
               <ThemedView
                 darkColor='#1c1c1e'
-                lightColor='#f3f4f6'
+                lightColor='#e5e7eb'
                 className={`flex-row items-center justify-between rounded-lg px-4 py-3 `}
                 style={{ width: width * 0.9 }}
               >

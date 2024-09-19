@@ -38,7 +38,7 @@ export default function CustomPasswordInput({
       </ThemedText>
       <View
         style={{
-          backgroundColor: theme === 'light' ? '#f3f4f6' : '#1c1c1e',
+          backgroundColor: theme === 'light' ? '#e5e7eb' : '#1c1c1e',
         }}
         className={`p-4 rounded-lg flex-row justify-between items-center mb-4 relative ${inputContainerStyle}`}
       >
@@ -60,7 +60,7 @@ export default function CustomPasswordInput({
             <Ionicons
               name={passwordVisible ? 'eye-off-outline' : 'eye-outline'}
               size={24}
-              color={theme === 'light' ? '#f3f4f6' : '#f3f4f6'}
+              color={theme === 'light' ? '#000' : '#f3f4f6'}
             />
           </TouchableOpacity>
         )}

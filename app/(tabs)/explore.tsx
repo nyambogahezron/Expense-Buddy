@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import {  Text, TouchableOpacity, FlatList } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { router, Stack } from 'expo-router';
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { Stack } from 'expo-router';
 import { transactions } from '@/Data';
 import TransactionCard from '@/components/TransactionsCard';
 import TransactionHeader from '@/components/TransactionHeader';
@@ -11,7 +10,6 @@ import EmptyListCard from '@/components/EmptyListCard';
 import LoadMoreBtn from '@/components/LoadMoreBtn';
 import { useTheme } from '@/context/ThemeProvider';
 import { ThemedSafeAreaView, ThemedView } from '@/components/Themed';
-import HeaderRightIconCard from '@/components/HeaderRightIconCard';
 import BackButton from '@/components/BackButton';
 
 type categoryType = 'All' | 'income' | 'expense';
@@ -75,18 +73,6 @@ export default function HomeScreen() {
             backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
           },
           headerLeft: () => <BackButton />,
-
-          headerRight: () => (
-            <HeaderRightIconCard
-              handleOnPress={() => router.push('/(profile)/settings')}
-            >
-              <Ionicons
-                name='log-out-outline'
-                size={22}
-                color={theme === 'light' ? 'black' : '#fff'}
-              />
-            </HeaderRightIconCard>
-          ),
         }}
       />
       <ThemedView>

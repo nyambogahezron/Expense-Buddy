@@ -190,9 +190,7 @@ export default function Statistics() {
                   }
                   activeOpacity={0.7}
                   key={id}
-                  className={`flex-row justify-between items-center bg-red-100 p-4 rounded-lg mb-1 ${
-                    type === 'expense' ? 'bg-red-50' : 'bg-green-50'
-                  } ${theme === 'light' ? '' : 'bg-[#1c1c1e]'}`}
+                  className={`flex-row justify-between items-center bg-red-100 p-4 rounded-lg mb-1  ${theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'}`}
                 >
                   <View className='flex-row items-center'>
                     <View className='bg-red-200 p-3 rounded-full mr-4'>

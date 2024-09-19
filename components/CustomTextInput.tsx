@@ -35,7 +35,7 @@ export default function CustomTextInput({
       </ThemedText>
       <ThemedView
         darkColor='#1c1c1e'
-        lightColor='#f3f4f6'
+        lightColor='#e5e7eb'
         className={`p-4 rounded-lg flex-row justify-between items-center mb-4 ${inputContainerStyle}`}
       >
         <TextInput

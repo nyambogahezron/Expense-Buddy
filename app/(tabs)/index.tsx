@@ -39,8 +39,8 @@ export default function HomeScreen() {
             backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
           },
           headerLeft: () => (
-            <ThemedView className='ml-2 p-2'>
-              <View className='flex mb-1 mt-2'>
+            <ThemedView lightColor='#fff' className='ml-2 px-2'>
+              <View className='flex '>
                 <View className='flex flex-row'>
                   <ThemedText style={{ fontSize: 15 }}>
                     Welcome Back!

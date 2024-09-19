@@ -28,7 +28,7 @@ export default function CategoryCard({
       activeOpacity={0.7}
       key={id}
       style={{
-        backgroundColor: theme === 'light' ? '#f3f4f6' : '#1c1c1e',
+        backgroundColor: theme === 'light' ? '#e5e7eb' : '#1c1c1e',
       }}
       className={`flex-row items-center justify-between p-4 rounded-lg mb-1 
                 }`}

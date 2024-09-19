@@ -60,9 +60,9 @@ export default function CategoryListBottomSheet({
       snapPoints={snapPoints}
       ref={bottomSheetRef}
       enablePanDownToClose={true}
-      handleIndicatorStyle={{ backgroundColor: '#fff' }}
+      handleIndicatorStyle={{ backgroundColor: theme === 'light' ? '#333' : '#fff' }}
       backgroundStyle={{
-        backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
+        backgroundColor: theme === 'light' ? '#fff' : '#070B11',
       }}
     >
       <BottomSheetFlatList

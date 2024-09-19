@@ -69,28 +69,34 @@ export default function CategoriesDetails() {
               keyExtractor={(item) => item.id.toString()}
               ListHeaderComponent={
                 <View>
-                  <ThemedView className='px-2 mt-2'>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor:
-                          theme === 'light' ? '#f3f4f6' : '#1c1c1e',
-                      }}
-                      activeOpacity={0.7}
-                      className={`flex-row items-center justify-between p-4 rounded-lg mb-4 
+                  {categoriesDetails.length > 0 && (
+                    <ThemedView className='px-2 mt-2'>
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor:
+                            theme === 'light' ? '#e5e7eb' : '#1c1c1e',
+                        }}
+                        activeOpacity={0.7}
+                        className={`flex-row items-center justify-between p-4 rounded-lg mb-4 
                   }`}
-                    >
-                      <View className='flex-row items-center'>
-                        <View className='bg-white p-3 rounded-full mr-4'>
-                          <Text>{icon ? icon : name.charAt(0)}</Text>
+                      >
+                        <View className='flex-row items-center'>
+                          <View className='bg-white p-3 rounded-full mr-4'>
+                            <Text>{icon ? icon : name.charAt(0)}</Text>
+                          </View>
+                          <View>
+                            <ThemedText className='font-bold'>
+                              {`Transactions for ${
+                                name.length > 30
+                                  ? name.slice(0, 30) + '...'
+                                  : name
+                              }`}
+                            </ThemedText>
+                          </View>
                         </View>
-                        <View>
-                          <ThemedText className='font-bold'>
-                            {`Transactions for ${name.length >30 ? name.slice(0,30) + '...' : name}`}
-                          </ThemedText>
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  </ThemedView>
+                      </TouchableOpacity>
+                    </ThemedView>
+                  )}
                 </View>
               }
               ListEmptyComponent={
