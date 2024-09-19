@@ -1,20 +1,17 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Dimensions,
 } from 'react-native';
-import { Entypo, Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { Stack } from 'expo-router';
 import { router } from 'expo-router';
-import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import TransactionCategories from '@/Data/TransactionsTypes';
+import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { TransactionCategoryProps } from '@/Types';
 import CustomButton from '@/components/CustomButton';
 import { useTheme } from '@/context/ThemeProvider';
 import { ThemedText, ThemedView } from '@/components/Themed';
@@ -23,8 +20,7 @@ import BackButton from '@/components/BackButton';
 import HeaderRightIconCard from '@/components/HeaderRightIconCard';
 import DatePicker from '@/components/DatePicker';
 import CategoryListBottomSheet from '@/components/CategoryListBottomSheet';
-
-const width = Dimensions.get('window').width;
+import TransactionTypePicker from '@/components/TransactionTypePicker';
 
 export default function AddExpense() {
   const [id, setId] = useState(1);
@@ -41,39 +37,8 @@ export default function AddExpense() {
 
   const { theme } = useTheme();
 
-  const snapPoints = useMemo(() => ['30%', '80%'], []);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleOpenPress = () => bottomSheetRef.current?.expand();
-  const handleClosePress = () => bottomSheetRef.current?.close();
-
-  const CategoryCard = useCallback(
-    ({ item }: { item: TransactionCategoryProps }) => (
-      <TouchableOpacity
-        onPress={() => {
-          setSelectedCategory(item.name);
-          handleClosePress();
-        }}
-        key={item.id}
-        activeOpacity={0.8}
-        className='flex-row justify-between items-center bg-[#f3f4f6] p-4 rounded-lg mb-1 w-full'
-        style={{
-          width: width * 0.94,
-          backgroundColor: theme === 'light' ? '#f3f4f6' : '#1c1c1e',
-        }}
-      >
-        <View className='flex-row items-center'>
-          <View className='bg-[#fff] p-3 rounded-full mr-4'>
-            <Text>{item.icon ? item.icon : item.name.charAt(0)}</Text>
-          </View>
-          <View>
-            <ThemedText className='font-bold'>{item.name}</ThemedText>
-          </View>
-        </View>
-        <Entypo name='circle' size={24} color='green' />
-      </TouchableOpacity>
-    ),
-    []
-  );
 
   // from submission
   const handleOnSubmit = () => {
@@ -156,7 +121,7 @@ export default function AddExpense() {
             />
             {/* category */}
             <View className='mb-4'>
-              <ThemedText className='font-pbold '>Category</ThemedText>
+              <ThemedText className='font-pbold ml-2 '>Category</ThemedText>
               <ThemedView
                 style={{
                   backgroundColor: theme === 'light' ? '#f3f4f6' : '#1c1c1e',
@@ -203,12 +168,15 @@ export default function AddExpense() {
 
             <CustomTextInput
               title='Transaction Fee'
-              placeholder='Enter Type'
+              placeholder=''
               value={transactionFee.toString()}
               onChangeText={setTransactionFee}
               keyboardType='numeric'
             />
-
+            <TransactionTypePicker
+              setType={(itemValue) => setType}
+              type={type}
+            />
             {/* Date Picker */}
             <DatePicker
               showDatePicker={showDatePicker}
@@ -252,7 +220,11 @@ export default function AddExpense() {
 
         {/* BottomSheet for categories*/}
       </ScrollView>
-      <CategoryListBottomSheet />
+      <CategoryListBottomSheet
+        selectedCategory={selectedCategory}
+        bottomSheetRef={bottomSheetRef}
+        setSelectedCategory={setSelectedCategory}
+      />
     </GestureHandlerRootView>
   );
 }

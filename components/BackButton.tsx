@@ -9,7 +9,7 @@ export default function BackButton() {
   return (
     <TouchableOpacity
       onPress={() => router.back()}
-      className={`bg-opacity-50 rounded-lg p-1 py-2 ${
+      className={`bg-opacity-50 rounded-lg ml-2 py-2 ${
         theme === 'light' ? 'bg-white' : 'bg-[#070B11]'
       }`}
     >

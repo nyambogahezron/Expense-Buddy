@@ -2,7 +2,6 @@ import { View, TouchableOpacity, FlatList } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { Text } from 'react-native';
 import { TransactionCategoryProps } from '@/Types';
 import EmptyListCard from '@/components/EmptyListCard';
@@ -42,9 +41,7 @@ export default function CategoriesDetails() {
         options={{
           title: 'Category Details',
           headerShown: true,
-          headerShadowVisible: false,
           headerTitleAlign: 'center',
-          statusBarStyle: 'dark',
           headerStyle: {
             backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
           },
@@ -64,7 +61,11 @@ export default function CategoriesDetails() {
               showsHorizontalScrollIndicator={false}
               showsVerticalScrollIndicator={false}
               data={categoriesDetails}
-              renderItem={({ item }) => <TransactionCard item={item} />}
+              renderItem={({ item }) => (
+                <View className='px-2'>
+                  <TransactionCard item={item} />
+                </View>
+              )}
               keyExtractor={(item) => item.id.toString()}
               ListHeaderComponent={
                 <View>
@@ -83,24 +84,13 @@ export default function CategoriesDetails() {
                           <Text>{icon ? icon : name.charAt(0)}</Text>
                         </View>
                         <View>
-                          <ThemedText className='font-bold'>{name}</ThemedText>
+                          <ThemedText className='font-bold'>
+                            {`Transactions for ${name.length >30 ? name.slice(0,30) + '...' : name}`}
+                          </ThemedText>
                         </View>
                       </View>
-
-                      <FontAwesome5
-                        name='edit'
-                        size={18}
-                        color={theme === 'light' ? 'black' : '#fff'}
-                      />
                     </TouchableOpacity>
                   </ThemedView>
-                  {categoriesDetails.length !== 0 && (
-                    <View className='ml-4'>
-                      <ThemedText className='capitalize text-[15px] ml-3 mb-3 font-psemibold'>
-                        Transaction for {name}
-                      </ThemedText>
-                    </View>
-                  )}
                 </View>
               }
               ListEmptyComponent={

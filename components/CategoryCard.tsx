@@ -36,7 +36,7 @@ export default function CategoryCard({
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={handleOnPress}
-        className='flex-row items-center'
+        className='flex-row items-center  w-[90%] '
       >
         <View className='bg-white p-3 rounded-full mr-4'>
           <Text>{icon ? icon : name.charAt(0)}</Text>
@@ -52,7 +52,7 @@ export default function CategoryCard({
       >
         <Entypo
           name='dots-three-vertical'
-          size={18}
+          size={15}
           color={theme === 'light' ? 'black' : '#fff'}
         />
       </TouchableOpacity>

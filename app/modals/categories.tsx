@@ -16,6 +16,7 @@ import {
 } from '@/components/Themed';
 import { useTheme } from '@/context/ThemeProvider';
 import BackButton from '@/components/BackButton';
+import HeaderRightIconCard from '@/components/HeaderRightIconCard';
 
 const Statistics = () => {
   const snapPoints = useMemo(() => ['30%', '35%'], []);
@@ -28,45 +29,46 @@ const Statistics = () => {
     <GestureHandlerRootView
       className='flex-1'
       style={{
-        backgroundColor: theme === 'light' ? '#f3f4f6' : '#000000',
+        backgroundColor: theme === 'light' ? '#f3f4f6' : '#070B11',
       }}
     >
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
       />
+      <Stack.Screen
+        options={{
+          title: 'Categories',
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
+          },
+          headerLeft: () => <BackButton />,
+          headerTitleStyle: {
+            color: theme === 'light' ? '#333' : '#fff',
+
+            fontSize: 20,
+            fontWeight: 'bold',
+          },
+          headerRight: () => (
+            <HeaderRightIconCard
+              handleOnPress={() => router.push('/modals/createCategory')}
+            >
+              <FontAwesome5
+                name='plus'
+                size={18}
+                color={theme === 'light' ? 'black' : '#fff'}
+              />
+            </HeaderRightIconCard>
+          ),
+        }}
+      />
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
+        className='mb-8'
       >
-        <Stack.Screen
-          options={{
-            title: 'Categories',
-            headerShown: true,
-            headerTitleAlign: 'center',
-            statusBarStyle: 'dark',
-            headerStyle: {
-              backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
-            },
-            headerLeft: () => <BackButton />,
-            headerTitleStyle: {
-              color: '#333',
-              fontSize: 20,
-              fontWeight: 'bold',
-            },
-            headerRight: () => (
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => router.push('/modals/createCategory')}
-                className='bg-white bg-opacity-50 rounded-lg p-1 py-2'
-              >
-                <View className='bg-gray-200 mr-2 p-2 rounded-lg'>
-                  <FontAwesome5 name='plus' size={21} color='#333' />
-                </View>
-              </TouchableOpacity>
-            ),
-          }}
-        />
         <View className='px-3'>
           {/* Expense Detail */}
           <View className='my-3'>

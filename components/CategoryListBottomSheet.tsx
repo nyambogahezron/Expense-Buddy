@@ -8,21 +8,22 @@ import { TransactionCategoryProps } from '@/Types';
 import { Entypo } from '@expo/vector-icons';
 import CustomButton from './CustomButton';
 import { router } from 'expo-router';
+import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 
 const { width } = Dimensions.get('window');
 
 type CategoryPickerProps = {
   selectedCategory?: string;
-  setSelectedCategory?: (value: string) => void;
+  setSelectedCategory: (value: string) => void;
+  bottomSheetRef: React.RefObject<BottomSheetMethods>;
 };
 
 export default function CategoryListBottomSheet({
   setSelectedCategory,
+  bottomSheetRef,
 }: CategoryPickerProps) {
   const { theme } = useTheme();
   const snapPoints = useMemo(() => ['30%', '80%'], []);
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const handleOpenPress = () => bottomSheetRef.current?.expand();
   const handleClosePress = () => bottomSheetRef.current?.close();
 
   const CategoryCard = useCallback(

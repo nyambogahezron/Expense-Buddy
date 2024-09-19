@@ -1,90 +1,73 @@
-import { View, Text, ScrollView } from 'react-native';
-import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { TouchableOpacity } from 'react-native';
-import { router, Stack } from 'expo-router';
-import { Feather } from '@expo/vector-icons';
-import { TextInput } from 'react-native';
+import { ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { Stack } from 'expo-router';
 import { CustomButton } from '@/components';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
+import { ThemedView, ThemedSafeAreaView } from '@/components/Themed';
+import { useTheme } from '@/context/ThemeProvider';
+import BackButton from '@/components/BackButton';
+import CustomTextInput from '@/components/CustomTextInput';
 
 export default function CreateCategory() {
-  const [id, setId] = React.useState('');
-  const [title, setTitle] = React.useState('');
-  const [icon, setIcon] = React.useState('');
+  const [id, setId] = useState('');
+  const [title, setTitle] = useState('');
+  const [icon, setIcon] = useState('');
+  const { theme } = useTheme();
+
   const handleOnSubmit = () => {
     console.log('Submitted: ', title, icon);
   };
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar backgroundColor='#ffffff' style='dark' />
-      <SafeAreaView className='flex-1 bg-gray-100 w-full h-full justify-center'>
+      <StatusBar
+        style={theme === 'light' ? 'dark' : 'light'}
+        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+      />
+      <ThemedSafeAreaView className='flex-1 w-full h-full justify-center'>
         <Stack.Screen
           options={{
-            title: 'Create New Categories',
+            title: 'Edit Categories',
             headerShown: true,
             headerTitleAlign: 'center',
-            statusBarStyle: 'dark',
             headerStyle: {
-              backgroundColor: '#fff',
+              backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
             },
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => router.back()}
-                className='bg-white bg-opacity-50 rounded-lg p-1 py-2 '
-              >
-                <View className='bg-gray-200 ml-2 p-2 rounded-lg'>
-                  <Feather name='arrow-left' size={22} />
-                </View>
-              </TouchableOpacity>
-            ),
+            headerLeft: () => <BackButton />,
             headerTitleStyle: {
-              color: '#333',
+              color: theme === 'light' ? '#333' : '#fff',
               fontSize: 20,
               fontWeight: 'bold',
             },
           }}
         />
         <ScrollView className='mt-[20%]'>
-          <View className='px-4 my-auto h-full'>
+          <ThemedView className='px-4 my-auto h-full'>
             {/* Title */}
-            <View className='mb-2'>
-              <Text className='text-gray-600 font-pbold text-lg ml-2 mb-1'>
-                Title
-              </Text>
-              <View className='bg-white p-4 rounded-lg flex-row justify-between items-center mb-4'>
-                <TextInput
-                  className='text-sm flex-1'
-                  placeholder='Enter Title'
-                  value={title}
-                  onChangeText={setTitle}
-                />
-              </View>
-            </View>
+
+            <CustomTextInput
+              title='Title'
+              onChangeText={setTitle}
+              value={title}
+              placeholder='Enter Title'
+            />
             {/* Icon */}
-            <View className='mb-2'>
-              <Text className='text-gray-600 font-pbold text-lg ml-2 mb-1'>
-                Icon
-              </Text>
-              <View className='bg-white p-4 rounded-lg flex-row justify-between items-center mb-4'>
-                <TextInput
-                  className='text-sm flex-1'
-                  placeholder='Select Emoji Icon'
-                  value={icon}
-                  onChangeText={setIcon}
-                />
-              </View>
-            </View>
+            <CustomTextInput
+              title='Icon'
+              onChangeText={setIcon}
+              value={icon}
+              placeholder='Choose Emoji For Icon'
+            />
+
             <CustomButton
-              title='Save'
+              title='Edit'
               handleOpenPress={() => handleOnSubmit()}
               customStyles='bg-orange-500 mt-5'
               textStyles='text-white'
             />
-          </View>
+          </ThemedView>
         </ScrollView>
-      </SafeAreaView>
+      </ThemedSafeAreaView>
     </GestureHandlerRootView>
   );
 }

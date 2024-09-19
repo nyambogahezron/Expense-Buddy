@@ -18,6 +18,7 @@ const TransactionCard = ({ item, isLoading }: TransactionCardProps) => (
       </View>
     ) : (
       <TouchableOpacity
+        activeOpacity={0.6}
         onPress={() =>
           router.push({
             pathname: '/(transactions)/details',

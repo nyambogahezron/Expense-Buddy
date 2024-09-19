@@ -1,9 +1,8 @@
 import { View, Text, ScrollView, TextInput } from 'react-native';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
 import { TransactionProps } from '@/Types';
 import { StatusBar } from 'expo-status-bar';
 import { Dimensions } from 'react-native';
@@ -12,6 +11,9 @@ import { ThemedText, ThemedView } from '@/components/Themed';
 import BackButton from '@/components/BackButton';
 import CustomTextInput from '@/components/CustomTextInput';
 import DatePicker from '@/components/DatePicker';
+import { CustomButton } from '@/components';
+import BottomSheet from '@gorhom/bottom-sheet';
+import CategoryListBottomSheet from '@/components/CategoryListBottomSheet';
 import TransactionTypePicker from '@/components/TransactionTypePicker';
 
 const { width } = Dimensions.get('window');
@@ -33,6 +35,8 @@ export default function EditTransaction() {
   const [typeF, setType] = useState(type);
   const [categoryF, setCategory] = useState(category.name);
   const { theme } = useTheme();
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const handleOpenPress = () => bottomSheetRef.current?.expand();
 
   const handleSave = () => {
     console.log(
@@ -111,18 +115,40 @@ export default function EditTransaction() {
           onChangeText={setAmount}
           keyboardType='numeric'
         />
+        <CustomTextInput
+          title='Transaction Fee'
+          value={transactionFeeF}
+          onChangeText={setTransactionFee}
+          keyboardType='numeric'
+        />
+        <View className='mb-4 w-full'>
+          <ThemedText className='font-pbold ml-2 '>Category</ThemedText>
+          <ThemedView
+            style={{
+              backgroundColor: theme === 'light' ? '#f3f4f6' : '#1c1c1e',
+            }}
+            className='relative h-12 flex-row justify-between items-center p-4 mt-2 px-4 py-2 rounded-lg'
+          >
+            <Text style={{ color: theme === 'light' ? '#333' : '#ccc' }}>
+              {categoryF}
+            </Text>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={handleOpenPress}
+              className='absolute bg-blue-500 p-3 h-12  rounded-r-lg right-0 items-center justify-center'
+            >
+              <ThemedText className='font-bold text-sm'>Choose</ThemedText>
+            </TouchableOpacity>
+          </ThemedView>
+        </View>
+        {/* Transaction Type */}
+        <TransactionTypePicker setType={(itemValue) => setType} type={typeF} />
 
         <DatePicker
           showDatePicker={showDatePicker}
           setShowDatePicker={setShowDatePicker}
           date={dateF}
           setDate={setDate}
-        />
-        <CustomTextInput
-          title='Transaction Fee'
-          value={transactionFeeF}
-          onChangeText={setTransactionFee}
-          keyboardType='numeric'
         />
 
         <CustomTextInput
@@ -132,37 +158,20 @@ export default function EditTransaction() {
           onChangeText={setDescription}
         />
 
-        {/* Transaction Type */}
-        {/* <TransactionTypePicker setType={(itemValue) => setType} type={typeF} /> */}
-
-        <View className='mb-5 relative' style={{ width: width * 0.92 }}>
-          <Text className='text-gray-600 mb-1 ml-1 font-pbold'>
-            Transaction Category
-          </Text>
-          <View className='bg-white p-4 rounded-lg text-black'>
-            <TextInput
-              value={categoryF}
-              onChangeText={setCategory}
-              className='text-[14.3px] capitalize font-pregular'
-            />
-          </View>
-        </View>
-
         {/* Save btn  */}
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={handleSave}
-          style={{ width: width * 0.9 }}
-          className='flex items-center justify-center bg-orange-600 p-3 rounded-full '
-        >
-          <View className='flex flex-row items-center gap-1'>
-            <Text className='text-white text-lg font-bold capitalize'>
-              Save
-            </Text>
-            <FontAwesome name='save' size={15} color='#fff' />
-          </View>
-        </TouchableOpacity>
+
+        <CustomButton
+          title='Save'
+          handleOpenPress={handleSave}
+          customStyles=' bg-orange-600'
+          textStyles='text-white'
+        />
       </ScrollView>
+      <CategoryListBottomSheet
+        selectedCategory={categoryF}
+        bottomSheetRef={bottomSheetRef}
+        setSelectedCategory={setCategory}
+      />
     </GestureHandlerRootView>
   );
 }
