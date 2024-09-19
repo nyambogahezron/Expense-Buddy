@@ -4,7 +4,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Stack } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 
 export default function Settings() {
@@ -35,16 +35,6 @@ export default function Settings() {
             fontSize: 20,
             fontWeight: 'bold',
           },
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() => router.push('/(profile)/security')}
-              className='bg-white bg-opacity-50 rounded-lg p-1 py-2'
-            >
-              <View className='bg-gray-200 mr-2 p-2 rounded-lg'>
-                <Ionicons name='settings-outline' size={22} />
-              </View>
-            </TouchableOpacity>
-          ),
         }}
       />
 

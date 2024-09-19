@@ -22,7 +22,7 @@ export default function OptionContainer({
     <TouchableOpacity
       activeOpacity={0.7}
       className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
-        theme === 'light' ? 'bg-white' : 'bg-[#1c1c1e]'
+        theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'
       }`}
       onPress={handleOnPress}
     >

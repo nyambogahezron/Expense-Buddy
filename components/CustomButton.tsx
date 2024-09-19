@@ -1,6 +1,6 @@
-import { Text, Dimensions, ViewStyle } from 'react-native';
+import { Text, Dimensions, ViewStyle, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+
 const width = Dimensions.get('window').width;
 
 type CustomButtonProps = {

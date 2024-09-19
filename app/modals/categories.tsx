@@ -9,16 +9,32 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { CustomButton } from '@/components';
 import CategoryActionCard from '@/components/CategoryActionCard';
+import {
+  ThemedText,
+  ThemedView,
+  ThemedSafeAreaView,
+} from '@/components/Themed';
+import { useTheme } from '@/context/ThemeProvider';
+import BackButton from '@/components/BackButton';
 
 const Statistics = () => {
   const snapPoints = useMemo(() => ['30%', '35%'], []);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleOpenPress = () => bottomSheetRef.current?.expand();
   const handleClosePress = () => bottomSheetRef.current?.close();
+  const { theme } = useTheme();
 
   return (
-    <GestureHandlerRootView className='flex-1 bg-white'>
-      <StatusBar backgroundColor='#ffffff' style='dark' />
+    <GestureHandlerRootView
+      className='flex-1'
+      style={{
+        backgroundColor: theme === 'light' ? '#f3f4f6' : '#000000',
+      }}
+    >
+      <StatusBar
+        style={theme === 'light' ? 'dark' : 'light'}
+        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+      />
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
@@ -30,18 +46,9 @@ const Statistics = () => {
             headerTitleAlign: 'center',
             statusBarStyle: 'dark',
             headerStyle: {
-              backgroundColor: '#fff',
+              backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
             },
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => router.back()}
-                className='bg-white bg-opacity-50 rounded-lg p-1 py-2 '
-              >
-                <View className='bg-gray-200 ml-2 p-2 rounded-lg'>
-                  <Feather name='arrow-left' size={22} />
-                </View>
-              </TouchableOpacity>
-            ),
+            headerLeft: () => <BackButton />,
             headerTitleStyle: {
               color: '#333',
               fontSize: 20,

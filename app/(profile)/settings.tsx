@@ -8,13 +8,19 @@ import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from '@/context/ThemeProvider';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { StatusBar } from 'expo-status-bar';
-import { ThemedSafeAreaView, ThemedText, ThemedView } from '@/components/Themed';
+import {
+  ThemedSafeAreaView,
+  ThemedText,
+  ThemedView,
+} from '@/components/Themed';
 import OptionContainer from '@/components/OptionContainer';
+import BackButton from '@/components/BackButton';
 
 export default function Settings() {
   const { theme, toggleTheme } = useTheme();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleOpenPress = () => bottomSheetRef.current?.expand();
+  const handleClosePress = () => bottomSheetRef.current?.close();
 
   return (
     <ThemedSafeAreaView className='flex-1 '>
@@ -32,17 +38,7 @@ export default function Settings() {
               backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
             },
             headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => router.back()}
-                style={{
-                  backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
-                }}
-                className='bg-opacity-50 rounded-lg p-1 py-2 '
-              >
-                <View className='bg-gray-200 ml-2 p-2 rounded-lg'>
-                  <Feather name='arrow-left' size={22} />
-                </View>
-              </TouchableOpacity>
+             <BackButton/>
             ),
             headerTitleStyle: {
               color: theme === 'light' ? '#333' : '#fff',
@@ -66,7 +62,7 @@ export default function Settings() {
             <TouchableOpacity
               activeOpacity={0.7}
               className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
-                theme === 'light' ? 'bg-white' : 'bg-[#1c1c1e]'
+                theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'
               }`}
               onPress={() => router.push('/(profile)/settings')}
             >
@@ -85,7 +81,7 @@ export default function Settings() {
             <TouchableOpacity
               activeOpacity={0.7}
               className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
-                theme === 'light' ? 'bg-white' : 'bg-[#1c1c1e]'
+                theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'
               }`}
               onPress={() => router.push('/(profile)/settings')}
             >
@@ -104,7 +100,7 @@ export default function Settings() {
             <TouchableOpacity
               activeOpacity={0.7}
               className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
-                theme === 'light' ? 'bg-white' : 'bg-[#1c1c1e]'
+                theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'
               }`}
               onPress={() => router.push('/(profile)/settings')}
             >
@@ -196,7 +192,9 @@ export default function Settings() {
                 className={`rounded-lg p-4 w-full mt-4 items-center  ${
                   theme === 'light' ? 'border-2 border-green-700' : ''
                 }`}
-                onPress={() => toggleTheme()}
+                onPress={() => {
+                  toggleTheme(), handleClosePress();
+                }}
               >
                 <View className='flex w-full flex-row justify-between'>
                   <ThemedText className=' text-lg font-bold'>Light</ThemedText>
@@ -208,14 +206,16 @@ export default function Settings() {
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
-               style={{
+                style={{
                   backgroundColor: theme === 'light' ? '#f2f2f2' : '#1c1c1e',
                 }}
                 activeOpacity={0.7}
                 className={`rounded-lg p-4 w-full mt-4 items-center  ${
                   theme === 'dark' ? 'border-2 border-green-700' : ''
                 }`}
-                onPress={() => toggleTheme()}
+                onPress={() => {
+                  toggleTheme(), handleClosePress();
+                }}
               >
                 <View className='flex w-full flex-row justify-between'>
                   <ThemedText className='text-lg font-bold'>Dark</ThemedText>

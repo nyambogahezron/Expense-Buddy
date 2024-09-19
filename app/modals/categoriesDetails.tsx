@@ -1,15 +1,21 @@
-import { View, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import { View, TouchableOpacity, FlatList } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Feather, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { Text } from 'react-native';
 import { TransactionCategoryProps } from '@/Types';
 import EmptyListCard from '@/components/EmptyListCard';
 import TransactionCard from '@/components/TransactionsCard';
 import { transactions } from '@/Data';
 import { TransactionProps } from '@/Types';
+import {
+  ThemedText,
+  ThemedView,
+  ThemedSafeAreaView,
+} from '@/components/Themed';
+import { useTheme } from '@/context/ThemeProvider';
+import BackButton from '@/components/BackButton';
 
 export default function CategoriesDetails() {
   const [categoriesDetails, setCategoriesDetails] = useState<
@@ -25,9 +31,13 @@ export default function CategoriesDetails() {
     setCategoriesDetails(data);
   }, []);
 
+  const { theme } = useTheme();
   return (
-    <SafeAreaView className='flex-1 bg-white'>
-      <StatusBar backgroundColor='#ffffff' style='dark' />
+    <ThemedSafeAreaView className='flex-1 '>
+      <StatusBar
+        style={theme === 'light' ? 'dark' : 'light'}
+        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+      />
       <Stack.Screen
         options={{
           title: 'Category Details',
@@ -36,28 +46,19 @@ export default function CategoriesDetails() {
           headerTitleAlign: 'center',
           statusBarStyle: 'dark',
           headerStyle: {
-            backgroundColor: '#fff',
+            backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
           },
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.back()}
-              className='bg-white bg-opacity-50 rounded-lg p-1 py-2 '
-            >
-              <View className='bg-gray-200 ml-2 p-2 rounded-lg'>
-                <Feather name='arrow-left' size={22} />
-              </View>
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <BackButton />,
           headerTitleStyle: {
-            color: '#333',
+            color: theme === 'light' ? '#333' : '#fff',
             fontSize: 20,
             fontWeight: 'bold',
           },
         }}
       />
-      <View>
+      <ThemedView>
         {/* category transactions */}
-        <View className='mt-4'>
+        <ThemedView className='mt-4'>
           <View>
             <FlatList
               showsHorizontalScrollIndicator={false}
@@ -67,31 +68,37 @@ export default function CategoriesDetails() {
               keyExtractor={(item) => item.id.toString()}
               ListHeaderComponent={
                 <View>
-                  <View className='px-2 mt-2'>
+                  <ThemedView className='px-2 mt-2'>
                     <TouchableOpacity
+                      style={{
+                        backgroundColor:
+                          theme === 'light' ? '#f3f4f6' : '#1c1c1e',
+                      }}
                       activeOpacity={0.7}
-                      className={`flex-row items-center justify-between bg-gray-100 p-4 rounded-lg mb-4 
+                      className={`flex-row items-center justify-between p-4 rounded-lg mb-4 
                   }`}
                     >
                       <View className='flex-row items-center'>
                         <View className='bg-white p-3 rounded-full mr-4'>
-                          <Text>🛒</Text>
+                          <Text>{icon ? icon : name.charAt(0)}</Text>
                         </View>
                         <View>
-                          <Text className='font-bold text-gray-800'>
-                            {name}
-                          </Text>
+                          <ThemedText className='font-bold'>{name}</ThemedText>
                         </View>
                       </View>
 
-                      <FontAwesome5 name='edit' size={18} color='black' />
+                      <FontAwesome5
+                        name='edit'
+                        size={18}
+                        color={theme === 'light' ? 'black' : '#fff'}
+                      />
                     </TouchableOpacity>
-                  </View>
-                  {categoriesDetails && (
+                  </ThemedView>
+                  {categoriesDetails.length !== 0 && (
                     <View className='ml-4'>
-                      <Text className='capitalize text-[15px] ml-3 mb-3 font-psemibold'>
+                      <ThemedText className='capitalize text-[15px] ml-3 mb-3 font-psemibold'>
                         Transaction for {name}
-                      </Text>
+                      </ThemedText>
                     </View>
                   )}
                 </View>
@@ -101,8 +108,8 @@ export default function CategoriesDetails() {
               }
             />
           </View>
-        </View>
-      </View>
-    </SafeAreaView>
+        </ThemedView>
+      </ThemedView>
+    </ThemedSafeAreaView>
   );
 }

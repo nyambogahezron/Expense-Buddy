@@ -14,7 +14,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].textPrimary,
+        tabBarInactiveTintColor: theme === 'light' ? '#333' : '#ffffff',
         headerShadowVisible: false,
         headerShown: false,
         tabBarShowLabel: false,
@@ -61,7 +61,7 @@ export default function TabLayout() {
           tabBarIcon: ({ focused }) => (
             <View
               style={{
-                backgroundColor: theme === 'light' ? '#f3f3f3' : '#333',
+                backgroundColor: theme === 'light' ? '#f3f3f3' : '#1c1c1e',
               }}
               className='relative flex items-center justify-center p-2 -mt-12 rounded-full w-18 h-18  '
             >
@@ -69,7 +69,7 @@ export default function TabLayout() {
                 <FontAwesome5
                   name='plus'
                   size={20}
-                  color={`${focused ? 'white' : '#333'}`}
+                  color={`${focused ? 'white' : '#1c1c1e'}`}
                 />
               </View>
             </View>

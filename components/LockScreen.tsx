@@ -65,7 +65,7 @@ export default function LockScreen() {
         <Animated.View style={[styles.codeView, animationStyles]}>
           {codeLength.map((_, index) => (
             <View
-              className={`w-7 h-7 rounded-full border-4 border-gray-500 bg-white ${
+              className={`w-7 h-7 rounded-full border-4 border-blue-600 bg-white ${
                 code[index] ? 'bg-blue-600 border-green-600' : 'bg-white'
               }`}
               key={index}

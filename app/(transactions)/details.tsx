@@ -4,10 +4,13 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
-import { Feather, FontAwesome } from '@expo/vector-icons';
+import {  FontAwesome } from '@expo/vector-icons';
 import { TransactionProps } from '@/Types';
 import { StatusBar } from 'expo-status-bar';
 import { Dimensions } from 'react-native';
+import { useTheme } from '@/context/ThemeProvider';
+import { ThemedText, ThemedView } from '@/components/Themed';
+import BackButton from '@/components/BackButton';
 
 const { width } = Dimensions.get('window');
 
@@ -18,6 +21,7 @@ export default function TransactionDetails() {
     typeof item === 'string' ? JSON.parse(item) : null;
   const { amount, date, transactionFee, description, type, category } =
     transaction;
+  const { theme } = useTheme();
 
   const transactionDetails = [
     { label: 'Amount', value: amount },
@@ -29,28 +33,25 @@ export default function TransactionDetails() {
   ];
 
   return (
-    <GestureHandlerRootView className='bg-gray-100 flex flex-1 px-2'>
-      <StatusBar backgroundColor='#ffffff' style='dark' />
+    <GestureHandlerRootView
+      style={{ backgroundColor: theme === 'light' ? '#f3f4f6' : '#070B11' }}
+      className='flex flex-1 px-2'
+    >
+      <StatusBar
+        style={theme === 'light' ? 'dark' : 'light'}
+        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+      />
       <Stack.Screen
         options={{
           title: 'Transaction Details',
           headerShown: true,
           headerTitleAlign: 'center',
           headerStyle: {
-            backgroundColor: '#fff',
+            backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
           },
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.back()}
-              className='bg-white bg-opacity-50 rounded-lg p-1 py-2 '
-            >
-              <View className='bg-gray-200 ml-1 p-2 rounded-lg'>
-                <Feather name='arrow-left' size={22} />
-              </View>
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <BackButton />,
           headerTitleStyle: {
-            color: '#333',
+            color: theme === 'light' ? '#333' : '#fff',
             fontSize: 20,
             fontWeight: 'bold',
           },
@@ -64,7 +65,11 @@ export default function TransactionDetails() {
         className='flex flex-1 mb-8'
       >
         {/* Title  */}
-        <View className='flex flex-row items-center bg-white rounded-sm h-12 w-full mt-5 mb-8'>
+        <ThemedView
+          darkColor='#1c1c1e'
+          lightColor='#f2f2f2'
+          className='flex flex-row items-center rounded-sm h-12 w-full mt-5 mb-8'
+        >
           <View
             className='flex items-center justify-center h-12 w-12 rounded-full mr-3 p-2'
             style={{
@@ -73,13 +78,15 @@ export default function TransactionDetails() {
                 : '#3030cc',
             }}
           >
-            <Text className='text-lg font-bold text-white italic'>
+            <ThemedText className='text-lg font-bold'>
               {transaction.category.icon}
-            </Text>
+            </ThemedText>
           </View>
 
-          <Text className='text-lg font-bold'>{transaction.title}</Text>
-        </View>
+          <ThemedText className='text-lg font-bold'>
+            {transaction.title}
+          </ThemedText>
+        </ThemedView>
 
         {/* Transaction Details */}
         {transactionDetails.map((detail, index) => (
@@ -88,19 +95,27 @@ export default function TransactionDetails() {
             className='mb-5 relative'
             style={{ width: width * 0.92 }}
           >
-            <Text className='text-gray-600 mb-1 ml-1 font-pbold'>
+            <ThemedText className=' mb-1 ml-1 font-pbold'>
               {detail.label}
-            </Text>
-            <View className='bg-white p-4 rounded-lg text-black'>
-              <Text className='text-[14.3px] capitalize font-pregular'>
+            </ThemedText>
+            <ThemedView
+              darkColor='#1c1c1e'
+              lightColor='#ffffff'
+              className='p-4 rounded-lg '
+            >
+              <ThemedText
+                darkColor='#ccc'
+                className='text-[14.3px] capitalize font-pregular'
+              >
                 {detail.value}
-              </Text>
-            </View>
+              </ThemedText>
+            </ThemedView>
           </View>
         ))}
 
         {/* edit btn  */}
         <TouchableOpacity
+          activeOpacity={0.7}
           onPress={() =>
             router.push({
               pathname: '/(transactions)/edit',
@@ -110,11 +125,11 @@ export default function TransactionDetails() {
           style={{ width: width * 0.9 }}
           className='flex items-center justify-center bg-orange-600 p-3 rounded-full '
         >
-          <View className='flex flex-row items-center gap-1'>
-            <FontAwesome name='edit' size={20} color='#fff' />
+          <View className='flex flex-row items-center gap-2'>
             <Text className='text-white text-lg font-bold capitalize'>
               Edit
             </Text>
+            <FontAwesome name='edit' size={18} color='#fff' />
           </View>
         </TouchableOpacity>
       </ScrollView>

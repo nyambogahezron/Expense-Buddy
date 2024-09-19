@@ -1,8 +1,13 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import { BarChart, PieChart } from 'react-native-chart-kit';
-import { Dimensions } from 'react-native';
-import { Feather, Ionicons } from '@expo/vector-icons';
+import {  Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { transactions } from '@/Data';
@@ -14,7 +19,10 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import CategoryActionCard from '@/components/CategoryActionCard';
 import LoadMoreBtn from '@/components/LoadMoreBtn';
-
+import { useTheme } from '@/context/ThemeProvider';
+import { ThemedText, ThemedView } from '@/components/Themed';
+import BackButton from '@/components/BackButton';
+import HeaderRightIconCard from '@/components/HeaderRightIconCard';
 const width = Dimensions.get('window').width;
 
 export default function Statistics() {
@@ -22,6 +30,7 @@ export default function Statistics() {
     'income'
   );
   const [Transactions, setTransactions] = useState<TransactionProps[]>([]);
+  const { theme } = useTheme();
 
   const snapPoints = useMemo(() => ['30%', '35%'], []);
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -45,8 +54,13 @@ export default function Statistics() {
   };
 
   return (
-    <GestureHandlerRootView className='flex-1 bg-white'>
-      <StatusBar style='dark' backgroundColor='#ffffff' />
+    <GestureHandlerRootView
+      className={`flex-1 ${theme === 'light' ? 'bg-gray-100' : 'bg-[#070B11]'}`}
+    >
+      <StatusBar
+        style={theme === 'light' ? 'dark' : 'light'}
+        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+      />
 
       <ScrollView
         showsHorizontalScrollIndicator={false}
@@ -57,39 +71,30 @@ export default function Statistics() {
             title: 'Reports',
             headerShown: true,
             headerTitleAlign: 'center',
-            statusBarStyle: 'dark',
+            statusBarStyle: theme === 'light' ? 'dark' : 'light',
             headerStyle: {
-              backgroundColor: '#fff',
+              backgroundColor: theme === 'light' ? '#fff' : '#070B11',
             },
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => router.back()}
-                className='bg-white bg-opacity-50 rounded-lg p-1 py-2 '
-              >
-                <View className='bg-gray-200 ml-2 p-2 rounded-lg'>
-                  <Feather name='arrow-left' size={22} />
-                </View>
-              </TouchableOpacity>
-            ),
+            headerLeft: () => <BackButton />,
             headerTitleStyle: {
-              color: '#333',
+              color: theme === 'light' ? '#333' : '#fff',
               fontSize: 20,
               fontWeight: 'bold',
             },
             headerRight: () => (
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => router.push('/(profile)/settings')}
-                className='bg-white bg-opacity-50 rounded-lg p-1 py-2'
+              <HeaderRightIconCard
+                handleOnPress={() => router.push('/(profile)/settings')}
               >
-                <View className='bg-gray-200 mr-2 p-2 rounded-lg'>
-                  <Ionicons name='settings-outline' size={22} />
-                </View>
-              </TouchableOpacity>
+                <Ionicons
+                  name='settings-outline'
+                  size={22}
+                  color={theme === 'light' ? 'black' : '#fff'}
+                />
+              </HeaderRightIconCard>
             ),
           }}
         />
-        <View className='px-3'>
+        <ThemedView className='px-3'>
           <View className='items-center w-full px-2'>
             {/* Income and Expenses Summary */}
             <View className='flex-row justify-between mb-4'>
@@ -111,10 +116,12 @@ export default function Statistics() {
 
             {/* Statistics */}
             <View className='my-3 items-center'>
-              <Text className='text-sm font-bold text-gray-800 mb-5'>
+              <ThemedText className='text-sm font-bold mb-5'>
                 Statistics
-              </Text>
-              <Text className='text-sm text-gray-500'>Apr 01 - Apr 30</Text>
+              </ThemedText>
+              <ThemedText lightColor='#6b7280' className='text-sm'>
+                Apr 01 - Apr 30
+              </ThemedText>
             </View>
           </View>
 
@@ -133,7 +140,7 @@ export default function Statistics() {
 
           <View>
             {/* Income and Expenses Tabs */}
-            <View className='flex-row justify-center my-6'>
+            <ThemedView className='flex-row justify-center my-6'>
               <TouchableOpacity
                 onPress={() => handleCatagories('income')}
                 className={`bg-white p-4 rounded-l-full border border-gray-200 w-1/2 items-center ${
@@ -162,31 +169,44 @@ export default function Statistics() {
                   Expenses
                 </Text>
               </TouchableOpacity>
-            </View>
+            </ThemedView>
 
-            <View className='my-2 ml-2'>
-              <Text className='text-lg text-black font-bold capitalize'>
+            <ThemedView className='my-2 ml-2'>
+              <ThemedText className='text-lg  font-bold capitalize'>
                 Top Five {activeCategory}
-              </Text>
-            </View>
+              </ThemedText>
+            </ThemedView>
 
             {/* Expense Detail */}
             {Transactions.map((item) => {
-              const { id, title, type, amount, date } = item;
+              const { id, title, type, amount, date, category } = item;
               return (
-                <View
+                <TouchableOpacity
+                  onPress={() =>
+                    router.push({
+                      pathname: '/(transactions)/details',
+                      params: { item: JSON.stringify(item) },
+                    })
+                  }
+                  activeOpacity={0.7}
                   key={id}
-                  className={`flex-row justify-between bg-red-100 p-4 rounded-lg mb-1 ${
+                  className={`flex-row justify-between items-center bg-red-100 p-4 rounded-lg mb-1 ${
                     type === 'expense' ? 'bg-red-50' : 'bg-green-50'
-                  }`}
+                  } ${theme === 'light' ? '' : 'bg-[#1c1c1e]'}`}
                 >
                   <View className='flex-row items-center'>
                     <View className='bg-red-200 p-3 rounded-full mr-4'>
-                      <Text>🛒</Text>
+                      <Text>{category.icon}</Text>
                     </View>
                     <View>
-                      <Text className='font-bold text-gray-800'>{title}</Text>
-                      <Text className='text-gray-500'>{date}</Text>
+                      <ThemedText className='font-bold '>{title}</ThemedText>
+                      <ThemedText
+                        darkColor='#ccc'
+                        lightColor='#6b7280 '
+                        className='text-sm'
+                      >
+                        {date}
+                      </ThemedText>
                     </View>
                   </View>
                   <Text
@@ -196,7 +216,7 @@ export default function Statistics() {
                   >
                     {'KSH' + amount}
                   </Text>
-                </View>
+                </TouchableOpacity>
               );
             })}
 
@@ -206,10 +226,10 @@ export default function Statistics() {
             />
           </View>
 
-          <View className='my-3'>
-            <Text className='ml-2 text-lg text-black font-bold'>
+          <ThemedView className='my-3'>
+            <ThemedText darkColor='#fff' className='ml-2 text-lg font-bold'>
               Top Five Transactions
-            </Text>
+            </ThemedText>
             {/* PieChart Graph */}
             <View
               className='flex items-center justify-center mb-4'
@@ -227,14 +247,14 @@ export default function Statistics() {
                 absolute
               />
             </View>
-          </View>
+          </ThemedView>
 
           {/* Expense Detail */}
-          <View className='my-3'>
-            <Text className='ml-2 text-lg text-black font-bold'>
+          <ThemedView className='my-3'>
+            <ThemedText className='ml-2 text-lg font-bold'>
               Categories
-            </Text>
-          </View>
+            </ThemedText>
+          </ThemedView>
           {TransactionCategories.slice(0, 5).map((item) => {
             const { id, name, icon } = item;
             return (
@@ -258,7 +278,7 @@ export default function Statistics() {
             title='View All'
             handleOnPress={() => router.push('/modals/categories')}
           />
-        </View>
+        </ThemedView>
       </ScrollView>
 
       {/* actions BottomSheet */}

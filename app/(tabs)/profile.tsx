@@ -7,13 +7,19 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import { Ionicons, Feather } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ExternalLink } from '@/components/ExternalLink';
 import { useTheme } from '@/context/ThemeProvider';
-import { ThemedSafeAreaView, ThemedText } from '@/components/Themed';
+import {
+  ThemedSafeAreaView,
+  ThemedText,
+  ThemedView,
+} from '@/components/Themed';
 import OptionContainer from '@/components/OptionContainer';
+import BackButton from '@/components/BackButton';
+import HeaderRightIconCard from '@/components/HeaderRightIconCard';
 
 const width = Dimensions.get('window').width;
 
@@ -31,37 +37,25 @@ const Profile = () => {
           title: 'Profile',
           headerShown: true,
           headerTitleAlign: 'center',
-          statusBarStyle: theme === 'light' ? 'dark' : 'light',
           headerStyle: {
             backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
           },
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.back()}
-              className={`bg-opacity-50 rounded-lg p-1 py-2 ${
-                theme === 'light' ? 'bg-white' : 'bg-[#070B11]'
-              }`}
-            >
-              <View className='bg-gray-200 ml-2 p-2 rounded-lg'>
-                <Feather name='arrow-left' size={22} />
-              </View>
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <BackButton />,
           headerTitleStyle: {
             color: theme === 'light' ? '#333' : '#fff',
             fontSize: 20,
             fontWeight: 'bold',
           },
           headerRight: () => (
-            <TouchableOpacity
-              className={`bg-opacity-50 rounded-lg p-1 py-2 ${
-                theme === 'light' ? 'bg-white' : 'bg-[#070B11]'
-              }`}
+            <HeaderRightIconCard
+              handleOnPress={() => router.push('/(auth)/login')}
             >
-              <View className='bg-gray-200 mr-2 p-2 rounded-lg'>
-                <Ionicons name='log-out-outline' size={22} />
-              </View>
-            </TouchableOpacity>
+              <Ionicons
+                name='log-out-outline'
+                size={22}
+                color={theme === 'light' ? 'black' : '#fff'}
+              />
+            </HeaderRightIconCard>
           ),
         }}
       />
@@ -71,10 +65,10 @@ const Profile = () => {
       >
         {/* Header and Profile Info */}
         <View className='flex items-center mb-8 mt-5'>
-          <View
-            className={`w-28 h-28 flex items-center justify-center rounded-full ${
-              theme === 'light' ? 'bg-white' : 'bg-blue-50'
-            }`}
+          <ThemedView
+            darkColor='#1c1c1e'
+            lightColor='#f3f4f6'
+            className={`w-28 h-28 flex items-center justify-center rounded-full `}
           >
             <Image
               source={{
@@ -82,7 +76,7 @@ const Profile = () => {
               }}
               className='w-24 h-24 rounded-full'
             />
-          </View>
+          </ThemedView>
           <ThemedText className='text-lg font-bold mt-4'>John Doe</ThemedText>
           <ThemedText
             className={`text-gray-600 ${
@@ -108,10 +102,10 @@ const Profile = () => {
 
           <View className='mb-4 flex items-center justify-center'>
             <ExternalLink href='https://nyambogahezron.vercel.app'>
-              <View
-                className={`flex-row items-center justify-between rounded-lg px-4 py-3 ${
-                  theme === 'light' ? 'bg-white' : 'bg-[#1c1c1e]'
-                }`}
+              <ThemedView
+                darkColor='#1c1c1e'
+                lightColor='#f3f4f6'
+                className={`flex-row items-center justify-between rounded-lg px-4 py-3 `}
                 style={{ width: width * 0.9 }}
               >
                 <View className='flex-row items-center '>
@@ -131,14 +125,14 @@ const Profile = () => {
                 <View className='absolute flex right-2'>
                   <Ionicons name='chevron-forward' size={22} color='#6B7280' />
                 </View>
-              </View>
+              </ThemedView>
             </ExternalLink>
           </View>
 
           <TouchableOpacity
             activeOpacity={0.7}
             className={`flex-row items-center rounded-lg px-4 py-3 ${
-              theme === 'light' ? 'bg-white' : 'bg-[#1c1c1e]'
+              theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'
             }`}
             onPress={() => router.push('/(tabs)/')}
           >

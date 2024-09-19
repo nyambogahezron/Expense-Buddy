@@ -3,11 +3,16 @@ import React, { useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
-import { router } from 'expo-router';
-import { Feather, FontAwesome } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import { TransactionProps } from '@/Types';
 import { StatusBar } from 'expo-status-bar';
 import { Dimensions } from 'react-native';
+import { useTheme } from '@/context/ThemeProvider';
+import { ThemedText, ThemedView } from '@/components/Themed';
+import BackButton from '@/components/BackButton';
+import CustomTextInput from '@/components/CustomTextInput';
+import DatePicker from '@/components/DatePicker';
+import TransactionTypePicker from '@/components/TransactionTypePicker';
 
 const { width } = Dimensions.get('window');
 
@@ -19,14 +24,15 @@ export default function EditTransaction() {
 
   const { title, amount, date, transactionFee, description, type, category } =
     initialTransaction;
-
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [titleF, setTitle] = useState(title);
   const [amountF, setAmount] = useState(amount);
-  const [dateF, setDate] = useState(date);
+  const [dateF, setDate] = useState(new Date());
   const [transactionFeeF, setTransactionFee] = useState(transactionFee);
   const [descriptionF, setDescription] = useState(description);
   const [typeF, setType] = useState(type);
   const [categoryF, setCategory] = useState(category.name);
+  const { theme } = useTheme();
 
   const handleSave = () => {
     console.log(
@@ -41,28 +47,25 @@ export default function EditTransaction() {
   };
 
   return (
-    <GestureHandlerRootView className='bg-gray-100 flex flex-1 px-2'>
-      <StatusBar backgroundColor='#ffffff' style='dark' />
+    <GestureHandlerRootView
+      style={{ backgroundColor: theme === 'light' ? '#f3f4f6' : '#070B11' }}
+      className='flex flex-1 px-2'
+    >
+      <StatusBar
+        style={theme === 'light' ? 'dark' : 'light'}
+        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+      />
       <Stack.Screen
         options={{
           title: 'Edit Transaction',
           headerShown: true,
           headerTitleAlign: 'center',
           headerStyle: {
-            backgroundColor: '#fff',
+            backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
           },
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.back()}
-              className='bg-white bg-opacity-50 rounded-lg p-1 py-2 '
-            >
-              <View className='bg-gray-200 ml-1 p-2 rounded-lg'>
-                <Feather name='arrow-left' size={22} />
-              </View>
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <BackButton />,
           headerTitleStyle: {
-            color: '#333',
+            color: theme === 'light' ? '#333' : '#fff',
             fontSize: 20,
             fontWeight: 'bold',
           },
@@ -76,7 +79,11 @@ export default function EditTransaction() {
         className='flex flex-1 mb-8'
       >
         {/* Title  */}
-        <View className='flex flex-row items-center bg-white rounded-sm h-10 w-full mt-5 mb-8'>
+        <ThemedView
+          darkColor='#1c1c1e'
+          lightColor='#f2f2f2'
+          className='flex flex-row items-center rounded-sm h-10 w-full mt-5 mb-8'
+        >
           <View
             className='flex items-center justify-center h-12 w-12 rounded-full mr-3 p-2'
             style={{
@@ -85,87 +92,48 @@ export default function EditTransaction() {
                 : '#3030cc',
             }}
           >
-            <Text className='text-lg font-bold text-white italic'>
-              {initialTransaction.category.icon}
-            </Text>
+            <ThemedText className='text-lg font-bold'>
+              {initialTransaction.category.icon.charAt(0)}
+            </ThemedText>
           </View>
 
-          <Text className='text-lg font-bold'>{initialTransaction.title}</Text>
-        </View>
+          <ThemedText className='text-lg font-bold'>
+            {initialTransaction.title}
+          </ThemedText>
+        </ThemedView>
 
         {/* Transaction Details */}
-        <View className='mb-5 relative' style={{ width: width * 0.92 }}>
-          <Text className='text-gray-600 mb-1 ml-1 font-pbold'>Title</Text>
-          <View className='bg-white p-4 rounded-lg text-black'>
-            <TextInput
-              value={titleF}
-              onChangeText={setTitle}
-              className='text-[14.3px] capitalize font-pregular'
-            />
-          </View>
-        </View>
-        <View className='mb-5 relative' style={{ width: width * 0.92 }}>
-          <Text className='text-gray-600 mb-1 ml-1 font-pbold'>Amount</Text>
-          <View className='bg-white p-4 rounded-lg text-black'>
-            <TextInput
-              value={amountF}
-              onChangeText={setAmount}
-              className='text-[14.3px] capitalize font-pregular'
-              keyboardType='numeric'
-            />
-          </View>
-        </View>
 
-        <View className='mb-5 relative' style={{ width: width * 0.92 }}>
-          <Text className='text-gray-600 mb-1 ml-1 font-pbold'>Date</Text>
-          <View className='bg-white p-4 rounded-lg text-black'>
-            <TextInput
-              value={dateF}
-              onChangeText={setDate}
-              className='text-[14.3px] capitalize font-pregular'
-            />
-          </View>
-        </View>
+        <CustomTextInput title='Title' value={titleF} onChangeText={setTitle} />
+        <CustomTextInput
+          title='Amount'
+          value={amountF}
+          onChangeText={setAmount}
+          keyboardType='numeric'
+        />
 
-        <View className='mb-5 relative' style={{ width: width * 0.92 }}>
-          <Text className='text-gray-600 mb-1 ml-1 font-pbold'>
-            Transaction Fee
-          </Text>
-          <View className='bg-white p-4 rounded-lg text-black'>
-            <TextInput
-              value={transactionFeeF}
-              onChangeText={setTransactionFee}
-              keyboardType='numeric'
-              className='text-[14.3px] capitalize font-pregular'
-            />
-          </View>
-        </View>
+        <DatePicker
+          showDatePicker={showDatePicker}
+          setShowDatePicker={setShowDatePicker}
+          date={dateF}
+          setDate={setDate}
+        />
+        <CustomTextInput
+          title='Transaction Fee'
+          value={transactionFeeF}
+          onChangeText={setTransactionFee}
+          keyboardType='numeric'
+        />
 
-        <View className='mb-5 relative' style={{ width: width * 0.92 }}>
-          <Text className='text-gray-600 mb-1 ml-1 font-pbold'>
-            Description
-          </Text>
-          <View className='bg-white p-4 rounded-lg text-black'>
-            <TextInput
-              value={descriptionF}
-              onChangeText={setDescription}
-              className='text-[14.3px] capitalize font-pregular'
-            />
-          </View>
-        </View>
+        <CustomTextInput
+          title='Description'
+          multiline={true}
+          value={descriptionF}
+          onChangeText={setDescription}
+        />
 
-        <View className='mb-5 relative' style={{ width: width * 0.92 }}>
-          <Text className='text-gray-600 mb-1 ml-1 font-pbold'>
-            Transaction Type
-          </Text>
-          <View className='bg-white p-4 rounded-lg text-black'>
-            <TextInput
-              value={typeF}
-              onChangeText={() => setType.toString()}
-              className='text-[14.3px] capitalize font-pregular'
-            />
-          </View>
-        </View>
+        {/* Transaction Type */}
+        {/* <TransactionTypePicker setType={(itemValue) => setType} type={typeF} /> */}
 
         <View className='mb-5 relative' style={{ width: width * 0.92 }}>
           <Text className='text-gray-600 mb-1 ml-1 font-pbold'>

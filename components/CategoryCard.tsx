@@ -1,6 +1,8 @@
 import { Dispatch } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
+import { useTheme } from '@/context/ThemeProvider';
+import { ThemedText } from '@/components/Themed';
 
 type CategoryCardProps = {
   handleOnPress: () => void;
@@ -20,11 +22,15 @@ export default function CategoryCard({
   icon,
   handleOpenPress,
 }: CategoryCardProps) {
+  const { theme } = useTheme();
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       key={id}
-      className={`flex-row items-center justify-between bg-gray-100 p-4 rounded-lg mb-1 
+      style={{
+        backgroundColor: theme === 'light' ? '#f3f4f6' : '#1c1c1e',
+      }}
+      className={`flex-row items-center justify-between p-4 rounded-lg mb-1 
                 }`}
     >
       <TouchableOpacity
@@ -36,7 +42,7 @@ export default function CategoryCard({
           <Text>{icon ? icon : name.charAt(0)}</Text>
         </View>
         <View>
-          <Text className='font-bold text-gray-800'>{name}</Text>
+          <ThemedText className='font-bold'>{name}</ThemedText>
         </View>
       </TouchableOpacity>
       <TouchableOpacity
@@ -44,7 +50,11 @@ export default function CategoryCard({
         activeOpacity={0.7}
         onPress={handleOpenPress}
       >
-        <Entypo name='dots-three-vertical' size={18} color='black' />
+        <Entypo
+          name='dots-three-vertical'
+          size={18}
+          color={theme === 'light' ? 'black' : '#fff'}
+        />
       </TouchableOpacity>
     </TouchableOpacity>
   );

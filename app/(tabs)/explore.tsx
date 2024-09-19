@@ -11,6 +11,8 @@ import EmptyListCard from '@/components/EmptyListCard';
 import LoadMoreBtn from '@/components/LoadMoreBtn';
 import { useTheme } from '@/context/ThemeProvider';
 import { ThemedSafeAreaView, ThemedView } from '@/components/Themed';
+import HeaderRightIconCard from '@/components/HeaderRightIconCard';
+import BackButton from '@/components/BackButton';
 
 type categoryType = 'All' | 'income' | 'expense';
 
@@ -72,29 +74,18 @@ export default function HomeScreen() {
           headerStyle: {
             backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
           },
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.back()}
-              className={`bg-opacity-50 rounded-lg p-1 py-2 ${
-                theme === 'light' ? 'bg-white' : 'bg-[#070B11]'
-              }`}
-            >
-              <View className='bg-gray-200 ml-2 p-2 rounded-lg'>
-                <Feather name='arrow-left' size={22} />
-              </View>
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <BackButton />,
 
           headerRight: () => (
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => router.push('/(profile)/settings')}
-              className={` bg-opacity-50 rounded-lg p-1 py-2 {theme === 'light' ? 'bg-white' : 'bg-[#070B11]'}`}
+            <HeaderRightIconCard
+              handleOnPress={() => router.push('/(profile)/settings')}
             >
-              <View className='bg-gray-200 mr-2 p-2 rounded-lg'>
-                <Ionicons name='settings-outline' size={22} />
-              </View>
-            </TouchableOpacity>
+              <Ionicons
+                name='log-out-outline'
+                size={22}
+                color={theme === 'light' ? 'black' : '#fff'}
+              />
+            </HeaderRightIconCard>
           ),
         }}
       />

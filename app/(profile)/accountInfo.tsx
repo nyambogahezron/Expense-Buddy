@@ -3,19 +3,21 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  TextInput,
   Dimensions,
-  GestureResponderEvent,
   TouchableWithoutFeedback,
   ScrollView,
 } from 'react-native';
 import React, { useMemo, useRef } from 'react';
-import { Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
+import { Feather, FontAwesome } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { ThemedSafeAreaView } from '@/components/Themed';
+import { useTheme } from '@/context/ThemeProvider';
+import { CustomButton } from '@/components';
+import CustomTextInput from '@/components/CustomTextInput';
+import BackButton from '@/components/BackButton';
 
 const { width } = Dimensions.get('window');
 
@@ -26,15 +28,19 @@ export default function AccountInfo() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleOpenPress = () => bottomSheetRef.current?.expand();
 
+  const { theme } = useTheme();
+
   // form submission handler
-  const HandleSubmit = (e: GestureResponderEvent): void => {
-    e.preventDefault();
+  const HandleSubmit = () => {
     console.log(email, name);
   };
 
   return (
-    <SafeAreaView className='bg-gray-100 flex flex-1 px-2'>
-      <StatusBar backgroundColor='#ffffff' style='dark' />
+    <ThemedSafeAreaView className='flex flex-1'>
+      <StatusBar
+        style={theme === 'light' ? 'dark' : 'light'}
+        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+      />
       <GestureHandlerRootView>
         <Stack.Screen
           options={{
@@ -43,39 +49,20 @@ export default function AccountInfo() {
             headerTitleAlign: 'center',
             statusBarStyle: 'light',
             headerStyle: {
-              backgroundColor: '#fff',
+              backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
             },
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => router.back()}
-                className='bg-white bg-opacity-50 rounded-lg p-1 py-2 '
-              >
-                <View className='bg-gray-200 ml-2 p-2 rounded-lg'>
-                  <Feather name='arrow-left' size={22} />
-                </View>
-              </TouchableOpacity>
-            ),
+            headerLeft: () => <BackButton />,
             headerTitleStyle: {
-              color: '#333',
+              color: theme === 'light' ? '#333' : '#fff',
               fontSize: 20,
               fontWeight: 'bold',
             },
-            headerRight: () => (
-              <TouchableOpacity
-                onPress={() => router.push('/(profile)/settings')}
-                className='bg-white bg-opacity-50 rounded-lg p-1 py-2'
-              >
-                <View className='bg-gray-200 mr-2 p-2 rounded-lg'>
-                  <Ionicons name='settings-outline' size={22} />
-                </View>
-              </TouchableOpacity>
-            ),
           }}
         />
         <ScrollView
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-          className='mb-5'
+          className='mb-5 px-2'
         >
           {/* Header and Profile Info */}
           <View className='flex items-center mb-8 mt-2'>
@@ -96,41 +83,25 @@ export default function AccountInfo() {
             <Text className='text-gray-600'></Text>
           </View>
           {/* account info  */}
-          <View className='flex flex-col items-center'>
-            {/* email */}
-            <View className='mb-1 ' style={{ width: width * 0.92 }}>
-              <Text className='text-gray-600 mb-2 ml-2 font-pbold'>Email</Text>
-              <TextInput
-                placeholder='hi@uigodesign.com'
-                className='bg-white p-4 rounded-lg text-gray-800'
-                keyboardType='email-address'
-                value={email}
-                onChangeText={setEmail}
-              />
-            </View>
-            <View className='flex flex-row items-center justify-between mt-2 mb-3'>
-              {/* name */}
-              <View className='mb-6 relative' style={{ width: width * 0.92 }}>
-                <Text className='text-gray-600 mb-2 ml-2 font-pbold'>Name</Text>
-                <TextInput
-                  placeholder='name'
-                  className='bg-white p-4 rounded-lg text-gray-800'
-                  value={name}
-                  onChangeText={setName}
-                />
-              </View>
-            </View>
-            <TouchableOpacity
-              onPress={HandleSubmit}
-              style={{ width: width * 0.9 }}
-              className='flex items-center justify-center bg-orange-600 p-4 rounded-full '
-            >
-              <View className='flex flex-row items-center gap-1'>
-                <Text className='text-white text-lg font-bold capitalize'>
-                  Edit
-                </Text>
-              </View>
-            </TouchableOpacity>
+          <View className='flex flex-col px-3'>
+            <CustomTextInput
+              title='Email'
+              onChangeText={(text) => setEmail(text)}
+              keyboardType='email-address'
+              value={email}
+            />
+            <CustomTextInput
+              title='Name'
+              onChangeText={(text) => setName(text)}
+              value={name}
+            />
+
+            <CustomButton
+              title='Edit'
+              customStyles='bg-orange-600'
+              textStyles='text-white text-lg font-bold'
+              handleOpenPress={() => HandleSubmit()}
+            />
           </View>
         </ScrollView>
         {/* bottom sheet to upload profile picture */}
@@ -162,6 +133,6 @@ export default function AccountInfo() {
           </View>
         </BottomSheet>
       </GestureHandlerRootView>
-    </SafeAreaView>
+    </ThemedSafeAreaView>
   );
 }
