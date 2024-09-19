@@ -6,8 +6,9 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   ScrollView,
+  Button,
 } from 'react-native';
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { Feather, FontAwesome } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -18,12 +19,14 @@ import { useTheme } from '@/context/ThemeProvider';
 import { CustomButton } from '@/components';
 import CustomTextInput from '@/components/CustomTextInput';
 import BackButton from '@/components/BackButton';
+import * as ImagePicker from 'expo-image-picker';
 
 const { width } = Dimensions.get('window');
 
 export default function AccountInfo() {
-  const [email, setEmail] = React.useState('johndoe@gmail.com');
-  const [name, setName] = React.useState('John Doe');
+  const [email, setEmail] = useState('johndoe@gmail.com');
+  const [name, setName] = useState('John Doe');
+  const [selectedImage, setSelectedImage] = useState<string>();
   const snapPoints = useMemo(() => ['20%', '25%'], []);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleOpenPress = () => bottomSheetRef.current?.expand();
@@ -33,6 +36,21 @@ export default function AccountInfo() {
   // form submission handler
   const HandleSubmit = () => {
     console.log(email, name);
+  };
+
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+      console.log(result);
+      
+    } else {
+      alert('You did not select any image.');
+    }
   };
 
   return (
@@ -82,6 +100,14 @@ export default function AccountInfo() {
             <Text className='text-lg font-bold mt-4'>John Doe</Text>
             <Text className='text-gray-600'></Text>
           </View>
+
+          <Button title='Choose a photo' onPress={pickImageAsync} />
+          {selectedImage && (
+            <Image
+              source={{ uri: selectedImage }}
+              style={{ width: 200, height: 200 }}
+            />
+          )}
           {/* account info  */}
           <View className='flex flex-col px-3'>
             <CustomTextInput

@@ -15,7 +15,11 @@ export default function LoadMoreBtn({
   const { theme } = useTheme();
   return (
     <TouchableOpacity activeOpacity={0.7} onPress={handleOnPress}>
-      <ThemedView className='flex-row items-center justify-center h-12 w-full mr-3 rounded-lg border-red-50 border-2 mt-4 mb-4 px-2'>
+      <ThemedView
+        darkColor='#1c1c1e'
+        lightColor='#f3f4f6'
+        className='flex-row items-center justify-center h-12 w-full mr-3 rounded-[12px] border-2 mt-4 mb-4 px-2'
+      >
         <View className='flex-row items-center justify-between w-full px-2'>
           <ThemedText className='text-[15px] font-semibold  text-gray-600 ml-4'>
             {title}
