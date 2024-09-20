@@ -10,14 +10,10 @@ import * as LocalAuthentication from 'expo-local-authentication';
 import { Alert, AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import { supabase } from '@/utils/supabase';
+import { Session } from '@supabase/supabase-js';
+import { GlobalContextType } from '@/Types';
 
-type GlobalContextType = {
-  isUnlocked: boolean;
-  appInactive: boolean;
-  isAuthenticated: boolean;
-  authenticate: () => Promise<void>;
-  setIsUnlocked: React.Dispatch<React.SetStateAction<boolean>>;
-};
 
 const GlobalContext = createContext<GlobalContextType>({
   isUnlocked: false,
@@ -25,6 +21,10 @@ const GlobalContext = createContext<GlobalContextType>({
   isAuthenticated: true,
   authenticate: async () => {},
   setIsUnlocked: () => {},
+  session: null,
+  user: null,
+  setUser: () => {},
+  loading: false,
 });
 
 const LOCK_TIME = 3000;
@@ -32,10 +32,38 @@ const LOCK_TIME = 3000;
 export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [appInactive, setAppInactive] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // handle authentication first
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
   const appState = useRef(AppState.currentState);
   const router = useRouter();
+
+  // get current session
+  useEffect(() => {
+    const fetchSession = async () => {
+      const { data: { session }  } = await supabase.auth.getSession();
+      setSession(session);
+
+      if (session) {
+        // fetch profile
+        const { data } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+        setUser(data || null);
+      }
+
+      setLoading(false);
+    };
+
+    fetchSession();
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
 
   // local authentication using biometrics or pattern
   const authenticate = async () => {
@@ -112,6 +140,10 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
         setIsUnlocked,
         appInactive,
         isAuthenticated,
+        session,
+        user,
+        setUser,
+        loading,
       }}
     >
       {children}

@@ -72,7 +72,7 @@ export default function AddExpense() {
   return (
     <GestureHandlerRootView
       className='flex-1'
-      style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#070B11' }}
+      style={{ backgroundColor: theme === 'light' ? '#f3f4f6' : '#070B11' }}
     >
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
@@ -124,7 +124,7 @@ export default function AddExpense() {
               <ThemedText className='font-pbold ml-2 '>Category</ThemedText>
               <ThemedView
                 style={{
-                  backgroundColor: theme === 'light' ? '#f3f4f6' : '#1c1c1e',
+                  backgroundColor: theme === 'light' ? '#e5e7eb' : '#1c1c1e',
                 }}
                 className='relative h-12 flex-row justify-between items-center p-4 mt-2 px-4 py-2 rounded-lg'
               >
@@ -146,7 +146,7 @@ export default function AddExpense() {
               <ThemedText className='font-pbold ml-2 mb-1'>Amount</ThemedText>
               <ThemedView
                 darkColor='#1c1c1e'
-                lightColor='#f3f4f6'
+                lightColor='#e5e7eb'
                 className='relative p-4 h-12 rounded-lg flex-row justify-between items-center mb-4'
               >
                 <TextInput
@@ -186,27 +186,13 @@ export default function AddExpense() {
             />
 
             {/* Description Input */}
-            <View className='mb-3'>
-              <ThemedText className='font-pbold ml-2 mb-1'>
-                Description
-              </ThemedText>
-              <ThemedView
-                darkColor='#1c1c1e'
-                lightColor='#f3f4f6'
-                className='p-4 rounded-lg'
-              >
-                <TextInput
-                  placeholderTextColor={theme === 'light' ? '#333' : '#ccc'}
-                  className={`text-sm font-bold flex-1 h-12  ${
-                    theme === 'light' ? 'text-gray-800' : 'text-gray-200'
-                  }`}
-                  multiline
-                  placeholder='Add a description...'
-                  value={description}
-                  onChangeText={setDescription}
-                />
-              </ThemedView>
-            </View>
+            <CustomTextInput
+              title='Description'
+              placeholder='Add a description...'
+              value={description}
+              onChangeText={setDescription}
+              multiline
+            />
 
             {/* Submit Button */}
             <CustomButton

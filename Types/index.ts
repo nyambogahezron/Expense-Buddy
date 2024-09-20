@@ -1,3 +1,6 @@
+import { Session } from "@supabase/supabase-js";
+import React from "react";
+
 type TransactionProps = {
   id: number;
   title: string;
@@ -25,4 +28,17 @@ type TransactionCategoryProps = {
   icon: string;
 };
 
-export { TransactionProps, TransactionCategoryProps };
+
+type GlobalContextType = {
+  isUnlocked: boolean;
+  appInactive: boolean;
+  isAuthenticated: boolean;
+  authenticate: () => Promise<void>;
+  setIsUnlocked: React.Dispatch<React.SetStateAction<boolean>>;
+  session: Session | null;
+  user: any;
+  loading?: boolean;
+  setUser: React.Dispatch<React.SetStateAction<any>>;
+};
+
+export { TransactionProps, TransactionCategoryProps, GlobalContextType };

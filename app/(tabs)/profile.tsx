@@ -67,7 +67,7 @@ const Profile = () => {
         <View className='flex items-center mb-8 mt-5'>
           <ThemedView
             darkColor='#1c1c1e'
-            lightColor='#f3f4f6'
+            lightColor='#ffffff'
             className={`w-28 h-28 flex items-center justify-center rounded-full `}
           >
             <Image

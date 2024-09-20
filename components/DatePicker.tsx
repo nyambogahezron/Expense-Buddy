@@ -37,7 +37,7 @@ export default function DatePicker({
       <ThemedText className='font-pbold l-2 mb-1'>Date</ThemedText>
       <ThemedView
         darkColor='#1c1c1e'
-        lightColor='#f3f4f6'
+        lightColor='#e5e7eb'
         className='flex-row justify-between h-12 items-center  p-4 rounded-lg mb-4'
       >
         <ThemedText className='font-psemibold text-sm'>

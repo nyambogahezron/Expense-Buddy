@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {  ScrollView } from 'react-native';
+import { Alert, ScrollView } from 'react-native';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
@@ -9,6 +9,7 @@ import CustomPasswordInput from '@/components/CustomPasswordInput';
 import AuthFooter from '@/components/AuthFooter';
 import AuthHeader from '@/components/AuthHeader';
 import { CustomButton } from '@/components';
+import { supabase } from '@/utils/supabase';
 
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -16,6 +17,7 @@ export default function Login() {
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [username, setUsername] = useState<string>('');
+  const [loading, setLoading] = useState(false);
 
   const { theme } = useTheme();
 
@@ -25,11 +27,32 @@ export default function Login() {
     console.log('Password', password);
   };
 
+  async function signUpWithUser() {
+    setLoading(true);
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: {
+          first_name: username,
+        },
+      },
+    });
+
+    if (error) Alert.alert(error.message);
+    if (!session)
+      Alert.alert('Please check your inbox for email verification!');
+    setLoading(false);
+  }
+
   return (
     <ThemedSafeAreaView className='flex-1 px-3 w-full justify-center'>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
-        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+        backgroundColor={theme === 'light' ? '#f3f4f6' : '#070B11'}
       />
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView

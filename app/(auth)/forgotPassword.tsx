@@ -22,7 +22,7 @@ export default function ForgotPassword() {
     <ThemedSafeAreaView className='flex-1 flex px-3 w-full justify-center h-full items-center'>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
-        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+        backgroundColor={theme === 'light' ? '#f3f4f6' : '#070B11'}
       />
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView

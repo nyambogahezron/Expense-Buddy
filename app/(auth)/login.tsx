@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
@@ -9,26 +9,37 @@ import CustomPasswordInput from '@/components/CustomPasswordInput';
 import AuthFooter from '@/components/AuthFooter';
 import AuthHeader from '@/components/AuthHeader';
 import { CustomButton } from '@/components';
+import { supabase } from '@/utils/supabase';
 
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [username, setUsername] = useState<string>('');
+  const [loading, setLoading] = useState(false);
 
   const { theme } = useTheme();
 
   const handleSubmission = () => {
-    console.log('Username:', username);
     console.log('Email:', email);
     console.log('Password', password);
   };
+
+  async function signInWithUser() {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+
+    if (error) Alert.alert(error.message);
+    setLoading(false);
+  }
 
   return (
     <ThemedSafeAreaView className='flex-1 px-3 w-full justify-center'>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
-        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+        backgroundColor={theme === 'light' ? '#f3f4f6' : '#070B11'}
       />
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView

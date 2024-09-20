@@ -37,9 +37,7 @@ export default function Settings() {
             headerStyle: {
               backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
             },
-            headerLeft: () => (
-             <BackButton/>
-            ),
+            headerLeft: () => <BackButton />,
             headerTitleStyle: {
               color: theme === 'light' ? '#333' : '#fff',
               fontSize: 20,
@@ -51,7 +49,7 @@ export default function Settings() {
         <ScrollView
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-          className='flex flex-1 px-3 mt-4'
+          className='flex flex-1 px-3 '
         >
           <ThemedView>
             <OptionContainer
