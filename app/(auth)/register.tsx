@@ -28,6 +28,11 @@ export default function Login() {
   };
 
   async function signUpWithUser() {
+    if (!email || !password || !username || !confirmPassword)
+      return Alert.alert('Please fill all fields');
+
+    if (password !== confirmPassword) return Alert.alert('Passwords do not match');
+
     setLoading(true);
     const {
       data: { session },
@@ -41,6 +46,8 @@ export default function Login() {
         },
       },
     });
+    console.log(session);
+    
 
     if (error) Alert.alert(error.message);
     if (!session)
@@ -94,7 +101,7 @@ export default function Login() {
         <CustomButton
           title='Register'
           customStyles='bg-blue-600'
-          handleOpenPress={handleSubmission}
+          handleOpenPress={signUpWithUser}
           textStyles='text-white text-lg font-bold'
         />
 

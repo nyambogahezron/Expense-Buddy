@@ -5,10 +5,18 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { View } from 'react-native';
 import { useTheme } from '@/context/ThemeProvider';
+import { useGlobalContext } from '@/context/GlobalProvider';
+import { router } from 'expo-router';
+import { useEffect } from 'react';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { theme } = useTheme();
+  const { session, loading } = useGlobalContext();
+
+  useEffect(() => {
+    if (!session && !loading) return router.replace('/');
+  }, [session]);
 
   return (
     <Tabs

@@ -36,7 +36,7 @@ type GlobalContextType = {
   authenticate: () => Promise<void>;
   setIsUnlocked: React.Dispatch<React.SetStateAction<boolean>>;
   session: Session | null;
-  user: any;
+  User: any;
   loading?: boolean;
   setUser: React.Dispatch<React.SetStateAction<any>>;
 };

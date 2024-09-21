@@ -1,5 +1,8 @@
-import { Stack } from 'expo-router';
+import { useGlobalContext } from '@/context/GlobalProvider';
+import { router, Stack } from 'expo-router';
 
 export default function Layout() {
-  return <Stack />;
+   const { session } = useGlobalContext();
+   if (!session) return router.replace('/');
+   return <Stack />;
 }

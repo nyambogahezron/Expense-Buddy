@@ -43,7 +43,7 @@ export default function CustomPasswordInput({
         className={`p-4 rounded-lg flex-row justify-between items-center mb-4 relative ${inputContainerStyle}`}
       >
         <TextInput
-          placeholderTextColor={theme === 'light' ? '#333' : '#ccc'}
+          placeholderTextColor={theme === 'light' ? '#6b7280' : '#ccc'}
           className={`font-bold flex-1 ${textInputStyle}  ${
             theme === 'light' ? 'text-gray-800' : 'text-gray-200'
           }`}

@@ -14,7 +14,7 @@ const { width, height } = Dimensions.get('window');
 export default function LandingPage() {
   const snapPoints = useMemo(() => ['30%', '35%'], []);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const { isAuthenticated } = useGlobalContext();
+  const { session, loading } = useGlobalContext();
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
 
@@ -23,10 +23,10 @@ export default function LandingPage() {
   }, []);
 
   useEffect(() => {
-    if (isMounted && isAuthenticated) {
+    if (session && !loading) {
       router.replace('/(tabs)/');
     }
-  }, [isMounted, isAuthenticated]);
+  }, []);
 
   return (
     <GestureHandlerRootView className='flex-1 justify-center items-center bg-[#161622]'>

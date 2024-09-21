@@ -39,7 +39,7 @@ export default function CustomTextInput({
         className={`p-4 rounded-lg flex-row justify-between items-center mb-4 ${inputContainerStyle}`}
       >
         <TextInput
-          placeholderTextColor={theme === 'light' ? '#333' : '#ccc'}
+          placeholderTextColor={theme === 'light' ? '#6b7280' : '#ccc'}
           className={`text-sm font-bold flex-1 ${textInputStyle}  ${
             theme === 'light' ? 'text-gray-800' : 'text-gray-200'
           }`}

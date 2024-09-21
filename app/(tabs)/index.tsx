@@ -17,10 +17,12 @@ import {
 import { Colors } from '@/constants/Colors';
 import { useTheme } from '@/context/ThemeProvider';
 import TransactionHeader from '@/components/TransactionHeader';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 export default function HomeScreen() {
   const transactionsData = transactions.slice(0, 8);
   const colorScheme = useColorScheme();
+  const { User } = useGlobalContext();
   const { theme } = useTheme();
 
   return (
@@ -47,7 +49,9 @@ export default function HomeScreen() {
                   </ThemedText>
                   <HelloWave />
                 </View>
-                <ThemedText className='text-lg font-bold'>John Doe</ThemedText>
+                <ThemedText className='text-lg font-bold'>
+                  {User?.first_name}
+                </ThemedText>
               </View>
             </ThemedView>
           ),

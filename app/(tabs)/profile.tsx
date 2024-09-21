@@ -20,11 +20,22 @@ import {
 import OptionContainer from '@/components/OptionContainer';
 import BackButton from '@/components/BackButton';
 import HeaderRightIconCard from '@/components/HeaderRightIconCard';
+import { supabase } from '@/utils/supabase';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 const width = Dimensions.get('window').width;
 
 const Profile = () => {
   const { theme } = useTheme();
+  const { User } = useGlobalContext();
+
+  // Sign out user
+  async function signOut() {
+    const { error } = await supabase.auth.signOut();
+    if (error) console.log('Error logging out:', error.message);
+
+    router.replace('/(auth)/login');
+  }
 
   return (
     <ThemedSafeAreaView className='flex-1'>
@@ -47,9 +58,7 @@ const Profile = () => {
             fontWeight: 'bold',
           },
           headerRight: () => (
-            <HeaderRightIconCard
-              handleOnPress={() => router.push('/(auth)/login')}
-            >
+            <HeaderRightIconCard handleOnPress={signOut}>
               <Ionicons
                 name='log-out-outline'
                 size={22}
@@ -77,13 +86,15 @@ const Profile = () => {
               className='w-24 h-24 rounded-full'
             />
           </ThemedView>
-          <ThemedText className='text-lg font-bold mt-4'>John Doe</ThemedText>
+          <ThemedText className='text-lg font-bold mt-4'>
+            {User?.first_name}
+          </ThemedText>
           <ThemedText
             className={`text-gray-600 ${
               theme === 'light' ? 'text-gray-600' : 'text-gray-400'
             }`}
           >
-            johndoe@gmail.com
+            {User?.email}
           </ThemedText>
         </View>
 
@@ -134,7 +145,7 @@ const Profile = () => {
             className={`flex-row items-center rounded-lg px-4 py-3 ${
               theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'
             }`}
-            onPress={() => router.push('/(tabs)/')}
+            onPress={signOut}
           >
             <Ionicons name='log-out-outline' size={22} color='#EF4444' />
             <Text className='ml-4 text-red-600'>Logout</Text>

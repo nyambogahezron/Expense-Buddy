@@ -14,27 +14,26 @@ import { supabase } from '@/utils/supabase';
 import { Session } from '@supabase/supabase-js';
 import { GlobalContextType } from '@/Types';
 
-
 const GlobalContext = createContext<GlobalContextType>({
   isUnlocked: false,
   appInactive: false,
-  isAuthenticated: true,
+  isAuthenticated: false,
   authenticate: async () => {},
   setIsUnlocked: () => {},
   session: null,
-  user: null,
+  User: null,
   setUser: () => {},
   loading: false,
 });
 
-const LOCK_TIME = 3000;
+const LOCK_TIME = 6000;
 
 export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [appInactive, setAppInactive] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [User, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
   const appState = useRef(AppState.currentState);
@@ -43,27 +42,39 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
   // get current session
   useEffect(() => {
     const fetchSession = async () => {
-      const { data: { session }  } = await supabase.auth.getSession();
-      setSession(session);
+      const {
+        data: { session: newSession },
+      } = await supabase.auth.getSession();
+      if (newSession?.user?.id !== session?.user?.id) {
+        setSession(newSession);
+        if (newSession) {
+          const {
+            error,
+            data: { user },
+          } = await supabase.auth.getUser();
+          setUser(user?.user_metadata);
+          console.log('user', User);
 
-      if (session) {
-        // fetch profile
-        const { data } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-        setUser(data || null);
+          if (error) console.log('error getting user data', error);
+          setIsAuthenticated(true);
+        }
       }
-
       setLoading(false);
     };
 
     fetchSession();
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-  }, []);
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, newSession) => {
+        if (newSession?.user?.id !== session?.user?.id) {
+          setSession(newSession);
+        }
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [session]);
 
   // local authentication using biometrics or pattern
   const authenticate = async () => {
@@ -141,7 +152,7 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
         appInactive,
         isAuthenticated,
         session,
-        user,
+        User,
         setUser,
         loading,
       }}

@@ -10,6 +10,7 @@ import AuthFooter from '@/components/AuthFooter';
 import AuthHeader from '@/components/AuthHeader';
 import { CustomButton } from '@/components';
 import { supabase } from '@/utils/supabase';
+import Loading from '@/components/Loading';
 
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -25,6 +26,8 @@ export default function Login() {
   };
 
   async function signInWithUser() {
+    if(!email || !password) return Alert.alert('Please fill all fields');
+      
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -35,8 +38,11 @@ export default function Login() {
     setLoading(false);
   }
 
+  // if (loading) return <Loading />;
+
   return (
     <ThemedSafeAreaView className='flex-1 px-3 w-full justify-center'>
+      
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#f3f4f6' : '#070B11'}
@@ -76,7 +82,7 @@ export default function Login() {
         <CustomButton
           title='Login'
           customStyles='bg-blue-600 '
-          handleOpenPress={handleSubmission}
+          handleOpenPress={signInWithUser}
           textStyles='text-white text-lg font-bold'
         />
         {/* Signup Option */}
