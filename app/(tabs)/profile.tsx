@@ -87,7 +87,7 @@ const Profile = () => {
             />
           </ThemedView>
           <ThemedText className='text-lg font-bold mt-4'>
-            {User?.first_name}
+            {User?.name}
           </ThemedText>
           <ThemedText
             className={`text-gray-600 ${

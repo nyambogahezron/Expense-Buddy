@@ -24,6 +24,8 @@ const GlobalContext = createContext<GlobalContextType>({
   User: null,
   setUser: () => {},
   loading: false,
+  isLockPinSet: false,
+  setIsLockPinSet: () => {},
 });
 
 const LOCK_TIME = 6000;
@@ -35,6 +37,7 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
   const [session, setSession] = useState<Session | null>(null);
   const [User, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [isLockPinSet, setIsLockPinSet] = useState(false);
 
   const appState = useRef(AppState.currentState);
   const router = useRouter();
@@ -42,24 +45,33 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
   // get current session
   useEffect(() => {
     const fetchSession = async () => {
-      const {
-        data: { session: newSession },
-      } = await supabase.auth.getSession();
-      if (newSession?.user?.id !== session?.user?.id) {
-        setSession(newSession);
-        if (newSession) {
-          const {
-            error,
-            data: { user },
-          } = await supabase.auth.getUser();
-          setUser(user?.user_metadata);
-          console.log('user', User);
+      try {
+        const {
+          data: { session: newSession },
+        } = await supabase.auth.getSession();
 
-          if (error) console.log('error getting user data', error);
-          setIsAuthenticated(true);
+        if (newSession?.user?.id !== session?.user?.id) {
+          setSession(newSession);
+
+          if (newSession) {
+            const {
+              error,
+              data: { user },
+            } = await supabase.auth.getUser();
+
+            if (error) {
+              console.log('error getting user data', error);
+            } else {
+              setUser(user?.user_metadata);
+              setIsAuthenticated(true);
+            }
+          }
         }
+      } catch (error) {
+        console.error('An error occurred:', error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchSession();
@@ -117,7 +129,8 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
 
   const handleAppStateChange = async (nextAppState: any) => {
     // handle app going to background
-    if (nextAppState === 'background') {
+    if (nextAppState === 'inactive') {
+      router.replace('/modals/WhiteScreen');
       setAppInactive(true);
     } else {
       if (router.canGoBack()) {
@@ -135,7 +148,6 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
         Date.now() -
         parseInt((await AsyncStorage.getItem('startTime')) || '0', 10);
       if (elapsedTime >= LOCK_TIME) {
-        console.log('Locking app');
         setIsUnlocked(false);
       }
     }
@@ -155,6 +167,8 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
         User,
         setUser,
         loading,
+        isLockPinSet,
+        setIsLockPinSet,
       }}
     >
       {children}

@@ -39,6 +39,8 @@ type GlobalContextType = {
   User: any;
   loading?: boolean;
   setUser: React.Dispatch<React.SetStateAction<any>>;
+  isLockPinSet: boolean;
+  setIsLockPinSet: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export { TransactionProps, TransactionCategoryProps, GlobalContextType };

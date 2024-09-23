@@ -1,4 +1,11 @@
-import { Text, Dimensions, ViewStyle, TouchableOpacity } from 'react-native';
+import {
+  Text,
+  Dimensions,
+  ViewStyle,
+  TouchableOpacity,
+  ActivityIndicator,
+  View,
+} from 'react-native';
 import React from 'react';
 
 const width = Dimensions.get('window').width;
@@ -10,6 +17,7 @@ type CustomButtonProps = {
   customStyles?: string;
   styles?: ViewStyle;
   touchOpacity?: number;
+  isLoading?: boolean;
 };
 
 export default function CustomButton({
@@ -19,17 +27,24 @@ export default function CustomButton({
   styles,
   textStyles,
   touchOpacity = 0.7,
+  isLoading = false,
 }: CustomButtonProps) {
   return (
     <TouchableOpacity
+      disabled={isLoading}
       activeOpacity={touchOpacity}
       onPress={handleOpenPress}
       style={[{ width: width * 0.9 }, styles]}
       className={`flex items-center justify-center bg-white p-4 rounded-full  ${customStyles}`}
     >
-      <Text className={`text-black text-lg font-bold capitalize ${textStyles}`}>
-        {title}
-      </Text>
+      <View className='items-center justify-center flex flex-row gap-2'>
+        <Text
+          className={`text-black text-lg font-bold capitalize ${textStyles}`}
+        >
+          {title}
+        </Text>
+        {isLoading && <ActivityIndicator size='small' color='#fff' />}
+      </View>
     </TouchableOpacity>
   );
 }

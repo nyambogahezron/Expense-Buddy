@@ -26,8 +26,8 @@ export default function Login() {
   };
 
   async function signInWithUser() {
-    if(!email || !password) return Alert.alert('Please fill all fields');
-      
+    if (!email || !password) return Alert.alert('Please fill all fields');
+
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -42,7 +42,6 @@ export default function Login() {
 
   return (
     <ThemedSafeAreaView className='flex-1 px-3 w-full justify-center'>
-      
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#f3f4f6' : '#070B11'}
@@ -80,7 +79,8 @@ export default function Login() {
 
         {/* Login Button */}
         <CustomButton
-          title='Login'
+          isLoading={loading}
+          title={loading ? 'Loading...' : 'Login'}
           customStyles='bg-blue-600 '
           handleOpenPress={signInWithUser}
           textStyles='text-white text-lg font-bold'

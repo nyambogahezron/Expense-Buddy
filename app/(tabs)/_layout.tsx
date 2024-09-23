@@ -7,16 +7,25 @@ import { View } from 'react-native';
 import { useTheme } from '@/context/ThemeProvider';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { router } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Loading from '@/components/Loading';
 
 export default function TabLayout() {
+  const [isMounted, setIsMounted] = useState(false);
   const colorScheme = useColorScheme();
   const { theme } = useTheme();
   const { session, loading } = useGlobalContext();
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  useEffect(() => {
     if (!session && !loading) return router.replace('/');
   }, [session]);
+
+  if (!isMounted) {
+    return <Loading />;
+  }
 
   return (
     <Tabs

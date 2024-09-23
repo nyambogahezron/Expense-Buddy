@@ -20,12 +20,14 @@ import { CustomButton } from '@/components';
 import CustomTextInput from '@/components/CustomTextInput';
 import BackButton from '@/components/BackButton';
 import * as ImagePicker from 'expo-image-picker';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 const { width } = Dimensions.get('window');
 
 export default function AccountInfo() {
-  const [email, setEmail] = useState('johndoe@gmail.com');
-  const [name, setName] = useState('John Doe');
+  const {User} = useGlobalContext();
+  const [email, setEmail] = useState(User?.email);
+  const [name, setName] = useState(User?.name);
   const [selectedImage, setSelectedImage] = useState<string>();
   const snapPoints = useMemo(() => ['20%', '25%'], []);
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -101,7 +103,6 @@ export default function AccountInfo() {
             <Text className='text-gray-600'></Text>
           </View>
 
-          <Button title='Choose a photo' onPress={pickImageAsync} />
           {selectedImage && (
             <Image
               source={{ uri: selectedImage }}
@@ -144,7 +145,7 @@ export default function AccountInfo() {
             <View className='mt-2'>
               <TouchableOpacity
                 activeOpacity={0.6}
-                onPress={() => router.push('/(tabs)/')}
+                onPress={pickImageAsync}
                 style={{ width: width * 0.9 }}
                 className='flex items-center justify-center bg-orange-600 p-4 rounded-full mt-4'
               >

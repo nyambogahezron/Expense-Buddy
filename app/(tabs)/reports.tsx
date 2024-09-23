@@ -7,12 +7,11 @@ import {
   Dimensions,
 } from 'react-native';
 import { BarChart, PieChart } from 'react-native-chart-kit';
-import {  Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { transactions } from '@/Data';
-import TransactionCategories from '@/Data/TransactionsTypes';
-import { TransactionProps } from '@/Types';
+import { TransactionProps, TransactionCategoryProps } from '@/Types';
 import { data, chartConfig, pieData, PieChartConfig } from '@/Data/ChartsData';
 import CategoryCard from '@/components/CategoryCard';
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -23,13 +22,22 @@ import { useTheme } from '@/context/ThemeProvider';
 import { ThemedText, ThemedView } from '@/components/Themed';
 import BackButton from '@/components/BackButton';
 import HeaderRightIconCard from '@/components/HeaderRightIconCard';
+import { supabase } from '@/utils/supabase';
+import { useGlobalContext } from '@/context/GlobalProvider';
+
 const width = Dimensions.get('window').width;
 
 export default function Statistics() {
+  const { User } = useGlobalContext();
+  console.log(User);
+
   const [activeCategory, setActiveCategory] = useState<'income' | 'expense'>(
     'income'
   );
   const [Transactions, setTransactions] = useState<TransactionProps[]>([]);
+  const [categoriesData, setCategoriesData] = useState<
+    TransactionCategoryProps[]
+  >([]);
   const { theme } = useTheme();
 
   const snapPoints = useMemo(() => ['30%', '35%'], []);
@@ -45,6 +53,7 @@ export default function Statistics() {
       )
       .sort((a, b) => Number(b.amount) - Number(a.amount))
       .slice(0, 5);
+
     setTransactions(filteredTransactions);
   }, [activeCategory]);
 
@@ -52,6 +61,28 @@ export default function Statistics() {
     setActiveCategory(category);
     console.log(activeCategory);
   };
+
+  //fetch categories
+  useEffect(() => {
+    async function fetchCategories() {
+      const { data: fetchedCategoriesData, error } = await supabase
+        .from('categories')
+        .select('*')
+        .eq('userId', User?.sub)
+        .limit(5)
+        .order('id', { ascending: true });
+      if (error) {
+        throw new Error(error.message);
+      }
+      if (data) {
+        setCategoriesData(fetchedCategoriesData);
+      } else {
+        setCategoriesData([]);
+      }
+    }
+
+    fetchCategories();
+  }, []);
 
   return (
     <GestureHandlerRootView
@@ -190,7 +221,9 @@ export default function Statistics() {
                   }
                   activeOpacity={0.7}
                   key={id}
-                  className={`flex-row justify-between items-center bg-red-100 p-4 rounded-lg mb-1  ${theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'}`}
+                  className={`flex-row justify-between items-center bg-red-100 p-4 rounded-lg mb-1  ${
+                    theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'
+                  }`}
                 >
                   <View className='flex-row items-center'>
                     <View className='bg-red-200 p-3 rounded-full mr-4'>
@@ -253,7 +286,7 @@ export default function Statistics() {
               Categories
             </ThemedText>
           </ThemedView>
-          {TransactionCategories.slice(0, 5).map((item) => {
+          {categoriesData.slice(0, 5).map((item) => {
             const { id, name, icon } = item;
             return (
               <CategoryCard

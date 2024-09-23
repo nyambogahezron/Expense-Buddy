@@ -31,7 +31,8 @@ export default function Login() {
     if (!email || !password || !username || !confirmPassword)
       return Alert.alert('Please fill all fields');
 
-    if (password !== confirmPassword) return Alert.alert('Passwords do not match');
+    if (password !== confirmPassword)
+      return Alert.alert('Passwords do not match');
 
     setLoading(true);
     const {
@@ -42,16 +43,62 @@ export default function Login() {
       password: password,
       options: {
         data: {
-          first_name: username,
+          name: username,
+          email: email,
         },
       },
     });
-    console.log(session);
-    
+    if (session) {
+      // insert default categories
+      const { error } = await supabase.from('categories').insert([
+        { name: 'Food', icon: '🍜', userId: session?.user?.id },
+        {
+          name: 'Transport',
+          icon: '🚗',
+          userId: session?.user?.id,
+        },
+        { name: 'Home', icon: '🏠', userId: session?.user?.id },
+        { name: 'Health', icon: '🚑', userId: session?.user?.id },
+        {
+          name: 'Entertainment',
+          icon: '🎬',
+          userId: session?.user?.id,
+        },
+        {
+          name: 'Shopping',
+          icon: '🛍️',
+          userId: session?.user?.id,
+        },
+        {
+          name: 'Online Services Subscription',
+          icon: '💻',
+          userId: session?.user?.id,
+        },
+        { name: 'Salary', icon: '💰', userId: session?.user?.id },
+        {
+          name: 'Business',
+          icon: '🏢',
+          userId: session?.user?.id,
+        },
+        {
+          name: 'Investment',
+          icon: '📈',
+          userId: session?.user?.id,
+        },
+        {
+          name: 'Clothing',
+          icon: '👔',
+          userId: session?.user?.id,
+        },
+        { name: 'Other', icon: '❓', userId: session?.user?.id },
+      ]);
+      if (error) {
+        console.log('Error inserting default:', error);
+      }
+    }
+    console.log(error, session);
+    if (error) Alert.alert('Something went wrong, please try again!');
 
-    if (error) Alert.alert(error.message);
-    if (!session)
-      Alert.alert('Please check your inbox for email verification!');
     setLoading(false);
   }
 
@@ -99,7 +146,8 @@ export default function Login() {
         />
 
         <CustomButton
-          title='Register'
+          isLoading={loading}
+          title={loading ? 'Loading...' : 'Register'}
           customStyles='bg-blue-600'
           handleOpenPress={signUpWithUser}
           textStyles='text-white text-lg font-bold'

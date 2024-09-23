@@ -1,6 +1,6 @@
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
@@ -8,6 +8,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { ThemeProvider } from '@/context/ThemeProvider';
 import GlobalProvider, { useGlobalContext } from '@/context/GlobalProvider';
 import LockScreen from '../components/LockScreen';
+import WhiteScreen from '@/app/modals/WhiteScreen';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -27,7 +28,7 @@ function RootLayoutContent() {
     'Poppins-Thin': require('../assets/fonts/Poppins-Thin.ttf'),
   });
 
-  const { isUnlocked, authenticate } = useGlobalContext();
+  const { isUnlocked, authenticate, session, appInactive } = useGlobalContext();
 
   useEffect(() => {
     if (error) throw error;
@@ -37,17 +38,20 @@ function RootLayoutContent() {
   }, [loaded, error]);
 
   useEffect(() => {
-    if (!isUnlocked) {
+    if (!isUnlocked && session) {
       authenticate();
     }
-  }, [isUnlocked]);
+  }, [isUnlocked, session]);
 
   if (!loaded) return null;
 
-  if (!isUnlocked) {
+  if (!isUnlocked && session) {
     return <LockScreen />;
   }
 
+  if (appInactive) {
+    return <WhiteScreen />;
+  }
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <GlobalProvider>

@@ -50,7 +50,7 @@ export default function HomeScreen() {
                   <HelloWave />
                 </View>
                 <ThemedText className='text-lg font-bold'>
-                  {User?.first_name}
+                  {User?.name}
                 </ThemedText>
               </View>
             </ThemedView>
