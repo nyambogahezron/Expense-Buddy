@@ -26,6 +26,7 @@ const GlobalContext = createContext<GlobalContextType>({
   loading: false,
   isLockPinSet: false,
   setIsLockPinSet: () => {},
+  // lockPin,
 });
 
 const LOCK_TIME = 6000;
@@ -38,7 +39,7 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
   const [User, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [isLockPinSet, setIsLockPinSet] = useState(false);
-
+  const [lockPin, setLockPin] = useState<number>();
   const appState = useRef(AppState.currentState);
   const router = useRouter();
 
@@ -155,6 +156,22 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
     appState.current = nextAppState;
   };
 
+  //get lockPin
+  useEffect(() => {
+    const getLockPin = async () => {
+      try {
+        const value = await AsyncStorage.getItem('lockPassword');
+        if (value !== null) {
+          setIsLockPinSet(true);
+          setLockPin(Number(value));
+        }
+      } catch (e) {
+        console.log('error getting lock pin', e);
+      }
+    };
+    getLockPin();
+  }, []);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -169,6 +186,7 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
         loading,
         isLockPinSet,
         setIsLockPinSet,
+        lockPin,
       }}
     >
       {children}

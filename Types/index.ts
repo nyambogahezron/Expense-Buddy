@@ -1,5 +1,5 @@
-import { Session } from "@supabase/supabase-js";
-import React from "react";
+import { Session } from '@supabase/supabase-js';
+import React from 'react';
 
 type TransactionProps = {
   id: number;
@@ -28,7 +28,6 @@ type TransactionCategoryProps = {
   icon: string;
 };
 
-
 type GlobalContextType = {
   isUnlocked: boolean;
   appInactive: boolean;
@@ -40,7 +39,32 @@ type GlobalContextType = {
   loading?: boolean;
   setUser: React.Dispatch<React.SetStateAction<any>>;
   isLockPinSet: boolean;
+  lockPin?: number;
   setIsLockPinSet: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export { TransactionProps, TransactionCategoryProps, GlobalContextType };
+type CustomTextInputProps = {
+  title: string;
+  onChangeText: React.Dispatch<React.SetStateAction<any>>;
+  placeholder?: string;
+  textInputStyle?: string;
+  containerStyle?: string;
+  inputContainerStyle?: string;
+  keyboardType?: 'email-address' | 'default' | 'numeric';
+  value?: string;
+  multiline?: boolean;
+};
+
+type CustomPasswordTextInputProps = CustomTextInputProps & {
+  handleOnPress?: () => void;
+  passwordVisible?: boolean;
+  isForConfirmation?: boolean;
+};
+
+export {
+  TransactionProps,
+  TransactionCategoryProps,
+  GlobalContextType,
+  CustomTextInputProps,
+  CustomPasswordTextInputProps,
+};

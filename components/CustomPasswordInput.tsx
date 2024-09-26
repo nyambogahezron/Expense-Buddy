@@ -1,21 +1,8 @@
 import { View, TextInput, TouchableOpacity } from 'react-native';
-import React from 'react';
 import { ThemedText } from './Themed';
 import { useTheme } from '@/context/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-
-type CustomTextInputProps = {
-  title: string;
-  onChangeText: React.Dispatch<React.SetStateAction<string>>;
-  placeholder?: string;
-  textInputStyle?: string;
-  containerStyle?: string;
-  inputContainerStyle?: string;
-  value?: string;
-  handleOnPress?: () => void;
-  passwordVisible?: boolean;
-  isForConfirmation?: boolean;
-};
+import { CustomPasswordTextInputProps } from '@/Types';
 
 export default function CustomPasswordInput({
   title,
@@ -27,8 +14,9 @@ export default function CustomPasswordInput({
   inputContainerStyle,
   handleOnPress,
   passwordVisible,
-  isForConfirmation=false
-}: CustomTextInputProps) {
+  isForConfirmation = false,
+  keyboardType = 'default',
+}: CustomPasswordTextInputProps) {
   const { theme } = useTheme();
 
   return (
@@ -51,6 +39,7 @@ export default function CustomPasswordInput({
           secureTextEntry={!passwordVisible}
           value={value}
           onChangeText={onChangeText}
+          keyboardType={keyboardType}
         />
         {!isForConfirmation && (
           <TouchableOpacity

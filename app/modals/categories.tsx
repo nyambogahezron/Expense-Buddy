@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { Feather, FontAwesome5 } from '@expo/vector-icons';
+import { View, Text,ScrollView } from 'react-native';
+import {  FontAwesome5 } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import TransactionCategories from '@/Data/TransactionsTypes';
@@ -9,11 +9,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { CustomButton } from '@/components';
 import CategoryActionCard from '@/components/CategoryActionCard';
-import {
-  ThemedText,
-  ThemedView,
-  ThemedSafeAreaView,
-} from '@/components/Themed';
 import { useTheme } from '@/context/ThemeProvider';
 import BackButton from '@/components/BackButton';
 import HeaderRightIconCard from '@/components/HeaderRightIconCard';

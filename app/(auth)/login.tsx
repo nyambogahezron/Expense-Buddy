@@ -10,7 +10,6 @@ import AuthFooter from '@/components/AuthFooter';
 import AuthHeader from '@/components/AuthHeader';
 import { CustomButton } from '@/components';
 import { supabase } from '@/utils/supabase';
-import Loading from '@/components/Loading';
 
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);

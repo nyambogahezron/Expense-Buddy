@@ -2,18 +2,7 @@ import React from 'react';
 import { View, TextInput } from 'react-native';
 import { ThemedText, ThemedView } from './Themed';
 import { useTheme } from '@/context/ThemeProvider';
-
-type CustomTextInputProps = {
-  title: string;
-  onChangeText: React.Dispatch<React.SetStateAction<any>>;
-  placeholder?: string;
-  textInputStyle?: string;
-  containerStyle?: string;
-  inputContainerStyle?: string;
-  keyboardType?: 'email-address' | 'default' | 'numeric';
-  value?: string;
-  multiline?: boolean;
-};
+import { CustomTextInputProps } from '@/Types';
 
 export default function CustomTextInput({
   title,

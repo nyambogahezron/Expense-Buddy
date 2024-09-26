@@ -62,7 +62,7 @@ export default function Settings() {
               className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
                 theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'
               }`}
-              onPress={() => router.push('/(profile)/settings')}
+              onPress={() => router.push('/(profile)/lockScreen')}
             >
               <Feather name='lock' size={22} color='#6B7280' />
               <Text

@@ -66,7 +66,7 @@ export default function LockScreen() {
         {!isLockPinSet ? (
           <View className='items-center justify-center mt-20'>
             <TouchableOpacity
-              className='p-3 bg-[#1E1E2C] rounded-full w-20 h-20 items-center justify-center'
+              className='p-3 bg-[#1E1E2C] rounded-full w-16 h-16 items-center justify-center'
               onPress={() => {
                 authenticate();
               }}
