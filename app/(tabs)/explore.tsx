@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Text, TouchableOpacity, FlatList } from 'react-native';
+import { Text, TouchableOpacity, SectionList, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Stack } from 'expo-router';
 import { transactions } from '@/data';
@@ -21,11 +21,13 @@ export default function HomeScreen() {
   const [sectionItems, setSectionItems] = useState(10);
   const { theme } = useTheme();
 
+  // get the first 10 transactions
   const transactionsData: TransactionProps[] = transactions.slice(
     0,
     sectionItems
   );
 
+  // load more data
   const handleLoadMore = () => {
     setLoading(true);
     const newLength = Math.min(sectionItems + 10, transactions.length);
@@ -33,25 +35,32 @@ export default function HomeScreen() {
     setLoading(false);
   };
 
+  // filter data based on category
+
   const filterData = (category: categoryType) => {
     setData([]);
     setLoading(true);
-    if (category.toString() === 'All') {
+    if (category === 'All') {
       setData(transactionsData);
-      setLoading(false);
     } else {
       const filteredData: TransactionProps[] = transactions.filter(
-        (item) => item.type === category.toString()
+        (item) => item.type === category
       );
       setData(filteredData.slice(0, sectionItems));
-      setLoading(false);
     }
+    setLoading(false);
   };
-
   useEffect(() => {
-    setLoading(true);
-    filterData(category as categoryType);
+    filterData(category);
   }, [sectionItems, category]);
+
+  // set data to be displayed in the section list
+  const sections = [
+    {
+      title: category,
+      data: data,
+    },
+  ];
 
   return (
     <ThemedSafeAreaView className='flex-1 px-2'>
@@ -75,19 +84,17 @@ export default function HomeScreen() {
           headerLeft: () => <BackButton />,
         }}
       />
-      <ThemedView>
+      <ThemedView className='-mt-8'>
         {/* transactions list  */}
-        <FlatList
+        <SectionList
+          contentInsetAdjustmentBehavior='automatic'
+          keyExtractor={(item) => item.id.toString()}
+          sections={sections}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-          data={data}
+          stickySectionHeadersEnabled={true}
           initialNumToRender={10}
-          renderItem={({ item }) => (
-            <TransactionCard item={item} isLoading={loading} />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-          ListHeaderComponentStyle={{ marginTop: 1 }}
-          ListHeaderComponent={
+          renderSectionHeader={() => (
             <ThemedView>
               <ThemedView className='flex-row justify-center gap-0'>
                 <TouchableOpacity
@@ -145,9 +152,13 @@ export default function HomeScreen() {
                   </Text>
                 </TouchableOpacity>
               </ThemedView>
-              <TransactionHeader viewMore={false} />
             </ThemedView>
-          }
+          )}
+          ListHeaderComponent={() => <TransactionHeader viewMore={false} />}
+          renderItem={({ item }) => (
+            <TransactionCard item={item} isLoading={loading} />
+          )}
+          ListHeaderComponentStyle={{ marginTop: 1 }}
           ListFooterComponent={
             <LoadMoreBtn handleOnPress={handleLoadMore} title='Load More' />
           }

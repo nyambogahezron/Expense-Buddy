@@ -74,7 +74,7 @@ export default function HomeScreen() {
           ),
         }}
       />
-      <View className='-mt-6'>
+      <View className='-mt-10'>
         <FlatList
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}

@@ -29,7 +29,6 @@ const width = Dimensions.get('window').width;
 
 export default function Statistics() {
   const { User } = useGlobalContext();
-  console.log(User);
 
   const [activeCategory, setActiveCategory] = useState<'income' | 'expense'>(
     'income'
@@ -128,7 +127,7 @@ export default function Statistics() {
         <ThemedView className='px-3'>
           <View className='items-center w-full px-2'>
             {/* Income and Expenses Summary */}
-            <View className='flex-row justify-between mb-4'>
+            <View className='flex-row justify-between mb-4 mt-2'>
               <View className='bg-purple-100 p-6 rounded-lg items-center w-1/2 mr-2'>
                 <Text className='text-purple-700 font-bold'>Total Income</Text>
                 <Text className='text-xl font-bold text-purple-700'>

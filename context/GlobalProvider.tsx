@@ -39,7 +39,7 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
   const [User, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [isLockPinSet, setIsLockPinSet] = useState(false);
-  const [lockPin, setLockPin] = useState<number>();
+  const [lockPin, setLockPin] = useState<any>();
   const appState = useRef(AppState.currentState);
   const router = useRouter();
 

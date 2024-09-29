@@ -27,7 +27,7 @@ export default function CreateCategory() {
       <ThemedSafeAreaView className='flex-1 w-full h-full justify-center'>
         <Stack.Screen
           options={{
-            title: 'Edit Categories',
+            title: 'Create Categories',
             headerShown: true,
             headerTitleAlign: 'center',
             headerStyle: {
@@ -60,7 +60,8 @@ export default function CreateCategory() {
             />
 
             <CustomButton
-              title='Edit'
+            
+              title='Create'
               handleOpenPress={() => handleOnSubmit()}
               customStyles='bg-orange-500 mt-5'
               textStyles='text-white'
