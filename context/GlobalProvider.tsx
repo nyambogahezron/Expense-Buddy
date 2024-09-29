@@ -12,7 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { supabase } from '@/utils/supabase';
 import { Session } from '@supabase/supabase-js';
-import { GlobalContextType } from '@/Types';
+import { GlobalContextType } from '@/types';
 
 const GlobalContext = createContext<GlobalContextType>({
   isUnlocked: false,
@@ -26,7 +26,7 @@ const GlobalContext = createContext<GlobalContextType>({
   loading: false,
   isLockPinSet: false,
   setIsLockPinSet: () => {},
-  // lockPin,
+  setLockPin: () => {},
 });
 
 const LOCK_TIME = 6000;
@@ -187,6 +187,7 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
         isLockPinSet,
         setIsLockPinSet,
         lockPin,
+        setLockPin,
       }}
     >
       {children}

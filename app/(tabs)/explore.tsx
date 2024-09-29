@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import {  Text, TouchableOpacity, FlatList } from 'react-native';
+import { Text, TouchableOpacity, FlatList } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Stack } from 'expo-router';
-import { transactions } from '@/Data';
+import { transactions } from '@/data';
 import TransactionCard from '@/components/TransactionsCard';
 import TransactionHeader from '@/components/TransactionHeader';
-import { TransactionProps } from '@/Types';
+import { TransactionProps } from '@/types';
 import EmptyListCard from '@/components/EmptyListCard';
 import LoadMoreBtn from '@/components/LoadMoreBtn';
 import { useTheme } from '@/context/ThemeProvider';

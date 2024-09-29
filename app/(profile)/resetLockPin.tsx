@@ -18,7 +18,6 @@ export default function LockScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [oldPin, setOldPin] = useState('');
 
   const HandleSubmit = async () => {
     if (!password || !confirmPassword)
@@ -27,11 +26,7 @@ export default function LockScreen() {
       return Alert.alert('Password Entered Do not Match!');
     if (password.length !== 6)
       return Alert.alert('Password Should Be of length 6!');
-    if (lockPin && oldPin) {
-      if (oldPin !== lockPin.toString()) {
-        return Alert.alert('Invalid Pin, Please try again');
-      }
-    }
+   
 
     setIsLoading(true);
 
@@ -40,7 +35,6 @@ export default function LockScreen() {
       Alert.alert('Password Saved Successfully');
       setConfirmPassword('');
       setPassword('');
-      setOldPin('');
       router.back();
     } catch (e) {
       setIsLoading(false);
@@ -85,41 +79,7 @@ export default function LockScreen() {
           <Loading />
         ) : (
           <View className='flex flex-col px-3 mt-20'>
-            {lockPin ? (
-              <>
-                <CustomPasswordInput
-                  title='Enter Old Pin'
-                  onChangeText={setOldPin}
-                  value={oldPin}
-                  isForConfirmation={true}
-                  keyboardType='numeric'
-                />
-                <CustomPasswordInput
-                  title='New Pin'
-                  onChangeText={setPassword}
-                  value={password}
-                  handleOnPress={() => setIsPasswordVisible(!isPasswordVisible)}
-                  passwordVisible={isPasswordVisible}
-                  keyboardType='numeric'
-                />
-                <CustomPasswordInput
-                  title='Confirm New Pin'
-                  onChangeText={setConfirmPassword}
-                  value={confirmPassword}
-                  keyboardType='numeric'
-                  isForConfirmation={true}
-                />
-
-                <CustomButton
-                  isLoading={isLoading}
-                  title={isLoading ? 'Loading...' : 'Edit Pin'}
-                  customStyles='bg-orange-600'
-                  textStyles='text-white text-lg font-bold'
-                  handleOpenPress={() => HandleSubmit()}
-                />
-              </>
-            ) : (
-              <>
+            
                 <CustomPasswordInput
                   title='Enter Pin'
                   onChangeText={setPassword}
@@ -143,8 +103,7 @@ export default function LockScreen() {
                   textStyles='text-white text-lg font-bold'
                   handleOpenPress={() => HandleSubmit()}
                 />
-              </>
-            )}
+            
           </View>
         )}
       </ScrollView>

@@ -1,4 +1,4 @@
-import { TransactionCategoryProps } from '@/Types';
+import { TransactionCategoryProps } from '@/types';
 
 const TransactionCategories: TransactionCategoryProps[] = [
   {

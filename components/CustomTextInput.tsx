@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TextInput } from 'react-native';
 import { ThemedText, ThemedView } from './Themed';
 import { useTheme } from '@/context/ThemeProvider';
-import { CustomTextInputProps } from '@/Types';
+import { CustomTextInputProps } from '@/types';
 
 export default function CustomTextInput({
   title,

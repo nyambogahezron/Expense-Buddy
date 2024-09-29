@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { router, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { HelloWave } from '@/components/HelloWave';
-import { transactions } from '@/Data';
+import { transactions } from '@/data';
 import HomeTransactionCard from '@/components/TransactionsCard';
 import EmptyListCard from '@/components/EmptyListCard';
 import LoadMoreBtn from '@/components/LoadMoreBtn';

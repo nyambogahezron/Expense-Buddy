@@ -1,8 +1,8 @@
-import { View, Text,ScrollView } from 'react-native';
-import {  FontAwesome5 } from '@expo/vector-icons';
+import { View, Text, ScrollView } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import TransactionCategories from '@/Data/TransactionsTypes';
+import TransactionCategories from '@/data/TransactionsTypes';
 import CategoryCard from '@/components/CategoryCard';
 import { useMemo, useRef } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';

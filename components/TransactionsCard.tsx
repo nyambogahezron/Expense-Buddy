@@ -1,4 +1,4 @@
-import { TransactionProps } from '@/Types';
+import { TransactionProps } from '@/types';
 import isEmoji from '@/utils/isEmoji';
 import { router } from 'expo-router';
 import { Text, TouchableOpacity, View } from 'react-native';

@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
-import { TransactionProps } from '@/Types';
+import { TransactionProps } from '@/types';
 import { StatusBar } from 'expo-status-bar';
 import { Dimensions } from 'react-native';
 import { useTheme } from '@/context/ThemeProvider';

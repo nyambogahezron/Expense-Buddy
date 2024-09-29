@@ -41,6 +41,7 @@ type GlobalContextType = {
   isLockPinSet: boolean;
   lockPin?: number;
   setIsLockPinSet: React.Dispatch<React.SetStateAction<boolean>>;
+  setLockPin: React.Dispatch<React.SetStateAction<number>>;
 };
 
 type CustomTextInputProps = {

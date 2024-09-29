@@ -1,4 +1,4 @@
-import { TransactionProps } from '@/Types';
+import { TransactionProps } from '@/types';
 
 const transactions: TransactionProps[] = [
   {

@@ -3,8 +3,8 @@ import React, { useCallback, useMemo, useRef } from 'react';
 import { ThemedText, ThemedView } from './Themed';
 import { useTheme } from '@/context/ThemeProvider';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import TransactionCategories from '@/Data/TransactionsTypes';
-import { TransactionCategoryProps } from '@/Types';
+import TransactionCategories from '@/data/TransactionsTypes';
+import { TransactionCategoryProps } from '@/types';
 import { Entypo } from '@expo/vector-icons';
 import CustomButton from './CustomButton';
 import { router } from 'expo-router';
@@ -60,7 +60,9 @@ export default function CategoryListBottomSheet({
       snapPoints={snapPoints}
       ref={bottomSheetRef}
       enablePanDownToClose={true}
-      handleIndicatorStyle={{ backgroundColor: theme === 'light' ? '#333' : '#fff' }}
+      handleIndicatorStyle={{
+        backgroundColor: theme === 'light' ? '#333' : '#fff',
+      }}
       backgroundStyle={{
         backgroundColor: theme === 'light' ? '#fff' : '#070B11',
       }}

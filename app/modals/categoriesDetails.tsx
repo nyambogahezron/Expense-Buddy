@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Text } from 'react-native';
-import { TransactionCategoryProps } from '@/Types';
+import { TransactionCategoryProps } from '@/types';
 import EmptyListCard from '@/components/EmptyListCard';
 import TransactionCard from '@/components/TransactionsCard';
-import { transactions } from '@/Data';
-import { TransactionProps } from '@/Types';
+import { transactions } from '@/data';
+import { TransactionProps } from '@/types';
 import {
   ThemedText,
   ThemedView,
