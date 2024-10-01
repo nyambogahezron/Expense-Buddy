@@ -11,6 +11,7 @@ import { Dimensions } from 'react-native';
 import { useTheme } from '@/context/ThemeProvider';
 import { ThemedText, ThemedView } from '@/components/Themed';
 import BackButton from '@/components/BackButton';
+import isEmoji from '@/utils/isEmoji';
 
 const { width } = Dimensions.get('window');
 
@@ -19,8 +20,16 @@ export default function TransactionDetails() {
   const { item } = useLocalSearchParams();
   const transaction: TransactionProps =
     typeof item === 'string' ? JSON.parse(item) : null;
-  const { amount, date, transactionFee, description, type, category } =
-    transaction;
+  const {
+    amount,
+    date,
+    transactionFee,
+    description,
+    type,
+    category,
+    iconColor,
+    title,
+  } = transaction;
   const { theme } = useTheme();
 
   const transactionDetails = [
@@ -49,7 +58,7 @@ export default function TransactionDetails() {
           headerStyle: {
             backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
           },
-          headerLeft: () => <BackButton />,
+          headerLeft: () => <BackButton containerStyles='-ml-2' />,
           headerTitleStyle: {
             color: theme === 'light' ? '#333' : '#fff',
             fontSize: 20,
@@ -73,19 +82,17 @@ export default function TransactionDetails() {
           <View
             className='flex items-center justify-center h-12 w-12 rounded-full mr-3 p-2'
             style={{
-              backgroundColor: transaction.iconColor
-                ? transaction?.iconColor
-                : '#3030cc',
+              backgroundColor: iconColor ? iconColor : '#3030cc',
             }}
           >
-            <ThemedText className='text-lg font-bold'>
-              {transaction.category.icon}
-            </ThemedText>
+            <Text className='text-lg font-bold text-white'>
+              {category.icon && isEmoji(category.icon)
+                ? category.icon
+                : title.charAt(0)}
+            </Text>
           </View>
 
-          <ThemedText className='text-lg font-bold'>
-            {transaction.title}
-          </ThemedText>
+          <ThemedText className='text-lg font-bold'>{title}</ThemedText>
         </ThemedView>
 
         {/* Transaction Details */}
