@@ -2,13 +2,17 @@ import { Tabs } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native';
 import { useTheme } from '@/context/ThemeProvider';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import Loading from '@/components/Loading';
+import { BlurView } from 'expo-blur';
+import CustomHeader from '@/components/CustomHeader';
+import BackButton from '@/components/BackButton';
+import HeaderRightIconCard from '@/components/HeaderRightIconCard';
 
 export default function TabLayout() {
   const [isMounted, setIsMounted] = useState(false);
@@ -23,9 +27,7 @@ export default function TabLayout() {
     if (!session && !loading) return router.replace('/');
   }, [session]);
 
-  if (!isMounted) {
-    return <Loading />;
-  }
+  if (!isMounted) return <Loading />;
 
   return (
     <Tabs
@@ -36,11 +38,29 @@ export default function TabLayout() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
           height: 70,
           borderTopWidth: 0,
           ...styles.shadow,
+          backgroundColor: 'transparent',
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          elevation: 0,
         },
+        tabBarBackground: () => (
+          <BlurView
+            intensity={4}
+            tint={'extraLight'}
+            style={{
+              flex: 1,
+              backgroundColor:
+                theme === 'light'
+                  ? 'rgba(255, 255, 255, 0.99)'
+                  : 'rgba(7, 11, 17, 0.99)',
+            }}
+          />
+        ),
       }}
     >
       <Tabs.Screen
@@ -55,6 +75,14 @@ export default function TabLayout() {
               iconName='Home'
             />
           ),
+          headerShown: true,
+          headerShadowVisible: false,
+          headerTransparent: true,
+          headerTitle: '',
+          headerStyle: {
+            backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
+          },
+          header: () => <CustomHeader />,
         }}
       />
       <Tabs.Screen
@@ -69,12 +97,19 @@ export default function TabLayout() {
               iconName='Explore'
             />
           ),
+          headerShown: true,
+          headerShadowVisible: false,
+          headerTransparent: true,
+          headerTitle: '',
+          headerStyle: {
+            backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
+          },
+          header: () => <CustomHeader isForExplore={true} />,
         }}
       />
       <Tabs.Screen
         name='create'
         options={{
-          title: '',
           tabBarIcon: ({ focused }) => (
             <View
               style={{
@@ -91,12 +126,57 @@ export default function TabLayout() {
               </View>
             </View>
           ),
+          title: 'Add Transaction',
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
+          },
+          headerLeft: () => <BackButton />,
+          headerTitleStyle: {
+            color: theme === 'light' ? '#333' : '#fff',
+            fontSize: 20,
+            fontWeight: 'bold',
+          },
+          headerRight: () => (
+            <HeaderRightIconCard
+              handleOnPress={() => router.push('/(profile)/settings')}
+            >
+              <Ionicons
+                name='settings-outline'
+                size={22}
+                color={theme === 'light' ? 'black' : '#fff'}
+              />
+            </HeaderRightIconCard>
+          ),
         }}
       />
       <Tabs.Screen
         name='reports'
         options={{
           title: 'Reports',
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: theme === 'light' ? '#fff' : '#070B11',
+          },
+          headerLeft: () => <BackButton />,
+          headerTitleStyle: {
+            color: theme === 'light' ? '#333' : '#fff',
+            fontSize: 20,
+            fontWeight: 'bold',
+          },
+          headerRight: () => (
+            <HeaderRightIconCard
+              handleOnPress={() => router.push('/(profile)/settings')}
+            >
+              <Ionicons
+                name='settings-outline'
+                size={22}
+                color={theme === 'light' ? 'black' : '#fff'}
+              />
+            </HeaderRightIconCard>
+          ),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? 'stats-chart' : 'stats-chart-outline'}

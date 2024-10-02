@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Text, TouchableOpacity, SectionList, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { Stack } from 'expo-router';
 import { transactions } from '@/data';
 import TransactionCard from '@/components/TransactionsCard';
 import TransactionHeader from '@/components/TransactionHeader';
@@ -10,7 +9,6 @@ import EmptyListCard from '@/components/EmptyListCard';
 import LoadMoreBtn from '@/components/LoadMoreBtn';
 import { useTheme } from '@/context/ThemeProvider';
 import { ThemedSafeAreaView, ThemedView } from '@/components/Themed';
-import BackButton from '@/components/BackButton';
 
 type categoryType = 'All' | 'income' | 'expense';
 
@@ -68,23 +66,7 @@ export default function HomeScreen() {
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
       />
-      <Stack.Screen
-        options={{
-          title: 'Explore',
-          headerShown: true,
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            color: theme === 'light' ? '#333' : '#fff',
-            fontSize: 20,
-            fontWeight: 'bold',
-          },
-          headerStyle: {
-            backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
-          },
-          headerLeft: () => <BackButton />,
-        }}
-      />
-      <ThemedView className='-mt-8'>
+      <ThemedView className='mt-4'>
         {/* transactions list  */}
         <SectionList
           contentInsetAdjustmentBehavior='automatic'
@@ -156,7 +138,7 @@ export default function HomeScreen() {
           )}
           ListHeaderComponent={() => <TransactionHeader viewMore={false} />}
           renderItem={({ item }) => (
-            <TransactionCard item={item} isLoading={loading} />
+            <TransactionCard item={item} />
           )}
           ListHeaderComponentStyle={{ marginTop: 1 }}
           ListFooterComponent={

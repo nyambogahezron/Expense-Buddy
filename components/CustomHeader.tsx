@@ -1,72 +1,78 @@
 import { Ionicons } from '@expo/vector-icons';
-import { View, Text, StyleSheet } from 'react-native';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { View, StyleSheet } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useGlobalContext } from '@/context/GlobalProvider';
+import { useTheme } from '@/context/ThemeProvider';
 
-const CustomHeader = () => {
+const CustomHeader = ({ isForExplore }: { isForExplore?: boolean }) => {
   const { top } = useSafeAreaInsets();
+  const { User } = useGlobalContext();
+  const { theme } = useTheme();
 
   return (
-    <BlurView intensity={80} tint={'extraLight'} style={{ paddingTop: top }}>
-      <View
-        style={[
-          styles.container,
-          {
+    <GestureHandlerRootView
+      style={{
+        flex: 1,
+        backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
+      }}
+    >
+      <BlurView intensity={3} tint={'extraLight'} style={{ paddingTop: top }}>
+        <View
+          className='flex-row justify-between items-center'
+          style={{
             height: 60,
             gap: 10,
             paddingHorizontal: 20,
             backgroundColor: 'transparent',
-          },
-        ]}
-      >
-        <Link href={'/'} asChild>
-          <TouchableOpacity
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 20,
-              backgroundColor: '#626D77',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Text style={{ color: '#fff', fontWeight: '500', fontSize: 16 }}>
-              SG
-            </Text>
-          </TouchableOpacity>
-        </Link>
-        <View style={styles.searchSection}>
-          <Ionicons
-            style={styles.searchIcon}
-            name='search'
-            size={20}
-            color='#141518'
-          />
-          <TextInput
-            style={styles.input}
-            placeholder='Search'
-            placeholderTextColor='#141518'
-          />
+          }}
+        >
+          <View className='-ml-3' style={styles.searchSection}>
+            <Ionicons
+              style={styles.searchIcon}
+              name='search'
+              size={20}
+              color='#141518'
+            />
+            <TextInput
+              style={styles.input}
+              placeholder='Search...'
+              placeholderTextColor='#141518'
+              onFocus={() => router.push('/modals/search')}
+            />
+          </View>
+
+          {!isForExplore && (
+            <View className='flex-row gap-2'>
+              <Link href={'/(tabs)/reports'}>
+                <View style={styles.circle}>
+                  <Ionicons name={'stats-chart'} size={20} color='#141518' />
+                </View>
+              </Link>
+              <Link href={'/(tabs)/profile'}>
+                <View style={styles.circle}>
+                  <Ionicons name={'person'} size={20} color='#141518' />
+                </View>
+              </Link>
+            </View>
+          )}
+          {isForExplore && (
+            <Link href={'/(tabs)/profile'}>
+              <View style={styles.circle}>
+                <Ionicons name={'filter'} size={20} color='#141518' />
+              </View>
+            </Link>
+          )}
         </View>
-        <View style={styles.circle}>
-          <Ionicons name={'stats-chart'} size={20} color='#141518' />
-        </View>
-        <View style={styles.circle}>
-          <Ionicons name={'card'} size={20} color='#141518' />
-        </View>
-      </View>
-    </BlurView>
+      </BlurView>
+    </GestureHandlerRootView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   btn: {
     padding: 10,
     backgroundColor: '#626D77',
@@ -77,10 +83,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#D8DCE2',
-    borderRadius: 30,
+    borderRadius: 25,
   },
   searchIcon: {
-    padding: 10,
+    padding: 12,
   },
   input: {
     flex: 1,
@@ -91,6 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D8DCE2',
     color: '#141518',
     borderRadius: 30,
+    fontWeight: 'semibold',
   },
   circle: {
     width: 40,

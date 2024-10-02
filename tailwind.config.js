@@ -1,11 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './app/**/*.{js,jsx,ts,tsx}',
-    './components/**/*.{js,jsx,ts,tsx}',
-    './pages/**/*.{js,jsx,ts,tsx}',
-    './App/**/*.{js,jsx,ts,tsx}',
-  ],
+  content: ['./app/**/*.{js,jsx,ts,tsx}', './components/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
       fontFamily: {
@@ -21,7 +16,11 @@ module.exports = {
       },
       colors: {
         bgPrimaryDark: '#161622',
+        dark: '#070B11',
+        blueClr: '#0079FB',
+        redCrl: '#EE401B',
         bgPrimaryLight: '#f3f4f6',
+        orangeClr: '#F38D1B',
       },
     },
   },

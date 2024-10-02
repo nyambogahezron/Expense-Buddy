@@ -55,7 +55,7 @@ export default function LockScreen() {
   };
 
   return (
-    <SafeAreaProvider className='flex flex-1 bg-bgPrimaryDark'>
+    <SafeAreaProvider className='flex flex-1 bg-dark'>
       <View>
         <View className='flex items-center justify-center w-full mx-auto mt-24'>
           <Feather name='lock' size={35} color='#fff' />

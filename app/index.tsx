@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import CustomButton from '@/components/CustomButton';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,7 +26,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <SafeAreaView className='flex-1 justify-center items-center bg-[#070B11]'>
+    <SafeAreaView className='flex-1 justify-center items-center bg-dark'>
       <View className='flex-1'>
         <LinearGradient
           className='absolute top-[-50px] right-[-60px] h-[260px] w-[260px] rounded-full'
@@ -41,12 +42,12 @@ export default function LandingPage() {
               width: width * 0.9,
               height: height * 0.25,
             }}
-            className='relative  ml-2 shadow-lg mb-12 mt-[60px] rotate-[-4deg] rounded-2xl bg-[#070B11] opacity-80'
+            className='relative  ml-2 shadow-lg mb-12 mt-[60px] rotate-[-4deg] rounded-2xl bg-dark opacity-80'
           >
             <View className='flex justify-center p-4 mx-4'>
               <View className='flex flex-row mt-2'>
-                <View className='w-12 h-12 rounded-full bg-[#EE401B] opacity-70'></View>
-                <View className='w-12 h-12 rounded-full bg-[#F38D1B] opacity-70 right-6'></View>
+                <View className='w-12 h-12 rounded-full bg-redCrl opacity-70'></View>
+                <View className='w-12 h-12 rounded-full bg-orangeClr opacity-70 right-6'></View>
               </View>
               <Text className='text-white text-2xl font-bold mt-4'>
                 My Wallet
@@ -84,7 +85,10 @@ export default function LandingPage() {
           </Text>
         </View>
 
-        <View className=' absolute px-4 items-center w-full bottom-10'>
+        <Animated.View
+          entering={FadeInDown}
+          className='w-full absolute px-3 -ml-3 items-center justify-center bottom-10'
+        >
           <CustomButton
             title='Login'
             handleOpenPress={() => router.push('/(auth)/login')}
@@ -94,10 +98,10 @@ export default function LandingPage() {
           <CustomButton
             title='Register'
             handleOpenPress={() => router.push('/(auth)/register')}
-            customStyles='bg-[#0079FB] mt-4'
+            customStyles='bg-blueClr mt-4'
             textStyles='text-white font-bold'
           />
-        </View>
+        </Animated.View>
       </View>
 
       {/* top bar mobile status bar */}

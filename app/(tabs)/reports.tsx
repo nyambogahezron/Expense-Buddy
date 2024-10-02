@@ -7,8 +7,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { BarChart, PieChart } from 'react-native-chart-kit';
-import { Ionicons } from '@expo/vector-icons';
-import { router, Stack } from 'expo-router';
+import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { transactions } from '@/data';
 import { TransactionProps, TransactionCategoryProps } from '@/types';
@@ -20,8 +19,6 @@ import CategoryActionCard from '@/components/CategoryActionCard';
 import LoadMoreBtn from '@/components/LoadMoreBtn';
 import { useTheme } from '@/context/ThemeProvider';
 import { ThemedText, ThemedView } from '@/components/Themed';
-import BackButton from '@/components/BackButton';
-import HeaderRightIconCard from '@/components/HeaderRightIconCard';
 import { supabase } from '@/utils/supabase';
 import { useGlobalContext } from '@/context/GlobalProvider';
 
@@ -96,34 +93,6 @@ export default function Statistics() {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
       >
-        <Stack.Screen
-          options={{
-            title: 'Reports',
-            headerShown: true,
-            headerTitleAlign: 'center',
-            statusBarStyle: theme === 'light' ? 'dark' : 'light',
-            headerStyle: {
-              backgroundColor: theme === 'light' ? '#fff' : '#070B11',
-            },
-            headerLeft: () => <BackButton />,
-            headerTitleStyle: {
-              color: theme === 'light' ? '#333' : '#fff',
-              fontSize: 20,
-              fontWeight: 'bold',
-            },
-            headerRight: () => (
-              <HeaderRightIconCard
-                handleOnPress={() => router.push('/(profile)/settings')}
-              >
-                <Ionicons
-                  name='settings-outline'
-                  size={22}
-                  color={theme === 'light' ? 'black' : '#fff'}
-                />
-              </HeaderRightIconCard>
-            ),
-          }}
-        />
         <ThemedView className='px-3'>
           <View className='items-center w-full px-2'>
             {/* Income and Expenses Summary */}

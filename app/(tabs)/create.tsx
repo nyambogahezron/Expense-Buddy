@@ -6,18 +6,13 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
-import { Stack } from 'expo-router';
-import { router } from 'expo-router';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import CustomButton from '@/components/CustomButton';
 import { useTheme } from '@/context/ThemeProvider';
 import { ThemedText, ThemedView } from '@/components/Themed';
 import CustomTextInput from '@/components/CustomTextInput';
-import BackButton from '@/components/BackButton';
-import HeaderRightIconCard from '@/components/HeaderRightIconCard';
 import DatePicker from '@/components/DatePicker';
 import CategoryListBottomSheet from '@/components/CategoryListBottomSheet';
 import TransactionTypePicker from '@/components/TransactionTypePicker';
@@ -79,34 +74,6 @@ export default function AddExpense() {
         backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
       />
 
-      <Stack.Screen
-        options={{
-          title: 'Add Transaction',
-          headerShown: true,
-          headerTitleAlign: 'center',
-          statusBarStyle: theme === 'light' ? 'dark' : 'light',
-          headerStyle: {
-            backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
-          },
-          headerLeft: () => <BackButton />,
-          headerTitleStyle: {
-            color: theme === 'light' ? '#333' : '#fff',
-            fontSize: 20,
-            fontWeight: 'bold',
-          },
-          headerRight: () => (
-            <HeaderRightIconCard
-              handleOnPress={() => router.push('/(profile)/settings')}
-            >
-              <Ionicons
-                name='settings-outline'
-                size={22}
-                color={theme === 'light' ? 'black' : '#fff'}
-              />
-            </HeaderRightIconCard>
-          ),
-        }}
-      />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className='mb-5'>
           {/* transaction form  */}

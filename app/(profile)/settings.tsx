@@ -37,7 +37,7 @@ export default function Settings() {
             headerStyle: {
               backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton containerStyles='-ml-2' />,
             headerTitleStyle: {
               color: theme === 'light' ? '#333' : '#fff',
               fontSize: 20,
