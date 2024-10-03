@@ -4,9 +4,17 @@ import { router } from 'expo-router';
 import { ThemedText, ThemedView } from '@/components/Themed';
 
 const width = Dimensions.get('window').width;
-type title = { title?: string };
+type EmptyListCardProps = {
+  title?: string;
+  onPress?: () => void;
+  buttonText?: string;
+};
 
-export default function EmptyListCard({ title = 'No Transactions' }: title) {
+export default function EmptyListCard({
+  title = 'No Transactions',
+  onPress = () => router.push('/(tabs)/create'),
+  buttonText = 'Add Transaction',
+}: EmptyListCardProps) {
   return (
     <ThemedView className='flex justify-center items-center mt-10'>
       <View className='my-8'>
@@ -21,17 +29,14 @@ export default function EmptyListCard({ title = 'No Transactions' }: title) {
         {title}
       </ThemedText>
 
-      <TouchableOpacity
-        activeOpacity={0.6}
-        onPress={() => router.push('/(tabs)/create')}
-      >
+      <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
         <View
           className='flex items-center justify-center bg-blue-600 h-12 mr-3 rounded-lg mt-6 mb-5'
           style={{ width: width * 0.89 }}
         >
           <View className='flex-row items-center'>
             <ThemedText className='text-[15px] font-semibold  text-white'>
-              Add Transactions
+              {buttonText}
             </ThemedText>
           </View>
         </View>

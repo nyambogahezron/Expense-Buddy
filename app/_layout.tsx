@@ -7,6 +7,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { ThemeProvider } from '@/context/ThemeProvider';
 import GlobalProvider, { useGlobalContext } from '@/context/GlobalProvider';
+import DataProvider from '@/context/DataProvider';
 import LockScreen from '../components/LockScreen';
 import WhiteScreen from '@/app/modals/WhiteScreen';
 
@@ -54,23 +55,18 @@ function RootLayoutContent() {
   }
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <GlobalProvider>
-        <Stack>
-          <Stack.Screen name='index' options={{ headerShown: false }} />
-          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-          <Stack.Screen name='(auth)' options={{ headerShown: false }} />
-          <Stack.Screen name='(profile)' options={{ headerShown: false }} />
-          <Stack.Screen
-            name='modals'
-            options={{ headerShown: false, presentation: 'modal' }}
-          />
-          <Stack.Screen
-            name='(transactions)'
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name='+not-found' />
-        </Stack>
-      </GlobalProvider>
+      <Stack>
+        <Stack.Screen name='index' options={{ headerShown: false }} />
+        <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+        <Stack.Screen name='(auth)' options={{ headerShown: false }} />
+        <Stack.Screen name='(profile)' options={{ headerShown: false }} />
+        <Stack.Screen
+          name='modals'
+          options={{ headerShown: false, presentation: 'modal' }}
+        />
+        <Stack.Screen name='(transactions)' options={{ headerShown: false }} />
+        <Stack.Screen name='+not-found' />
+      </Stack>
     </ThemeProvider>
   );
 }
@@ -78,7 +74,9 @@ function RootLayoutContent() {
 export default function RootLayout() {
   return (
     <GlobalProvider>
-      <RootLayoutContent />
+      <DataProvider>
+        <RootLayoutContent />
+      </DataProvider>
     </GlobalProvider>
   );
 }

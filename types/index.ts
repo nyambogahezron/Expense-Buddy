@@ -1,3 +1,4 @@
+import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { Session } from '@supabase/supabase-js';
 import React from 'react';
 
@@ -62,10 +63,18 @@ type CustomPasswordTextInputProps = CustomTextInputProps & {
   isForConfirmation?: boolean;
 };
 
+type CategoryPickerProps = {
+  selectedCategory?: string;
+  setSelectedCategory: (value: string) => void;
+  bottomSheetRef: React.RefObject<BottomSheetMethods>;
+  setSelectedCategoryObj: React.Dispatch<React.SetStateAction<any>>;
+};
+
 export {
   TransactionProps,
   TransactionCategoryProps,
   GlobalContextType,
   CustomTextInputProps,
   CustomPasswordTextInputProps,
+  CategoryPickerProps,
 };

@@ -23,3 +23,15 @@ export const Colors = {
     headerBackground: '#070B11',
   },
 };
+
+
+export const IconColors = [
+  '#FFA500',
+  '#FF4500',
+  '#FF6347',
+  '#FF0000',
+  '#FF69B4',
+  '#FF1493',
+  '#3030cc',
+  '#FF4500',
+];

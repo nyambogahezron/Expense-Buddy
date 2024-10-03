@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Dimensions } from 'react-native';
+import { View,  TextInput, Dimensions } from 'react-native';
 import React from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { useTheme } from '@/context/ThemeProvider';

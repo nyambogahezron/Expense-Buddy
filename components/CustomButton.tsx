@@ -35,13 +35,13 @@ export default function CustomButton({
       activeOpacity={touchOpacity}
       onPress={handleOpenPress}
       style={[{ width: width * 0.9 }, styles]}
-      className={`flex items-center justify-center bg-white p-4 rounded-full  ${customStyles}`}
+      className={`flex items-center justify-center bg-white p-4 rounded-full  ${customStyles} ${isLoading ? 'opacity-50' : ''}`}
     >
       <View className='items-center justify-center flex flex-row gap-2'>
         <Text
           className={`text-black text-lg font-bold capitalize ${textStyles}`}
         >
-          {title}
+          {isLoading ? 'Loading...' : title}
         </Text>
         {isLoading && <ActivityIndicator size='small' color='#fff' />}
       </View>

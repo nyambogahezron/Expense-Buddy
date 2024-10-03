@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -16,57 +17,84 @@ import CustomTextInput from '@/components/CustomTextInput';
 import DatePicker from '@/components/DatePicker';
 import CategoryListBottomSheet from '@/components/CategoryListBottomSheet';
 import TransactionTypePicker from '@/components/TransactionTypePicker';
+import { supabase } from '@/utils/supabase';
+import getRandomColor from '@/utils/generateRandomClr';
+import { useGlobalContext } from '@/context/GlobalProvider';
+import { useDataContext } from '@/context/DataProvider'; 
 
 export default function AddExpense() {
-  const [id, setId] = useState(1);
   const [title, setTitle] = useState('');
   const [date, setDate] = useState(new Date());
   const [amount, setAmount] = useState('');
-  const [icon, setIcon] = useState('A');
-  const [iconColor, setIconColor] = useState('#FF0000');
   const [type, setType] = useState('expense');
-  const [selectedCategory, setSelectedCategory] = useState('Travel');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [transactionFee, setTransactionFee] = useState(0.0);
   const [description, setDescription] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
-
-  const { theme } = useTheme();
-
+  const [selectedCategoryObj, setSelectedCategoryObj] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleOpenPress = () => bottomSheetRef.current?.expand();
+  const { theme } = useTheme();
+  const { User } = useGlobalContext();
+  const { fetchTransactions } = useDataContext(); 
 
   // from submission
-  const handleOnSubmit = () => {
-    const newTransaction = {
-      id: id + 1,
-      title,
-      date: date.toDateString(),
-      amount,
-      icon,
-      iconColor,
-      type,
-      category: {
-        id: 11,
-        name: selectedCategory,
-        icon: 'other',
-      },
-      transactionFee: transactionFee,
-      description,
-      receipt: 'https://example.com',
-    };
-    console.log(newTransaction);
-    setAmount('');
-    setTitle('');
-    setDescription('');
-    setTransactionFee(0.0);
-    setId(id);
-    setIcon('A');
-    setIconColor('#FF0000');
+  const handleOnSubmit = async () => {
+    const colors = getRandomColor();
+
+    if (!title || !date || !amount || !type || !type)
+      return Alert.alert('Input all field!');
+
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('transactions')
+        .insert([
+          {
+            userId: User?.sub,
+            title: title,
+            date: date,
+            amount: amount,
+            iconColor: colors,
+            type: type,
+            category: selectedCategoryObj,
+            transactionFee: transactionFee,
+            description: description,
+            receipt: 'https://receipt.com',
+          },
+        ])
+        .select();
+
+      if (error) {
+        setIsLoading(false);
+        console.log(error);
+        return Alert.alert('An error occurred while adding transaction');
+      }
+
+      if (data) {
+        setIsLoading(false);
+        console.log(data);
+        Alert.alert('Transaction added successfully');
+
+        setAmount('');
+        setTitle('');
+        setDescription('');
+        setTransactionFee(0.0);
+
+        fetchTransactions(); // Call fetchTransactions after successfully adding a transaction
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <GestureHandlerRootView
-      className='flex-1'
+      className='flex-1 '
       style={{ backgroundColor: theme === 'light' ? '#f3f4f6' : '#070B11' }}
     >
       <StatusBar
@@ -75,9 +103,8 @@ export default function AddExpense() {
       />
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View className='mb-5'>
+        <View className='mb-20'>
           {/* transaction form  */}
-
           <View className='mt-5 px-4'>
             {/* Title */}
             <CustomTextInput
@@ -167,13 +194,14 @@ export default function AddExpense() {
               handleOpenPress={handleOnSubmit}
               customStyles='bg-orange-600 my-5 p-3'
               textStyles='text-white text-lg'
+              isLoading={isLoading}
             />
           </View>
         </View>
-
         {/* BottomSheet for categories*/}
       </ScrollView>
       <CategoryListBottomSheet
+        setSelectedCategoryObj={setSelectedCategoryObj}
         selectedCategory={selectedCategory}
         bottomSheetRef={bottomSheetRef}
         setSelectedCategory={setSelectedCategory}

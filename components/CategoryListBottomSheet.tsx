@@ -1,39 +1,75 @@
 import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
-import React, { useCallback, useMemo, useRef } from 'react';
-import { ThemedText, ThemedView } from './Themed';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { ThemedText } from './Themed';
 import { useTheme } from '@/context/ThemeProvider';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import TransactionCategories from '@/data/TransactionsTypes';
-import { TransactionCategoryProps } from '@/types';
-import { Entypo } from '@expo/vector-icons';
+import { CategoryPickerProps, TransactionCategoryProps } from '@/types';
+import { Entypo, AntDesign } from '@expo/vector-icons';
 import CustomButton from './CustomButton';
 import { router } from 'expo-router';
-import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import { supabase } from '@/utils/supabase';
+import { useGlobalContext } from '@/context/GlobalProvider';
+import Loading from './Loading';
+import EmptyListCard from './EmptyListCard';
 
 const { width } = Dimensions.get('window');
-
-type CategoryPickerProps = {
-  selectedCategory?: string;
-  setSelectedCategory: (value: string) => void;
-  bottomSheetRef: React.RefObject<BottomSheetMethods>;
-};
 
 export default function CategoryListBottomSheet({
   setSelectedCategory,
   bottomSheetRef,
+  selectedCategory,
+  setSelectedCategoryObj,
 }: CategoryPickerProps) {
   const { theme } = useTheme();
-  const snapPoints = useMemo(() => ['30%', '80%'], []);
+  const snapPoints = useMemo(() => ['30%', '100%'], []);
   const handleClosePress = () => bottomSheetRef.current?.close();
+  const [fetchedCategories, setFetchedCategories] = useState<
+    TransactionCategoryProps[]
+  >([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { User } = useGlobalContext();
+
+  // fetch user categories list
+  useEffect(() => {
+    setIsLoading(true);
+    const fetchCategory = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('categories')
+          .select('*')
+          .eq('userId', User?.sub)
+          .order('id', { ascending: false });
+        if (error) {
+          console.log('error fetching transactions', error);
+          setIsLoading(false);
+          throw new Error(error.message);
+        }
+        if (data) {
+          setFetchedCategories(data);
+          // console.log('categories', data);
+
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log('error fetching transactions', error);
+        setIsLoading(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchCategory();
+  }, []);
 
   const CategoryCard = useCallback(
     ({ item }: { item: TransactionCategoryProps }) => (
       <TouchableOpacity
         onPress={() => {
           setSelectedCategory(item.name);
+          setSelectedCategoryObj(item);
           handleClosePress();
         }}
-        key={item.id}
+        key={item?.id}
         activeOpacity={0.8}
         className='flex-row justify-between items-center bg-[#f3f4f6] p-4 rounded-lg mb-1 w-full'
         style={{
@@ -43,17 +79,23 @@ export default function CategoryListBottomSheet({
       >
         <View className='flex-row items-center'>
           <View className='bg-[#fff] p-3 rounded-full mr-4'>
-            <Text>{item.icon ? item.icon : item.name.charAt(0)}</Text>
+            <Text>{item?.icon ? item?.icon : item?.name?.charAt(0)}</Text>
           </View>
           <View>
             <ThemedText className='font-bold'>{item.name}</ThemedText>
           </View>
         </View>
-        <Entypo name='circle' size={24} color='green' />
+
+        {selectedCategory === item.name ? (
+          <AntDesign name='checkcircle' size={17} color='green' />
+        ) : (
+          <Entypo name='circle' size={17} color='#f2f2f2' />
+        )}
       </TouchableOpacity>
     ),
-    []
+    [selectedCategory, theme]
   );
+
   return (
     <BottomSheet
       index={-1}
@@ -68,10 +110,12 @@ export default function CategoryListBottomSheet({
       }}
     >
       <BottomSheetFlatList
-        data={TransactionCategories}
-        keyExtractor={(i) => i.id.toString()}
-        renderItem={CategoryCard}
-        contentContainerStyle={{ alignItems: 'center', padding: 0 }}
+        data={fetchedCategories}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => {
+          return isLoading ? <Loading /> : <CategoryCard item={item} />;
+        }}
+        contentContainerStyle={{ alignItems: 'center', paddingBottom: 100 }}
         ListHeaderComponent={
           <View>
             <CustomButton
@@ -81,6 +125,13 @@ export default function CategoryListBottomSheet({
               textStyles='text-white text-sm'
             />
           </View>
+        }
+        ListEmptyComponent={
+          <EmptyListCard
+            title='No categories available'
+            buttonText='Add New Category'
+            onPress={() => router.push('/modals/createCategory')}
+          />
         }
       />
     </BottomSheet>

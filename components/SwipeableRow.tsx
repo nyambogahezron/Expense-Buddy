@@ -5,7 +5,7 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
 interface Props {
-  onToggle: () => void;
+  onEdit: () => void;
   onDelete: () => void;
 }
 type IconName = 'done' | 'delete' | 'edit' | 'undo' | 'close';
@@ -25,13 +25,11 @@ export default class AppleStyleSwipeableRow extends Component<
     });
 
     const pressHandler = () => {
-      if (iconName === 'done' || iconName === 'undo') {
-        this.props.onToggle();
+      if (iconName === 'edit' || iconName === 'close') {
+        this.props.onEdit();
       } else if (iconName === 'delete') {
         this.props.onDelete();
       }
-      console.log(this.props);
-
       this.close();
     };
 

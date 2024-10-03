@@ -12,10 +12,13 @@ import { useTheme } from '@/context/ThemeProvider';
 import { ThemedText, ThemedView } from '@/components/Themed';
 import BackButton from '@/components/BackButton';
 import isEmoji from '@/utils/isEmoji';
+import { useDataContext } from '@/context/DataProvider';
 
 const { width } = Dimensions.get('window');
 
 export default function TransactionDetails() {
+  const { deleteTransaction } = useDataContext();
+
   // get item from local search params
   const { item } = useLocalSearchParams();
   const transaction: TransactionProps =
@@ -77,10 +80,10 @@ export default function TransactionDetails() {
         <ThemedView
           darkColor='#1c1c1e'
           lightColor='#f2f2f2'
-          className='flex flex-row items-center rounded-sm h-12 w-full mt-5 mb-8'
+          className='relative flex flex-row items-center rounded-sm h-12 w-full mt-5 mb-8 ml-10'
         >
           <View
-            className='flex items-center justify-center h-12 w-12 rounded-full mr-3 p-2'
+            className='absolute -ml-4 flex items-center justify-center h-14 w-14 rounded-full mr-3 p-2'
             style={{
               backgroundColor: iconColor ? iconColor : '#3030cc',
             }}
@@ -92,7 +95,7 @@ export default function TransactionDetails() {
             </Text>
           </View>
 
-          <ThemedText className='text-lg font-bold'>{title}</ThemedText>
+          <ThemedText className='text-lg font-bold ml-16'>{title}</ThemedText>
         </ThemedView>
 
         {/* Transaction Details */}
@@ -120,25 +123,37 @@ export default function TransactionDetails() {
           </View>
         ))}
 
-        {/* edit btn  */}
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() =>
-            router.push({
-              pathname: '/(transactions)/edit',
-              params: { transaction: JSON.stringify(transaction) },
-            })
-          }
-          style={{ width: width * 0.9 }}
-          className='flex items-center justify-center bg-orange-600 p-3 rounded-full '
-        >
-          <View className='flex flex-row items-center gap-2'>
-            <Text className='text-white text-lg font-bold capitalize'>
-              Edit
-            </Text>
-            <FontAwesome name='edit' size={18} color='#fff' />
-          </View>
-        </TouchableOpacity>
+        {/* Action Buttons */}
+        <View className='flex w-full flex-row justify-end gap-4 mr-4'>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() =>
+              router.push({
+                pathname: '/(transactions)/edit',
+                params: { transaction: JSON.stringify(transaction) },
+              })
+            }
+            className='p-3 border border-green-500 rounded-lg'
+          >
+            <View className='flex flex-row items-center gap-2'>
+              <FontAwesome name='edit' size={18} color='#fff' />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              deleteTransaction(transaction.id);
+              if (router.canGoBack()) {
+                router.back();
+              }
+            }}
+            className='p-3 rounded-lg border border-red-500'
+          >
+            <View className='flex flex-row items-center gap-2'>
+              <FontAwesome name='trash' size={18} color='red' />
+            </View>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </GestureHandlerRootView>
   );

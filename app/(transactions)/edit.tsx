@@ -1,22 +1,22 @@
-import { View, Text, ScrollView, TextInput } from 'react-native';
+import { View, Text, ScrollView,  Alert } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import { TransactionProps } from '@/types';
 import { StatusBar } from 'expo-status-bar';
-import { Dimensions } from 'react-native';
 import { useTheme } from '@/context/ThemeProvider';
 import { ThemedText, ThemedView } from '@/components/Themed';
 import BackButton from '@/components/BackButton';
 import CustomTextInput from '@/components/CustomTextInput';
 import DatePicker from '@/components/DatePicker';
-import { CustomButton } from '@/components';
+import CustomButton from '@/components/CustomButton';
 import BottomSheet from '@gorhom/bottom-sheet';
 import CategoryListBottomSheet from '@/components/CategoryListBottomSheet';
 import TransactionTypePicker from '@/components/TransactionTypePicker';
-
-const { width } = Dimensions.get('window');
+import { supabase } from '@/utils/supabase';
+import { useDataContext } from '@/context/DataProvider';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 export default function EditTransaction() {
   // get item from local search params
@@ -24,30 +24,69 @@ export default function EditTransaction() {
   const initialTransaction: TransactionProps =
     typeof transaction === 'string' ? JSON.parse(transaction) : null;
 
+  // console.log('initialTransaction', initialTransaction);
+
   const { title, amount, date, transactionFee, description, type, category } =
     initialTransaction;
+
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [titleF, setTitle] = useState(title);
   const [amountF, setAmount] = useState(amount);
-  const [dateF, setDate] = useState(new Date());
+  const [dateF, setDate] = useState(new Date(date));
   const [transactionFeeF, setTransactionFee] = useState(transactionFee);
   const [descriptionF, setDescription] = useState(description);
-  const [typeF, setType] = useState(type);
+const [typeF, setType] = useState<any>(type);
   const [categoryF, setCategory] = useState(category.name);
+  const [selectedCategoryObj, setSelectedCategoryObj] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const { theme } = useTheme();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleOpenPress = () => bottomSheetRef.current?.expand();
+  const { fetchTransactions } = useDataContext();
+  const { User } = useGlobalContext();
 
-  const handleSave = () => {
-    console.log(
-      title,
-      amountF,
-      dateF,
-      transactionFeeF,
-      descriptionF,
-      typeF,
-      categoryF
-    );
+  const handleSave = async () => {
+    if (!titleF || !dateF || !amountF || !typeF || !categoryF)
+      return Alert.alert('Input all field!');
+
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from('transactions')
+        .update({
+          title: titleF,
+          amount: amountF,
+          date: dateF,
+          transactionFee: transactionFeeF,
+          description: descriptionF,
+          type: typeF,
+          category: selectedCategoryObj,
+        })
+        .eq('id', initialTransaction.id)
+        .eq('userId', User?.sub)
+        .select();
+
+      if (error) {
+        console.log(error);
+        return Alert.alert('An error occurred while updating transaction');
+        setIsLoading(false);
+      }
+
+      if (data) {
+        console.log(data);
+        Alert.alert('Transaction updated successfully');
+        setIsLoading(false);
+
+        fetchTransactions(); // Call fetchTransactions after successfully updating a transaction
+
+        // TODO: go back to previous screen and refresh the data
+        // router.back(); // go back to previous screen
+
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -67,7 +106,7 @@ export default function EditTransaction() {
           headerStyle: {
             backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
           },
-          headerLeft: () => <BackButton />,
+          headerLeft: () => <BackButton containerStyles='-ml-1' />,
           headerTitleStyle: {
             color: theme === 'light' ? '#333' : '#fff',
             fontSize: 20,
@@ -82,30 +121,6 @@ export default function EditTransaction() {
         contentContainerStyle={{ alignItems: 'center' }}
         className='flex flex-1 mb-8'
       >
-        {/* Title  */}
-        <ThemedView
-          darkColor='#1c1c1e'
-          lightColor='#f2f2f2'
-          className='flex flex-row items-center rounded-sm h-10 w-full mt-5 mb-8'
-        >
-          <View
-            className='flex items-center justify-center h-12 w-12 rounded-full mr-3 p-2'
-            style={{
-              backgroundColor: initialTransaction.iconColor
-                ? initialTransaction?.iconColor
-                : '#3030cc',
-            }}
-          >
-            <ThemedText className='text-lg font-bold'>
-              {initialTransaction.category.icon.charAt(0)}
-            </ThemedText>
-          </View>
-
-          <ThemedText className='text-lg font-bold'>
-            {initialTransaction.title}
-          </ThemedText>
-        </ThemedView>
-
         {/* Transaction Details */}
 
         <CustomTextInput title='Title' value={titleF} onChangeText={setTitle} />
@@ -142,7 +157,7 @@ export default function EditTransaction() {
           </ThemedView>
         </View>
         {/* Transaction Type */}
-        <TransactionTypePicker setType={(itemValue) => setType} type={typeF} />
+        <TransactionTypePicker setType={setType} type={typeF} />
 
         <DatePicker
           showDatePicker={showDatePicker}
@@ -161,6 +176,7 @@ export default function EditTransaction() {
         {/* Save btn  */}
 
         <CustomButton
+          isLoading={isLoading}
           title='Save'
           handleOpenPress={handleSave}
           customStyles=' bg-orange-600'
@@ -168,6 +184,7 @@ export default function EditTransaction() {
         />
       </ScrollView>
       <CategoryListBottomSheet
+        setSelectedCategoryObj={setSelectedCategoryObj}
         selectedCategory={categoryF}
         bottomSheetRef={bottomSheetRef}
         setSelectedCategory={setCategory}
