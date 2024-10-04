@@ -60,6 +60,7 @@ function RootLayoutContent() {
         <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
         <Stack.Screen name='(auth)' options={{ headerShown: false }} />
         <Stack.Screen name='(profile)' options={{ headerShown: false }} />
+        <Stack.Screen name='(categories)' options={{ headerShown: false }} />
         <Stack.Screen
           name='modals'
           options={{ headerShown: false, presentation: 'modal' }}
