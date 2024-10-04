@@ -70,6 +70,24 @@ type CategoryPickerProps = {
   setSelectedCategoryObj: React.Dispatch<React.SetStateAction<any>>;
 };
 
+type createContextProps = {
+  transactionsData: any;
+  isLoading: boolean;
+  fetchTransactions: () => Promise<void>;
+  deleteTransaction: (id: string) => Promise<void>;
+  addTransaction: (transaction: any) => Promise<void>;
+  updateTransaction: (transaction: any) => Promise<void>;
+  categoriesData: any;
+  fetchCategories: () => Promise<void>;
+  addCategory: (category: any) => Promise<void>;
+  updateCategory: (category: any) => Promise<void>;
+  deleteCategory: (id: string) => Promise<void>;
+  uploadImage: (image: any) => Promise<any>;
+  deleteImage: (imagePath: string) => Promise<void>;
+  uploadFile: (file: any) => Promise<any>;
+  deleteFile: (filePath: string) => Promise<void>;
+};
+
 export {
   TransactionProps,
   TransactionCategoryProps,
@@ -77,4 +95,5 @@ export {
   CustomTextInputProps,
   CustomPasswordTextInputProps,
   CategoryPickerProps,
+  createContextProps,
 };
