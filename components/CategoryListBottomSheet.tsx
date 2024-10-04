@@ -120,7 +120,7 @@ export default function CategoryListBottomSheet({
           <View>
             <CustomButton
               title='New Category'
-              handleOpenPress={() => router.push('/modals/createCategory')}
+              handleOpenPress={() => router.push('/(categories)/create')}
               customStyles='bg-orange-600 my-5 p-3 rounded-none'
               textStyles='text-white text-sm'
             />
@@ -130,7 +130,7 @@ export default function CategoryListBottomSheet({
           <EmptyListCard
             title='No categories available'
             buttonText='Add New Category'
-            onPress={() => router.push('/modals/createCategory')}
+            onPress={() => router.push('/(categories)/create')}
           />
         }
       />

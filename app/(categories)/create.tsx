@@ -10,7 +10,6 @@ import BackButton from '@/components/BackButton';
 import CustomTextInput from '@/components/CustomTextInput';
 
 export default function CreateCategory() {
-  const [id, setId] = useState('');
   const [title, setTitle] = useState('');
   const [icon, setIcon] = useState('');
   const { theme } = useTheme();

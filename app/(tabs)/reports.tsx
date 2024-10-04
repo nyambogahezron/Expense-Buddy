@@ -261,7 +261,7 @@ export default function Statistics() {
                 key={id}
                 handleOnPress={() =>
                   router.push({
-                    pathname: '/modals/categoriesDetails',
+                    pathname: '/(categories)/details',
                     params: { item: JSON.stringify(item) },
                   })
                 }
@@ -275,7 +275,7 @@ export default function Statistics() {
 
           <LoadMoreBtn
             title='View All'
-            handleOnPress={() => router.push('/modals/categories')}
+            handleOnPress={() => router.push('/(categories)/')}
           />
         </ThemedView>
       </ScrollView>

@@ -48,7 +48,7 @@ const Statistics = () => {
           },
           headerRight: () => (
             <HeaderRightIconCard
-              handleOnPress={() => router.push('/modals/createCategory')}
+              handleOnPress={() => router.push('/(categories)/create')}
             >
               <FontAwesome5
                 name='plus'
@@ -78,7 +78,7 @@ const Statistics = () => {
                 key={id}
                 handleOnPress={() =>
                   router.push({
-                    pathname: '/modals/categoriesDetails',
+                    pathname: '/(categories)/details',
                     params: { item: JSON.stringify(item) },
                   })
                 }
