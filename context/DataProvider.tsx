@@ -74,6 +74,7 @@ export default function DataProvider({
         console.log('error deleting transaction', error);
         throw new Error(error.message);
       }
+      setIsLoading(false);
       Alert.alert('Transaction deleted successfully');
       fetchTransactions();
     } catch (error) {
@@ -86,7 +87,7 @@ export default function DataProvider({
   async function addTransaction(transaction: any) {
     try {
       setIsLoading(true);
-      const { error } = await supabase.from('transactions').insert([
+      const { error, data } = await supabase.from('transactions').insert([
         {
           ...transaction,
           userId: User?.sub,
@@ -97,6 +98,7 @@ export default function DataProvider({
         console.log('error adding transaction', error);
         throw new Error(error.message);
       }
+
       fetchTransactions();
     } catch (error) {
       console.log('error adding transaction', error);

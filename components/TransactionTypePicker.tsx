@@ -1,4 +1,4 @@
-import { View,  TextInput, Dimensions } from 'react-native';
+import { View, TextInput, Dimensions } from 'react-native';
 import React from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { useTheme } from '@/context/ThemeProvider';
@@ -16,19 +16,16 @@ export default function TransactionTypePicker({
   type,
 }: CategoryPickerProps) {
   const { theme } = useTheme();
+
   return (
     <View className='mb-3 w-full'>
       <ThemedText className='font-pbold text-sm ml-2 mb-1'>
         Transaction Type
       </ThemedText>
 
-      <ThemedView lightColor='#e5e7eb' className='mb-6'>
-        <TextInput
-          className='text-sm flex-1'
-          placeholderTextColor={theme === 'light' ? '#333' : '#ccc'}
-          onChangeText={setType}
-        />
-        <Picker
+      <ThemedView lightColor='#e5e7eb' className='mb-6 pb-4'>
+        <Picker 
+       
           selectedValue={type}
           dropdownIconColor={theme === 'light' ? '#333' : '#fff'}
           style={{

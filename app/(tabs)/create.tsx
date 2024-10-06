@@ -6,6 +6,7 @@ import {
   TextInput,
   ScrollView,
   Alert,
+  Dimensions,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -17,28 +18,28 @@ import CustomTextInput from '@/components/CustomTextInput';
 import DatePicker from '@/components/DatePicker';
 import CategoryListBottomSheet from '@/components/CategoryListBottomSheet';
 import TransactionTypePicker from '@/components/TransactionTypePicker';
-import { supabase } from '@/utils/supabase';
 import getRandomColor from '@/utils/generateRandomClr';
-import { useGlobalContext } from '@/context/GlobalProvider';
-import { useDataContext } from '@/context/DataProvider'; 
+import { useDataContext } from '@/context/DataProvider';
+import { Picker } from '@react-native-picker/picker';
+const width = Dimensions.get('window').width;
 
 export default function AddExpense() {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState(new Date());
   const [amount, setAmount] = useState('');
-  const [type, setType] = useState('expense');
+  const [type, setType] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [transactionFee, setTransactionFee] = useState(0.0);
   const [description, setDescription] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedCategoryObj, setSelectedCategoryObj] = useState<any>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleOpenPress = () => bottomSheetRef.current?.expand();
   const { theme } = useTheme();
-  const { User } = useGlobalContext();
-  const { fetchTransactions } = useDataContext(); 
+  const { addTransaction, isLoading } = useDataContext();
 
+  console.log('selected type', type);
+  
   // from submission
   const handleOnSubmit = async () => {
     const colors = getRandomColor();
@@ -46,49 +47,29 @@ export default function AddExpense() {
     if (!title || !date || !amount || !type || !type)
       return Alert.alert('Input all field!');
 
-    setIsLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('transactions')
-        .insert([
-          {
-            userId: User?.sub,
-            title: title,
-            date: date,
-            amount: amount,
-            iconColor: colors,
-            type: type,
-            category: selectedCategoryObj,
-            transactionFee: transactionFee,
-            description: description,
-            receipt: 'https://receipt.com',
-          },
-        ])
-        .select();
+      await addTransaction({
+        title,
+        date,
+        amount,
+        type,
+        category: selectedCategoryObj,
+        transactionFee,
+        description,
+        iconColor: colors,
+      });
 
-      if (error) {
-        setIsLoading(false);
-        console.log(error);
-        return Alert.alert('An error occurred while adding transaction');
-      }
-
-      if (data) {
-        setIsLoading(false);
-        console.log(data);
-        Alert.alert('Transaction added successfully');
-
-        setAmount('');
-        setTitle('');
-        setDescription('');
-        setTransactionFee(0.0);
-
-        fetchTransactions(); // Call fetchTransactions after successfully adding a transaction
-      }
+      Alert.alert('Transaction Added Successfully');
+      // clear form
+      setTitle('');
+      setDate(new Date());
+      setAmount('');
+      setType('');
+      setSelectedCategory('');
+      setTransactionFee(0.0);
+      setDescription('');
     } catch (error) {
       console.log(error);
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -167,10 +148,30 @@ export default function AddExpense() {
               onChangeText={setTransactionFee}
               keyboardType='numeric'
             />
-            <TransactionTypePicker
-              setType={(itemValue) => setType}
-              type={type}
-            />
+
+            <View className='mb-3 w-full'>
+              <ThemedText className='font-pbold text-sm ml-2 mb-1'>
+                Transaction Type
+              </ThemedText>
+
+              <ThemedView lightColor='#e5e7eb' className='mb-6 pb-4'>
+                <Picker
+                  selectedValue={type}
+                  dropdownIconColor={theme === 'light' ? '#333' : '#fff'}
+                  style={{
+                    height: 8,
+                    width: width * 0.92,
+                    backgroundColor: theme === 'light' ? '#e5e7eb' : '#1c1c1e',
+                    color: theme === 'light' ? '#333' : '#fff',
+                    borderRadius: 10,
+                  }}
+                  onValueChange={(itemValue) => setType(itemValue)}
+                >
+                  <Picker.Item label='Income' value='income' />
+                  <Picker.Item label='Expense' value='expense' />
+                </Picker>
+              </ThemedView>
+            </View>
             {/* Date Picker */}
             <DatePicker
               showDatePicker={showDatePicker}

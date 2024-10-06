@@ -3,7 +3,7 @@ import { Session } from '@supabase/supabase-js';
 import React from 'react';
 
 type TransactionProps = {
-  id: number;
+  id: string;
   title: string;
   date: string;
   amount: string;
