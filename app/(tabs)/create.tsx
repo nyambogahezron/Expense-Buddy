@@ -17,7 +17,6 @@ import { ThemedText, ThemedView } from '@/components/Themed';
 import CustomTextInput from '@/components/CustomTextInput';
 import DatePicker from '@/components/DatePicker';
 import CategoryListBottomSheet from '@/components/CategoryListBottomSheet';
-import TransactionTypePicker from '@/components/TransactionTypePicker';
 import getRandomColor from '@/utils/generateRandomClr';
 import { useDataContext } from '@/context/DataProvider';
 import { Picker } from '@react-native-picker/picker';
@@ -38,8 +37,6 @@ export default function AddExpense() {
   const { theme } = useTheme();
   const { addTransaction, isLoading } = useDataContext();
 
-  console.log('selected type', type);
-  
   // from submission
   const handleOnSubmit = async () => {
     const colors = getRandomColor();

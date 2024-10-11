@@ -73,7 +73,7 @@ const Profile = () => {
         showsVerticalScrollIndicator={false}
       >
         {/* Header and Profile Info */}
-        <View className='flex items-center mb-8 mt-5'>
+        <View className='flex items-center mb-8'>
           <ThemedView
             darkColor='#1c1c1e'
             lightColor='#ffffff'

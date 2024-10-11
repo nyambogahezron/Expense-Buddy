@@ -21,12 +21,6 @@ export default function Login() {
 
   const { theme } = useTheme();
 
-  const handleSubmission = () => {
-    console.log('Username:', username);
-    console.log('Email:', email);
-    console.log('Password', password);
-  };
-
   async function signUpWithUser() {
     if (!email || !password || !username || !confirmPassword)
       return Alert.alert('Please fill all fields');
@@ -96,7 +90,6 @@ export default function Login() {
         console.log('Error inserting default:', error);
       }
     }
-    console.log(error, session);
     if (error) Alert.alert('Something went wrong, please try again!');
 
     setLoading(false);
@@ -153,7 +146,7 @@ export default function Login() {
           textStyles='text-white text-lg font-bold'
         />
 
-        {/* Signup Option */}
+        {/* SignUp Option */}
         <AuthFooter
           title={`Already Have An Account ?`}
           handleOnPress={() => router.push('/(auth)/login')}

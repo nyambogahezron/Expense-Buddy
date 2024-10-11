@@ -1,0 +1,16 @@
+export const GlobalContextInitialValues = {
+  isUnlocked: false,
+  appInactive: false,
+  isAuthenticated: false,
+  authenticate: async () => {},
+  setIsUnlocked: () => {},
+  session: null,
+  User: null,
+  setUser: () => {},
+  loading: false,
+  isLockPinSet: false,
+  setIsLockPinSet: () => {},
+  setLockPin: () => {},
+  UserCurrency: 'USD',
+  getUserCurrency: async () => {},
+};

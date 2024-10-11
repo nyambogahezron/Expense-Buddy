@@ -1,6 +1,6 @@
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { router, Stack } from 'expo-router';
+import {  Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
@@ -10,6 +10,8 @@ import GlobalProvider, { useGlobalContext } from '@/context/GlobalProvider';
 import DataProvider from '@/context/DataProvider';
 import LockScreen from '../components/LockScreen';
 import WhiteScreen from '@/app/modals/WhiteScreen';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import ToastProviderContext from '@/context/ToastProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -54,21 +56,28 @@ function RootLayoutContent() {
     return <WhiteScreen />;
   }
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name='index' options={{ headerShown: false }} />
-        <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-        <Stack.Screen name='(auth)' options={{ headerShown: false }} />
-        <Stack.Screen name='(profile)' options={{ headerShown: false }} />
-        <Stack.Screen name='(categories)' options={{ headerShown: false }} />
-        <Stack.Screen
-          name='modals'
-          options={{ headerShown: false, presentation: 'modal' }}
-        />
-        <Stack.Screen name='(transactions)' options={{ headerShown: false }} />
-        <Stack.Screen name='+not-found' />
-      </Stack>
-    </ThemeProvider>
+    <GestureHandlerRootView>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <ToastProviderContext>
+        <Stack>
+          <Stack.Screen name='index' options={{ headerShown: false }} />
+          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+          <Stack.Screen name='(auth)' options={{ headerShown: false }} />
+          <Stack.Screen name='(profile)' options={{ headerShown: false }} />
+          <Stack.Screen name='(categories)' options={{ headerShown: false }} />
+          <Stack.Screen
+            name='modals'
+            options={{ headerShown: false, presentation: 'modal' }}
+          />
+          <Stack.Screen
+            name='(transactions)'
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name='+not-found' />
+        </Stack>
+        </ToastProviderContext>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
 

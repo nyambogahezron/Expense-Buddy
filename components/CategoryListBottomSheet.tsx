@@ -48,7 +48,6 @@ export default function CategoryListBottomSheet({
         if (data) {
           setFetchedCategories(data);
           // console.log('categories', data);
-
           setIsLoading(false);
         }
       } catch (error) {

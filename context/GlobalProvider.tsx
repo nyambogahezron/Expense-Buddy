@@ -13,20 +13,10 @@ import { useRouter } from 'expo-router';
 import { supabase } from '@/utils/supabase';
 import { Session } from '@supabase/supabase-js';
 import { GlobalContextType } from '@/types';
+import { GlobalContextInitialValues } from '@/types/initialValues';
 
 const GlobalContext = createContext<GlobalContextType>({
-  isUnlocked: false,
-  appInactive: false,
-  isAuthenticated: false,
-  authenticate: async () => {},
-  setIsUnlocked: () => {},
-  session: null,
-  User: null,
-  setUser: () => {},
-  loading: false,
-  isLockPinSet: false,
-  setIsLockPinSet: () => {},
-  setLockPin: () => {},
+  ...GlobalContextInitialValues,
 });
 
 const LOCK_TIME = 6000;
@@ -40,6 +30,7 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
   const [loading, setLoading] = useState(false);
   const [isLockPinSet, setIsLockPinSet] = useState(false);
   const [lockPin, setLockPin] = useState<any>();
+  const [UserCurrency, setUserCurrency] = useState<any>('USD');
   const appState = useRef(AppState.currentState);
   const router = useRouter();
 
@@ -156,20 +147,37 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
     appState.current = nextAppState;
   };
 
-  //get lockPin
-  useEffect(() => {
-    const getLockPin = async () => {
-      try {
-        const value = await AsyncStorage.getItem('lockPassword');
-        if (value !== null) {
-          setIsLockPinSet(true);
-          setLockPin(Number(value));
-        }
-      } catch (e) {
-        console.log('error getting lock pin', e);
+  // get user's selected currency
+  async function getUserCurrency() {
+    try {
+      const value = await AsyncStorage.getItem('selectedCurrency');
+      if (value !== null) {
+        setUserCurrency(JSON.parse(value).code);
+      } else {
+        setUserCurrency('USD');
       }
-    };
+    } catch (e) {
+      console.log('error getting user currency', e);
+    }
+  }
+  //get lockPin
+  async function getLockPin() {
+    try {
+      const value = await AsyncStorage.getItem('lockPassword');
+      if (value !== null) {
+        setIsLockPinSet(true);
+        setLockPin(Number(value));
+      }
+    } catch (e) {
+      console.log('error getting lock pin', e);
+    }
+  }
+
+  useEffect(() => {
     getLockPin();
+
+    // get user currency
+    getUserCurrency();
   }, []);
 
   return (
@@ -188,6 +196,8 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
         setIsLockPinSet,
         lockPin,
         setLockPin,
+        UserCurrency,
+        getUserCurrency,
       }}
     >
       {children}

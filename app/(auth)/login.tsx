@@ -19,12 +19,7 @@ export default function Login() {
 
   const { theme } = useTheme();
 
-  const handleSubmission = () => {
-    console.log('Email:', email);
-    console.log('Password', password);
-  };
-
-  async function signInWithUser() {
+   async function signInWithUser() {
     if (!email || !password) return Alert.alert('Please fill all fields');
 
     setLoading(true);
@@ -36,8 +31,6 @@ export default function Login() {
     if (error) Alert.alert(error.message);
     setLoading(false);
   }
-
-  // if (loading) return <Loading />;
 
   return (
     <ThemedSafeAreaView className='flex-1 px-3 w-full justify-center'>
