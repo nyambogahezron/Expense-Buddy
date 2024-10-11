@@ -21,13 +21,11 @@ export default function HomeScreen() {
         backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
       />
 
-      <View>
+      <View className='flex-1 mb-24'>
         {isLoading ? (
           <Loading />
         ) : (
           <FlatList
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
             data={transactionsData}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => <TransactionCard item={item} />}

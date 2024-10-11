@@ -4,7 +4,6 @@ import { router } from 'expo-router';
 import { Text, TouchableOpacity, View } from 'react-native';
 const userCurrency = 'Ksh';
 import { ThemedText, ThemedView } from '@/components/Themed';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import AppleStyleSwipeableRow from '@/components/SwipeableRow';
 import { useDataContext } from '@/context/DataProvider';
 
@@ -16,7 +15,7 @@ const TransactionCard = ({ item }: TransactionCardProps) => {
   const { deleteTransaction } = useDataContext();
 
   return (
-    <GestureHandlerRootView className='justify-center'>
+    <View className='justify-center flex-1'>
       <AppleStyleSwipeableRow
         onDelete={() => deleteTransaction(item?.id)}
         onEdit={() =>
@@ -72,7 +71,7 @@ const TransactionCard = ({ item }: TransactionCardProps) => {
           </View>
         </TouchableOpacity>
       </AppleStyleSwipeableRow>
-    </GestureHandlerRootView>
+    </View>
   );
 };
 
