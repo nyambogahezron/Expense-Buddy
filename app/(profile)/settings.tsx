@@ -7,32 +7,14 @@ import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from '@/context/ThemeProvider';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { StatusBar } from 'expo-status-bar';
-import {
-  ThemedSafeAreaView,
-  ThemedText,
-  ThemedView,
-} from '@/components/Themed';
+import { ThemedSafeAreaView, ThemedView } from '@/components/Themed';
 import BackButton from '@/components/BackButton';
-import { currencies } from '@/data';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useGlobalContext } from '@/context/GlobalProvider';
 import CurrencyContainer from '@/components/CurrencyContainer';
 
 export default function Settings() {
   const { theme, toggleTheme } = useTheme();
-  const { UserCurrency } = useGlobalContext();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleOpenPress = () => bottomSheetRef.current?.expand();
-  const handleClosePress = () => bottomSheetRef.current?.close();
-
-  const handleCurrencySelect = async (currency: any) => {
-    try {
-      await AsyncStorage.setItem('selectedCurrency', JSON.stringify(currency));
-      console.log('Currency saved:', currency);
-    } catch (error) {
-      console.error('Error saving currency:', error);
-    }
-  };
 
   return (
     <ThemedSafeAreaView className='flex-1 '>
@@ -191,7 +173,7 @@ export default function Settings() {
       </ScrollView>
 
       {/*  currency bottom sheet  */}
-     <CurrencyContainer bottomSheetRef={bottomSheetRef} />
+      <CurrencyContainer bottomSheetRef={bottomSheetRef} />
     </ThemedSafeAreaView>
   );
 }

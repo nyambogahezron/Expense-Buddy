@@ -10,6 +10,7 @@ import AuthFooter from '@/components/AuthFooter';
 import AuthHeader from '@/components/AuthHeader';
 import { CustomButton } from '@/components';
 import { supabase } from '@/utils/supabase';
+import { useToast } from 'react-native-toast-notifications';
 
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -20,13 +21,14 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const { theme } = useTheme();
+  const toast = useToast();
 
   async function signUpWithUser() {
     if (!email || !password || !username || !confirmPassword)
-      return Alert.alert('Please fill all fields');
+      return toast.show('Input all fields', { type: 'danger' });
 
     if (password !== confirmPassword)
-      return Alert.alert('Passwords do not match');
+      return toast.show('Passwords do not match', { type: 'danger' });
 
     setLoading(true);
     const {

@@ -6,6 +6,7 @@ const userCurrency = 'Ksh';
 import { ThemedText, ThemedView } from '@/components/Themed';
 import AppleStyleSwipeableRow from '@/components/SwipeableRow';
 import { useDataContext } from '@/context/DataProvider';
+import { useToast } from 'react-native-toast-notifications';
 
 type TransactionCardProps = {
   item: TransactionProps;
@@ -13,14 +14,22 @@ type TransactionCardProps = {
 
 const TransactionCard = ({ item }: TransactionCardProps) => {
   const { deleteTransaction } = useDataContext();
+  const toast = useToast();
+
+  async function onDelete(item: any) {
+    await deleteTransaction(item);
+    toast.show('Transaction deleted successfully', {
+      type: 'success',
+    });
+  }
 
   return (
     <View className='justify-center flex-1'>
       <AppleStyleSwipeableRow
-        onDelete={() => deleteTransaction(item?.id)}
+        onDelete={() => onDelete(item?.id)}
         onEdit={() =>
           router.push({
-            pathname: '/(transactions)/details', // TODO push to edit screen, fix local params errror
+            pathname: '/(transactions)/details', // TODO push to edit screen, fix local params error
             params: { item: JSON.stringify(item) },
           })
         }

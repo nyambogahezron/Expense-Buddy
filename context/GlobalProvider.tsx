@@ -7,9 +7,9 @@ import React, {
   useState,
 } from 'react';
 import * as LocalAuthentication from 'expo-local-authentication';
-import { Alert, AppState } from 'react-native';
+import { AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
+import {  useRouter } from 'expo-router';
 import { supabase } from '@/utils/supabase';
 import { Session } from '@supabase/supabase-js';
 import { GlobalContextType } from '@/types';
@@ -31,6 +31,9 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
   const [isLockPinSet, setIsLockPinSet] = useState(false);
   const [lockPin, setLockPin] = useState<any>();
   const [UserCurrency, setUserCurrency] = useState<any>('USD');
+  const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+  const [isBiometricEnabled, setIsBiometricEnabled] = useState(false);
+
   const appState = useRef(AppState.currentState);
   const router = useRouter();
 
@@ -85,8 +88,21 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
     try {
       const hasHardware = await LocalAuthentication.hasHardwareAsync();
       if (!hasHardware) {
-        Alert.alert('Not supported');
+        console.log('Not supported');
         return;
+      }
+
+      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+      if (!isEnrolled) {
+        console.log('No biometrics enrolled');
+        
+       setIsBiometricEnabled(false);
+      }
+
+      const supportedTypes = await LocalAuthentication.supportedAuthenticationTypesAsync();
+
+      if (!supportedTypes.includes(1)) {
+        setIsBiometricSupported(false);
       }
 
       const res = await LocalAuthentication.authenticateAsync();
@@ -94,10 +110,11 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
       if (res.success) {
         setIsUnlocked(true);
       } else {
-        console.log('Authentication failed');
+        setIsUnlocked(false);
       }
     } catch (error) {
-      console.log('An error occurred during authentication');
+      setIsUnlocked(false);
+      console.log('An error occurred during authentication', error);
     }
   };
 
@@ -122,7 +139,6 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
   const handleAppStateChange = async (nextAppState: any) => {
     // handle app going to background
     if (nextAppState === 'inactive') {
-      router.replace('/modals/WhiteScreen');
       setAppInactive(true);
     } else {
       if (router.canGoBack()) {
@@ -198,6 +214,8 @@ export default function GlobalProvider({ children }: PropsWithChildren<{}>) {
         setLockPin,
         UserCurrency,
         getUserCurrency,
+        isBiometricSupported,
+        isBiometricEnabled,
       }}
     >
       {children}

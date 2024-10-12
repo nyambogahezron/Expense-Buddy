@@ -28,7 +28,6 @@ export default function DataProvider({
         .from('transactions')
         .select('*')
         .eq('userId', User?.sub)
-        // .limit(10)
         .order('date', { ascending: false });
 
       if (error) {
@@ -37,6 +36,7 @@ export default function DataProvider({
       }
 
       if (transactions) {
+        setIsLoading(false);
         setTransactionsData(transactions);
       } else {
         setTransactionsData([]);
@@ -62,7 +62,6 @@ export default function DataProvider({
         throw new Error(error.message);
       }
       setIsLoading(false);
-      Alert.alert('Transaction deleted successfully');
       fetchTransactions();
     } catch (error) {
       console.log('error deleting transaction', error);

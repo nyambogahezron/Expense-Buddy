@@ -35,6 +35,7 @@ const setPreferredTheme = async (theme: 'light' | 'dark') => {
 
 export const ThemeProvider = ({ children, value }: ThemeProviderProps) => {
   const deviceColorScheme: ColorSchemeName = getDeviceColorScheme();
+
   const [theme, setTheme] = useState<'light' | 'dark'>(
     deviceColorScheme === 'dark' ? 'dark' : 'light'
   );
@@ -45,7 +46,7 @@ export const ThemeProvider = ({ children, value }: ThemeProviderProps) => {
       if (preferredTheme) {
         setTheme(preferredTheme);
       } else if (deviceColorScheme) {
-        setTheme(deviceColorScheme === 'dark' ? 'dark' : 'light');
+        setTheme(deviceColorScheme); // default to device theme
       }
     };
     loadPreferredTheme();

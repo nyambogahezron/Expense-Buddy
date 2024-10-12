@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Alert,
   Dimensions,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
@@ -20,6 +19,8 @@ import CategoryListBottomSheet from '@/components/CategoryListBottomSheet';
 import getRandomColor from '@/utils/generateRandomClr';
 import { useDataContext } from '@/context/DataProvider';
 import { Picker } from '@react-native-picker/picker';
+import { useToast } from 'react-native-toast-notifications';
+import { router } from 'expo-router';
 const width = Dimensions.get('window').width;
 
 export default function AddExpense() {
@@ -35,6 +36,7 @@ export default function AddExpense() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleOpenPress = () => bottomSheetRef.current?.expand();
   const { theme } = useTheme();
+  const toast = useToast();
   const { addTransaction, isLoading } = useDataContext();
 
   // from submission
@@ -42,7 +44,9 @@ export default function AddExpense() {
     const colors = getRandomColor();
 
     if (!title || !date || !amount || !type || !type)
-      return Alert.alert('Input all field!');
+      return toast.show('Input all fields', {
+        type: 'danger',
+      });
 
     try {
       await addTransaction({
@@ -56,7 +60,10 @@ export default function AddExpense() {
         iconColor: colors,
       });
 
-      Alert.alert('Transaction Added Successfully');
+      router.push('/(tabs)/');
+      toast.show('Transaction added successfully', {
+        type: 'success',
+      });
       // clear form
       setTitle('');
       setDate(new Date());

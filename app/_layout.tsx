@@ -1,6 +1,6 @@
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import {  Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
@@ -8,8 +8,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { ThemeProvider } from '@/context/ThemeProvider';
 import GlobalProvider, { useGlobalContext } from '@/context/GlobalProvider';
 import DataProvider from '@/context/DataProvider';
-import LockScreen from '../components/LockScreen';
-import WhiteScreen from '@/app/modals/WhiteScreen';
+import LockScreen from '../components/PinLockScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ToastProviderContext from '@/context/ToastProvider';
 
@@ -17,7 +16,6 @@ import ToastProviderContext from '@/context/ToastProvider';
 SplashScreen.preventAutoHideAsync();
 
 function RootLayoutContent() {
-  const colorScheme = useColorScheme();
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     'Poppins-Black': require('../assets/fonts/Poppins-Black.ttf'),
@@ -31,7 +29,7 @@ function RootLayoutContent() {
     'Poppins-Thin': require('../assets/fonts/Poppins-Thin.ttf'),
   });
 
-  const { isUnlocked, authenticate, session, appInactive } = useGlobalContext();
+  const { isUnlocked, authenticate, session } = useGlobalContext();
 
   useEffect(() => {
     if (error) throw error;
@@ -52,13 +50,9 @@ function RootLayoutContent() {
     return <LockScreen />;
   }
 
-  if (appInactive) {
-    return <WhiteScreen />;
-  }
   return (
     <GestureHandlerRootView>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <ToastProviderContext>
+      <ToastProviderContext>
         <Stack>
           <Stack.Screen name='index' options={{ headerShown: false }} />
           <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
@@ -75,18 +69,20 @@ function RootLayoutContent() {
           />
           <Stack.Screen name='+not-found' />
         </Stack>
-        </ToastProviderContext>
-      </ThemeProvider>
+      </ToastProviderContext>
     </GestureHandlerRootView>
   );
 }
 
 export default function RootLayout() {
+  const colorScheme = useColorScheme();
   return (
-    <GlobalProvider>
-      <DataProvider>
-        <RootLayoutContent />
-      </DataProvider>
-    </GlobalProvider>
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <GlobalProvider>
+        <DataProvider>
+          <RootLayoutContent />
+        </DataProvider>
+      </GlobalProvider>
+    </ThemeProvider>
   );
 }

@@ -13,7 +13,7 @@ import { ThemedText, ThemedView } from '@/components/Themed';
 import BackButton from '@/components/BackButton';
 import isEmoji from '@/utils/isEmoji';
 import { useDataContext } from '@/context/DataProvider';
-
+import { useToast } from 'react-native-toast-notifications';
 const { width } = Dimensions.get('window');
 
 export default function TransactionDetails() {
@@ -34,7 +34,7 @@ export default function TransactionDetails() {
     title,
   } = transaction;
   const { theme } = useTheme();
-
+  const toast = useToast();
   const transactionDetails = [
     { label: 'Amount', value: amount },
     { label: 'Date', value: date },
@@ -143,9 +143,10 @@ export default function TransactionDetails() {
             activeOpacity={0.7}
             onPress={() => {
               deleteTransaction(transaction.id);
-              if (router.canGoBack()) {
-                router.back();
-              }
+              router.push('/(tabs)/');
+              toast.show('Transaction deleted successfully', {
+                type: 'success',
+              });
             }}
             className='p-3 rounded-lg border border-red-500'
           >

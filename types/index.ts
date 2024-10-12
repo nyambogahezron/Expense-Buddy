@@ -45,6 +45,8 @@ type GlobalContextType = {
   setLockPin: React.Dispatch<React.SetStateAction<number>>;
   UserCurrency: string;
   getUserCurrency: () => Promise<void>;
+  isBiometricSupported: boolean;
+  isBiometricEnabled: boolean;
 };
 
 type CustomTextInputProps = {

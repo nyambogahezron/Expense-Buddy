@@ -13,6 +13,8 @@ export const GlobalContextInitialValues = {
   setLockPin: () => {},
   UserCurrency: 'USD',
   getUserCurrency: async () => {},
+  isBiometricSupported: false,
+  isBiometricEnabled: false,
 };
 
 export const DataProviderInitialValues = {

@@ -28,11 +28,8 @@ export default function CurrencyContainer({
   const handleCurrencySelect = async (currency: any) => {
     try {
       await AsyncStorage.setItem('selectedCurrency', JSON.stringify(currency));
-     toast.show('Currency saved successfully', {
+      toast.show('Currency saved successfully', {
         type: 'success',
-        placement: 'top',
-        duration: 3000,
-        animationType: 'zoom-in',
       });
       handleClosePress();
       getUserCurrency();

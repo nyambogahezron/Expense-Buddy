@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { ThemedText } from './Themed';
 import { useTheme } from '@/context/ThemeProvider';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
@@ -7,10 +7,9 @@ import { CategoryPickerProps, TransactionCategoryProps } from '@/types';
 import { Entypo, AntDesign } from '@expo/vector-icons';
 import CustomButton from './CustomButton';
 import { router } from 'expo-router';
-import { supabase } from '@/utils/supabase';
-import { useGlobalContext } from '@/context/GlobalProvider';
 import Loading from './Loading';
 import EmptyListCard from './EmptyListCard';
+import { useDataContext } from '@/context/DataProvider';
 
 const { width } = Dimensions.get('window');
 
@@ -23,42 +22,7 @@ export default function CategoryListBottomSheet({
   const { theme } = useTheme();
   const snapPoints = useMemo(() => ['30%', '100%'], []);
   const handleClosePress = () => bottomSheetRef.current?.close();
-  const [fetchedCategories, setFetchedCategories] = useState<
-    TransactionCategoryProps[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const { User } = useGlobalContext();
-
-  // fetch user categories list
-  useEffect(() => {
-    setIsLoading(true);
-    const fetchCategory = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('categories')
-          .select('*')
-          .eq('userId', User?.sub)
-          .order('id', { ascending: false });
-        if (error) {
-          console.log('error fetching transactions', error);
-          setIsLoading(false);
-          throw new Error(error.message);
-        }
-        if (data) {
-          setFetchedCategories(data);
-          // console.log('categories', data);
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.log('error fetching transactions', error);
-        setIsLoading(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchCategory();
-  }, []);
+  const { categoriesData, isLoading } = useDataContext();
 
   const CategoryCard = useCallback(
     ({ item }: { item: TransactionCategoryProps }) => (
@@ -109,8 +73,8 @@ export default function CategoryListBottomSheet({
       }}
     >
       <BottomSheetFlatList
-        data={fetchedCategories}
-        keyExtractor={(item) => item.id.toString()}
+        data={categoriesData}
+        keyExtractor={(item: any) => item.id.toString()}
         renderItem={({ item }) => {
           return isLoading ? <Loading /> : <CategoryCard item={item} />;
         }}

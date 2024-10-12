@@ -10,6 +10,7 @@ import AuthFooter from '@/components/AuthFooter';
 import AuthHeader from '@/components/AuthHeader';
 import { CustomButton } from '@/components';
 import { supabase } from '@/utils/supabase';
+import { useToast } from 'react-native-toast-notifications';
 
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -18,9 +19,11 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const { theme } = useTheme();
+  const toast = useToast();
 
-   async function signInWithUser() {
-    if (!email || !password) return Alert.alert('Please fill all fields');
+  async function signInWithUser() {
+    if (!email || !password)
+      return toast.show('Input all fields', { type: 'danger' });
 
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
@@ -39,7 +42,7 @@ export default function Login() {
         backgroundColor={theme === 'light' ? '#f3f4f6' : '#070B11'}
       />
       <Stack.Screen options={{ headerShown: false }} />
-      <ScrollView
+      <ScrollView className='mt-14'
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >

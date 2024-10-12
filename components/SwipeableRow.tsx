@@ -25,17 +25,19 @@ export default class AppleStyleSwipeableRow extends Component<
     });
 
     const pressHandler = () => {
-      if (iconName === 'edit' || iconName === 'close') {
+      if (iconName === 'edit') {
         this.props.onEdit();
       } else if (iconName === 'delete') {
         this.props.onDelete();
+      } else if (iconName === 'close') {
+        this.close();
       }
       this.close();
     };
 
     return (
       <Animated.View
-        className='flex-1 h-full'
+        className='flex-1 h-full items-center justify-between'
         style={[{ transform: [{ translateX: trans }] }]}
       >
         <RectButton style={[styles.rightActionButton]} onPress={pressHandler}>

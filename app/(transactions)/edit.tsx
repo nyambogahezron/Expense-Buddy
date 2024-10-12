@@ -1,12 +1,15 @@
-import { View, Text, ScrollView,  Alert } from 'react-native';
+import { View, Text, ScrollView, Alert } from 'react-native';
 import React, { useRef, useState } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import { TransactionProps } from '@/types';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
-import { ThemedText, ThemedView } from '@/components/Themed';
+import {
+  ThemedSafeAreaView,
+  ThemedText,
+  ThemedView,
+} from '@/components/Themed';
 import BackButton from '@/components/BackButton';
 import CustomTextInput from '@/components/CustomTextInput';
 import DatePicker from '@/components/DatePicker';
@@ -17,14 +20,13 @@ import TransactionTypePicker from '@/components/TransactionTypePicker';
 import { supabase } from '@/utils/supabase';
 import { useDataContext } from '@/context/DataProvider';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import { useToast } from 'react-native-toast-notifications';
 
 export default function EditTransaction() {
   // get item from local search params
   const { transaction } = useLocalSearchParams();
   const initialTransaction: TransactionProps =
     typeof transaction === 'string' ? JSON.parse(transaction) : null;
-
-  // console.log('initialTransaction', initialTransaction);
 
   const { title, amount, date, transactionFee, description, type, category } =
     initialTransaction;
@@ -35,7 +37,7 @@ export default function EditTransaction() {
   const [dateF, setDate] = useState(new Date(date));
   const [transactionFeeF, setTransactionFee] = useState(transactionFee);
   const [descriptionF, setDescription] = useState(description);
-const [typeF, setType] = useState<any>(type);
+  const [typeF, setType] = useState<any>(type);
   const [categoryF, setCategory] = useState(category.name);
   const [selectedCategoryObj, setSelectedCategoryObj] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,10 +47,13 @@ const [typeF, setType] = useState<any>(type);
   const handleOpenPress = () => bottomSheetRef.current?.expand();
   const { fetchTransactions } = useDataContext();
   const { User } = useGlobalContext();
+  const toast = useToast();
 
   const handleSave = async () => {
     if (!titleF || !dateF || !amountF || !typeF || !categoryF)
-      return Alert.alert('Input all field!');
+      return toast.show('Input all fields', {
+        type: 'danger',
+      });
 
     try {
       setIsLoading(true);
@@ -69,20 +74,19 @@ const [typeF, setType] = useState<any>(type);
 
       if (error) {
         console.log(error);
-        return Alert.alert('An error occurred while updating transaction');
         setIsLoading(false);
       }
 
       if (data) {
         console.log(data);
-        Alert.alert('Transaction updated successfully');
         setIsLoading(false);
 
-        fetchTransactions(); // Call fetchTransactions after successfully updating a transaction
-
-        // TODO: go back to previous screen and refresh the data
-        // router.back(); // go back to previous screen
-
+        toast.show('Transaction updated successfully', {
+          type: 'success',
+        });
+        router.push('/(tabs)/');
+        // Call fetchTransactions after successfully updating a transaction
+        fetchTransactions();
       }
     } catch (error) {
       console.log(error);
@@ -90,10 +94,7 @@ const [typeF, setType] = useState<any>(type);
   };
 
   return (
-    <GestureHandlerRootView
-      style={{ backgroundColor: theme === 'light' ? '#f3f4f6' : '#070B11' }}
-      className='flex flex-1 px-2'
-    >
+    <ThemedSafeAreaView className='flex flex-1 px-2'>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
@@ -189,6 +190,6 @@ const [typeF, setType] = useState<any>(type);
         bottomSheetRef={bottomSheetRef}
         setSelectedCategory={setCategory}
       />
-    </GestureHandlerRootView>
+    </ThemedSafeAreaView>
   );
 }
