@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import {
   View,
+  Modal,
   Text,
   TouchableOpacity,
   ScrollView,
@@ -13,12 +14,14 @@ import { transactions } from '@/data';
 import { TransactionProps, TransactionCategoryProps } from '@/types';
 import { data, chartConfig, pieData, PieChartConfig } from '@/data/ChartsData';
 import CategoryCard from '@/components/CategoryCard';
-import BottomSheet from '@gorhom/bottom-sheet';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import CategoryActionCard from '@/components/CategoryActionCard';
 import LoadMoreBtn from '@/components/LoadMoreBtn';
 import { useTheme } from '@/context/ThemeProvider';
-import { ThemedText, ThemedView } from '@/components/Themed';
+import {
+  ThemedSafeAreaView,
+  ThemedText,
+  ThemedView,
+} from '@/components/Themed';
 import { supabase } from '@/utils/supabase';
 import { useGlobalContext } from '@/context/GlobalProvider';
 
@@ -26,7 +29,7 @@ const width = Dimensions.get('window').width;
 
 export default function Statistics() {
   const { User } = useGlobalContext();
-
+  const [modalVisible, setModalVisible] = useState(false);
   const [activeCategory, setActiveCategory] = useState<'income' | 'expense'>(
     'income'
   );
@@ -35,11 +38,8 @@ export default function Statistics() {
     TransactionCategoryProps[]
   >([]);
   const { theme } = useTheme();
-
-  const snapPoints = useMemo(() => ['30%', '35%'], []);
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const handleOpenPress = () => bottomSheetRef.current?.expand();
-  const handleClosePress = () => bottomSheetRef.current?.close();
+  const handleOpenPress = () => setModalVisible(true);
+  const handleClosePress = () => setModalVisible(false);
 
   // get top five transactions
   useEffect(() => {
@@ -81,9 +81,7 @@ export default function Statistics() {
   }, []);
 
   return (
-    <GestureHandlerRootView
-      className={`flex-1 ${theme === 'light' ? 'bg-gray-100' : 'bg-[#070B11]'}`}
-    >
+    <ThemedSafeAreaView>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
@@ -281,21 +279,9 @@ export default function Statistics() {
       </ScrollView>
 
       {/* actions BottomSheet */}
-      <BottomSheet
-        detached={true}
-        index={-1}
-        snapPoints={snapPoints}
-        ref={bottomSheetRef}
-        enablePanDownToClose={true}
-        handleIndicatorStyle={{ backgroundColor: '#fff' }}
-        backgroundStyle={{
-          backgroundColor: '#1B1F24',
-          alignItems: 'center',
-          borderRadius: 0,
-        }}
-      >
+      <Modal animationType='slide' transparent={true} visible={modalVisible}>
         <CategoryActionCard handleClosePress={handleClosePress} />
-      </BottomSheet>
-    </GestureHandlerRootView>
+      </Modal>
+    </ThemedSafeAreaView>
   );
 }

@@ -14,3 +14,21 @@ export const GlobalContextInitialValues = {
   UserCurrency: 'USD',
   getUserCurrency: async () => {},
 };
+
+export const DataProviderInitialValues = {
+  transactionsData: [],
+  isLoading: false,
+  fetchTransactions: async () => {},
+  deleteTransaction: async () => {},
+  addTransaction: async () => {},
+  updateTransaction: async () => {},
+  categoriesData: [],
+  fetchCategories: async () => {},
+  addCategory: async () => {},
+  updateCategory: async () => {},
+  deleteCategory: async () => {},
+  uploadImage: async () => {},
+  deleteImage: async () => {},
+  uploadFile: async () => {},
+  deleteFile: async () => {},
+};

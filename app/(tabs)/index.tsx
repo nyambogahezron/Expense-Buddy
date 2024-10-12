@@ -11,8 +11,11 @@ import Loading from '@/components/Loading';
 import { useDataContext } from '@/context/DataProvider';
 
 export default function HomeScreen() {
-  const { transactionsData, isLoading } = useDataContext();
+  const { transactionsData, isLoading, fetchTransactions } = useDataContext();
   const { theme } = useTheme();
+  async function onRefresh() {
+    await fetchTransactions();
+  }
 
   return (
     <ThemedSafeAreaView className='flex-1 px-2'>
@@ -26,7 +29,12 @@ export default function HomeScreen() {
           <Loading />
         ) : (
           <FlatList
-            data={transactionsData}
+            refreshing={false}
+            onRefresh={() => onRefresh()}
+            removeClippedSubviews={true}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            data={transactionsData.slice(0, 8)}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => <TransactionCard item={item} />}
             ListHeaderComponent={<TransactionHeader viewMore={true} />}

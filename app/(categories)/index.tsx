@@ -5,13 +5,13 @@ import { StatusBar } from 'expo-status-bar';
 import TransactionCategories from '@/data/TransactionsTypes';
 import CategoryCard from '@/components/CategoryCard';
 import { useMemo, useRef } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { CustomButton } from '@/components';
 import CategoryActionCard from '@/components/CategoryActionCard';
 import { useTheme } from '@/context/ThemeProvider';
 import BackButton from '@/components/BackButton';
 import HeaderRightIconCard from '@/components/HeaderRightIconCard';
+import { ThemedSafeAreaView } from '@/components/Themed';
 
 const Statistics = () => {
   const snapPoints = useMemo(() => ['30%', '35%'], []);
@@ -21,12 +21,7 @@ const Statistics = () => {
   const { theme } = useTheme();
 
   return (
-    <GestureHandlerRootView
-      className='flex-1'
-      style={{
-        backgroundColor: theme === 'light' ? '#f3f4f6' : '#070B11',
-      }}
-    >
+    <ThemedSafeAreaView className='flex-1'>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
@@ -135,7 +130,7 @@ const Statistics = () => {
           <CategoryActionCard handleClosePress={handleClosePress} />
         </View>
       </BottomSheet>
-    </GestureHandlerRootView>
+    </ThemedSafeAreaView>
   );
 };
 

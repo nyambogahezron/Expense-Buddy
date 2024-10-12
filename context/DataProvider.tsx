@@ -3,23 +3,10 @@ import React, { createContext, useContext } from 'react';
 import { useGlobalContext } from './GlobalProvider';
 import { Alert } from 'react-native';
 import { createContextProps } from '@/types';
+import { DataProviderInitialValues } from '@/types/initialValues';
 
 const DataContext = createContext<createContextProps>({
-  transactionsData: [],
-  isLoading: false,
-  fetchTransactions: async () => {},
-  deleteTransaction: async () => {},
-  addTransaction: async () => {},
-  updateTransaction: async () => {},
-  categoriesData: [],
-  fetchCategories: async () => {},
-  addCategory: async () => {},
-  updateCategory: async () => {},
-  deleteCategory: async () => {},
-  uploadImage: async () => {},
-  deleteImage: async () => {},
-  uploadFile: async () => {},
-  deleteFile: async () => {},
+  ...DataProviderInitialValues,
 });
 
 export default function DataProvider({
@@ -41,7 +28,7 @@ export default function DataProvider({
         .from('transactions')
         .select('*')
         .eq('userId', User?.sub)
-        .limit(10)
+        // .limit(10)
         .order('date', { ascending: false });
 
       if (error) {

@@ -6,14 +6,15 @@ const width = Dimensions.get('window').width;
 type CategoryActionCardProps = {
   handleClosePress: () => void | undefined;
 };
-export default function CategoryActionCard({ handleClosePress }: CategoryActionCardProps) {
+export default function CategoryActionCard({
+  handleClosePress,
+}: CategoryActionCardProps) {
   return (
-    <View className='relative px-4 items-center w-full h-full justify-center'>
-      {/* body  */}
-      <View className=''>
+    <View className='absolute bottom-0 px-4 items-center w-full h-[25%] justify-center bg-gray-950 border-4'>
+      <View>
         <TouchableOpacity
           activeOpacity={0.6}
-          onPress={() => router.push('/modals/EditCategory')}
+          onPress={() => router.push('/(categories)/edit')}
           className='w-full p-3 items-center justify-center mb-1'
           style={{ width: width }}
         >
