@@ -4,11 +4,11 @@ import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
 import { ThemedSafeAreaView } from '@/components/Themed';
-import CustomTextInput from '@/components/CustomTextInput';
-import CustomPasswordInput from '@/components/CustomPasswordInput';
-import AuthFooter from '@/components/AuthFooter';
-import AuthHeader from '@/components/AuthHeader';
-import { CustomButton } from '@/components';
+import CustomTextInput from '@/components/Form/CustomTextInput';
+import CustomPasswordInput from '@/components/Form/CustomPasswordInput';
+import AuthFooter from '@/components/Form/AuthFooter';
+import AuthHeader from '@/components/Form/AuthHeader';
+import  CustomButton  from '@/components/CustomButton';
 import { supabase } from '@/utils/supabase';
 import { useToast } from 'react-native-toast-notifications';
 

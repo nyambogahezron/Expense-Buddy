@@ -1,5 +1,5 @@
 import { Image, Text } from 'react-native';
-import { ThemedText, ThemedView } from './Themed';
+import { ThemedText, ThemedView } from '../Themed';
 
 type AuthHeaderProps = {
   title: string;
@@ -19,7 +19,7 @@ export default function AuthHeader({ title, description }: AuthHeaderProps) {
       <ThemedView>
         <Image
           style={{ width: 100, height: 100 }}
-          source={require('../assets/images/adaptive-icon.png')}
+          source={require('../../assets/images/adaptive-icon.png')}
         />
       </ThemedView>
     </ThemedView>

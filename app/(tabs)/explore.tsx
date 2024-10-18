@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Text, TouchableOpacity, SectionList, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import TransactionCard from '@/components/TransactionsCard';
-import TransactionHeader from '@/components/TransactionHeader';
+import TransactionCard from '@/components/cards/TransactionCard';
+import ListHeader from '@/components/cards/TransactionCard/ListHeader';
 import { TransactionProps } from '@/types';
 import EmptyListCard from '@/components/EmptyListCard';
 import LoadMoreBtn from '@/components/LoadMoreBtn';
@@ -74,7 +74,7 @@ export default function HomeScreen() {
     <ThemedSafeAreaView className='flex-1 px-2'>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
-        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+        backgroundColor={theme === 'light' ? '#f2f2f2' : 'rgba(7, 11, 17,0.1)'}
       />
       <ThemedView className='mt-4'>
         <SectionList
@@ -140,7 +140,9 @@ export default function HomeScreen() {
               )}
             </ThemedView>
           )}
-          ListHeaderComponent={() => <TransactionHeader viewMore={false} />}
+          ListHeaderComponent={() => (
+            <ListHeader viewMore={false} title='Recent Transactions' />
+          )}
           renderItem={({ item }) => (
             <View>
               {loading ? <Loading /> : <TransactionCard item={item} />}

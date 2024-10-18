@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { ScrollView, Dimensions } from 'react-native';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import CustomTextInput from '@/components/CustomTextInput';
-import AuthFooter from '@/components/AuthFooter';
+import CustomTextInput from '@/components/Form/CustomTextInput';
+import AuthFooter from '@/components/Form/AuthFooter';
 import { useTheme } from '@/context/ThemeProvider';
 import { ThemedSafeAreaView } from '@/components/Themed';
-import AuthHeader from '@/components/AuthHeader';
-import { CustomButton } from '@/components';
+import AuthHeader from '@/components/Form/AuthHeader';
+import CustomButton from '@/components/CustomButton';
 
 const { width, height } = Dimensions.get('window');
 export default function ForgotPassword() {

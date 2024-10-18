@@ -1,13 +1,13 @@
 import { ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { Stack } from 'expo-router';
-import { CustomButton } from '@/components';
+import CustomButton from '@/components/CustomButton';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import { ThemedView, ThemedSafeAreaView } from '@/components/Themed';
 import { useTheme } from '@/context/ThemeProvider';
-import BackButton from '@/components/BackButton';
-import CustomTextInput from '@/components/CustomTextInput';
+import BackButton from '@/components/navigation/BackButton';
+import CustomTextInput from '@/components/Form/CustomTextInput';
 
 export default function CreateCategory() {
   const [title, setTitle] = useState('');
@@ -59,7 +59,6 @@ export default function CreateCategory() {
             />
 
             <CustomButton
-            
               title='Create'
               handleOpenPress={() => handleOnSubmit()}
               customStyles='bg-orange-500 mt-5'

@@ -10,7 +10,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Dimensions } from 'react-native';
 import { useTheme } from '@/context/ThemeProvider';
 import { ThemedText, ThemedView } from '@/components/Themed';
-import BackButton from '@/components/BackButton';
+import BackButton from '@/components/navigation/BackButton';
 import isEmoji from '@/utils/isEmoji';
 import { useDataContext } from '@/context/DataProvider';
 import { useToast } from 'react-native-toast-notifications';

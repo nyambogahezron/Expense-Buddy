@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { ThemedSafeAreaView } from '@/components/Themed';
 import { CustomButton } from '@/components';
-import CustomPasswordInput from '@/components/CustomPasswordInput';
+import CustomPasswordInput from '@/components/Form/CustomPasswordInput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from '@/components/Loading';
 import { useGlobalContext } from '@/context/GlobalProvider';

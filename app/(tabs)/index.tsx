@@ -1,57 +1,53 @@
+import React from 'react';
 import { View, FlatList } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { router } from 'expo-router';
-import TransactionCard from '@/components/TransactionsCard';
-import EmptyListCard from '@/components/EmptyListCard';
-import LoadMoreBtn from '@/components/LoadMoreBtn';
 import { ThemedSafeAreaView } from '@/components/Themed';
 import { useTheme } from '@/context/ThemeProvider';
-import TransactionHeader from '@/components/TransactionHeader';
 import Loading from '@/components/Loading';
 import { useDataContext } from '@/context/DataProvider';
+import ExpenseBlock from '@/components/cards/ExpenseBlockCard';
+import IncomeBlockCard from '@/components/cards/IncomeBlockCard';
+import TransactionFlatList from '@/components/cards/TransactionCard/FlatListCard';
 
 export default function HomeScreen() {
   const { transactionsData, isLoading, fetchTransactions } = useDataContext();
   const { theme } = useTheme();
+
   async function onRefresh() {
     await fetchTransactions();
   }
+
+  const data = [
+    { key: 'expense', component: <ExpenseBlock /> },
+    { key: 'incomeCard', component: <IncomeBlockCard /> },
+    {
+      key: 'transactions',
+      component: <TransactionFlatList transactionsData={transactionsData} />,
+    },
+  ];
 
   return (
     <ThemedSafeAreaView className='flex-1 px-2'>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
-        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+        backgroundColor={theme === 'light' ? '#f2f2f2' : 'rgba(7, 11, 17,0.1)'}
       />
 
-      <View className='flex-1 mb-24'>
-        {isLoading ? (
-          <Loading />
-        ) : (
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <View className='mt-12'>
           <FlatList
             refreshing={false}
-            onRefresh={() => onRefresh()}
-            removeClippedSubviews={true}
+            onRefresh={onRefresh}
+            data={data}
+            keyExtractor={(item) => item.key}
+            renderItem={({ item }) => <View>{item.component}</View>}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
-            data={transactionsData.slice(0, 8)}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => <TransactionCard item={item} />}
-            ListHeaderComponent={<TransactionHeader viewMore={true} />}
-            ListFooterComponent={
-              <View>
-                {transactionsData && transactionsData.length > 8 && (
-                  <LoadMoreBtn
-                    handleOnPress={() => router.push('/(tabs)/explore')}
-                    title='View All'
-                  />
-                )}
-              </View>
-            }
-            ListEmptyComponent={<EmptyListCard />}
           />
-        )}
-      </View>
+        </View>
+      )}
     </ThemedSafeAreaView>
   );
 }

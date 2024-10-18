@@ -1,14 +1,14 @@
 import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import React, { useCallback, useMemo } from 'react';
-import { ThemedText } from './Themed';
+import { ThemedText } from '@/components/Themed';
 import { useTheme } from '@/context/ThemeProvider';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { CategoryPickerProps, TransactionCategoryProps } from '@/types';
 import { Entypo, AntDesign } from '@expo/vector-icons';
-import CustomButton from './CustomButton';
+import CustomButton from '@/components/CustomButton';
 import { router } from 'expo-router';
-import Loading from './Loading';
-import EmptyListCard from './EmptyListCard';
+import Loading from '@/components/Loading';
+import EmptyListCard from '@/components/EmptyListCard';
 import { useDataContext } from '@/context/DataProvider';
 
 const { width } = Dimensions.get('window');

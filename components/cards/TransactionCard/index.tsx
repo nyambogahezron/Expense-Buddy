@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { Text, TouchableOpacity, View } from 'react-native';
 const userCurrency = 'Ksh';
 import { ThemedText, ThemedView } from '@/components/Themed';
-import AppleStyleSwipeableRow from '@/components/SwipeableRow';
+import AppleStyleSwipeableRow from '@/components/cards/TransactionCard/SwipeableRow';
 import { useDataContext } from '@/context/DataProvider';
 import { useToast } from 'react-native-toast-notifications';
 

@@ -9,13 +9,16 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import BottomSheet from '@gorhom/bottom-sheet';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import CustomButton from '@/components/CustomButton';
 import { useTheme } from '@/context/ThemeProvider';
-import { ThemedText, ThemedView } from '@/components/Themed';
-import CustomTextInput from '@/components/CustomTextInput';
-import DatePicker from '@/components/DatePicker';
-import CategoryListBottomSheet from '@/components/CategoryListBottomSheet';
+import {
+  ThemedSafeAreaView,
+  ThemedText,
+  ThemedView,
+} from '@/components/Themed';
+import CustomTextInput from '@/components/Form/CustomTextInput';
+import DatePicker from '@/components/Form/DatePicker';
+import CategoryListBottomSheet from '@/components/cards/CategoryCard/CategoryListBottomSheet';
 import getRandomColor from '@/utils/generateRandomClr';
 import { useDataContext } from '@/context/DataProvider';
 import { Picker } from '@react-native-picker/picker';
@@ -78,16 +81,13 @@ export default function AddExpense() {
   };
 
   return (
-    <GestureHandlerRootView
-      className='flex-1 '
-      style={{ backgroundColor: theme === 'light' ? '#f3f4f6' : '#070B11' }}
-    >
+    <ThemedSafeAreaView className='flex-1 '>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
-        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+        backgroundColor={theme === 'light' ? '#ffffff' : 'rgba(7, 11, 17,0.1)'}
       />
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} className='-mt-10'>
         <View className='mb-20'>
           {/* transaction form  */}
           <View className='mt-5 px-4'>
@@ -211,6 +211,6 @@ export default function AddExpense() {
         bottomSheetRef={bottomSheetRef}
         setSelectedCategory={setSelectedCategory}
       />
-    </GestureHandlerRootView>
+    </ThemedSafeAreaView>
   );
 }

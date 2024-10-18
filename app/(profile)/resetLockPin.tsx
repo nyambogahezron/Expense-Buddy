@@ -4,9 +4,9 @@ import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ThemedSafeAreaView } from '@/components/Themed';
 import { useTheme } from '@/context/ThemeProvider';
-import { CustomButton } from '@/components';
-import BackButton from '@/components/BackButton';
-import CustomPasswordInput from '@/components/CustomPasswordInput';
+import CustomButton from '@/components/CustomButton';
+import BackButton from '@/components/navigation/BackButton';
+import CustomPasswordInput from '@/components/Form/CustomPasswordInput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from '@/components/Loading';
 import { useGlobalContext } from '@/context/GlobalProvider';
@@ -26,7 +26,6 @@ export default function LockScreen() {
       return Alert.alert('Password Entered Do not Match!');
     if (password.length !== 6)
       return Alert.alert('Password Should Be of length 6!');
-   
 
     setIsLoading(true);
 
@@ -79,31 +78,29 @@ export default function LockScreen() {
           <Loading />
         ) : (
           <View className='flex flex-col px-3 mt-20'>
-            
-                <CustomPasswordInput
-                  title='Enter Pin'
-                  onChangeText={setPassword}
-                  value={password}
-                  handleOnPress={() => setIsPasswordVisible(!isPasswordVisible)}
-                  passwordVisible={isPasswordVisible}
-                  keyboardType='numeric'
-                />
-                <CustomPasswordInput
-                  title='Confirm Pin'
-                  onChangeText={setConfirmPassword}
-                  value={confirmPassword}
-                  isForConfirmation={true}
-                  keyboardType='numeric'
-                />
+            <CustomPasswordInput
+              title='Enter Pin'
+              onChangeText={setPassword}
+              value={password}
+              handleOnPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              passwordVisible={isPasswordVisible}
+              keyboardType='numeric'
+            />
+            <CustomPasswordInput
+              title='Confirm Pin'
+              onChangeText={setConfirmPassword}
+              value={confirmPassword}
+              isForConfirmation={true}
+              keyboardType='numeric'
+            />
 
-                <CustomButton
-                  isLoading={isLoading}
-                  title={isLoading ? 'Loading...' : 'Set Pin'}
-                  customStyles='bg-orange-600'
-                  textStyles='text-white text-lg font-bold'
-                  handleOpenPress={() => HandleSubmit()}
-                />
-            
+            <CustomButton
+              isLoading={isLoading}
+              title={isLoading ? 'Loading...' : 'Set Pin'}
+              customStyles='bg-orange-600'
+              textStyles='text-white text-lg font-bold'
+              handleOpenPress={() => HandleSubmit()}
+            />
           </View>
         )}
       </ScrollView>

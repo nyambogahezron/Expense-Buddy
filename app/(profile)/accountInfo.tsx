@@ -6,26 +6,25 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   ScrollView,
-  Button,
 } from 'react-native';
 import React, { useMemo, useRef, useState } from 'react';
 import { Feather, FontAwesome } from '@expo/vector-icons';
-import { router, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import { ThemedSafeAreaView } from '@/components/Themed';
 import { useTheme } from '@/context/ThemeProvider';
-import { CustomButton } from '@/components';
-import CustomTextInput from '@/components/CustomTextInput';
-import BackButton from '@/components/BackButton';
+import CustomButton from '@/components/CustomButton';
+import CustomTextInput from '@/components/Form/CustomTextInput';
+import BackButton from '@/components/navigation/BackButton';
 import * as ImagePicker from 'expo-image-picker';
 import { useGlobalContext } from '@/context/GlobalProvider';
 
 const { width } = Dimensions.get('window');
 
 export default function AccountInfo() {
-  const {User} = useGlobalContext();
+  const { User } = useGlobalContext();
   const [email, setEmail] = useState(User?.email);
   const [name, setName] = useState(User?.name);
   const [selectedImage, setSelectedImage] = useState<string>();
@@ -49,7 +48,6 @@ export default function AccountInfo() {
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
       console.log(result);
-      
     } else {
       alert('You did not select any image.');
     }

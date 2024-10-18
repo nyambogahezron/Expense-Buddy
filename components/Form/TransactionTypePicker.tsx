@@ -2,7 +2,7 @@ import { View, TextInput, Dimensions } from 'react-native';
 import React from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { useTheme } from '@/context/ThemeProvider';
-import { ThemedText, ThemedView } from './Themed';
+import { ThemedText, ThemedView } from '../Themed';
 
 const width = Dimensions.get('window').width;
 
@@ -24,8 +24,7 @@ export default function TransactionTypePicker({
       </ThemedText>
 
       <ThemedView lightColor='#e5e7eb' className='mb-6 pb-4'>
-        <Picker 
-       
+        <Picker
           selectedValue={type}
           dropdownIconColor={theme === 'light' ? '#333' : '#fff'}
           style={{

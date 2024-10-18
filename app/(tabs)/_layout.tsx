@@ -11,8 +11,8 @@ import { useEffect, useState } from 'react';
 import Loading from '@/components/Loading';
 import { BlurView } from 'expo-blur';
 import CustomHeader from '@/components/CustomHeader';
-import BackButton from '@/components/BackButton';
-import HeaderRightIconCard from '@/components/HeaderRightIconCard';
+import BackButton from '@/components/navigation/BackButton';
+import HeaderRightIconCard from '@/components/navigation/HeaderRightIconCard';
 
 export default function TabLayout() {
   const [isMounted, setIsMounted] = useState(false);
@@ -138,17 +138,6 @@ export default function TabLayout() {
             fontSize: 20,
             fontWeight: 'bold',
           },
-          headerRight: () => (
-            <HeaderRightIconCard
-              handleOnPress={() => router.push('/(profile)/settings')}
-            >
-              <Ionicons
-                name='settings-outline'
-                size={22}
-                color={theme === 'light' ? 'black' : '#fff'}
-              />
-            </HeaderRightIconCard>
-          ),
         }}
       />
       <Tabs.Screen

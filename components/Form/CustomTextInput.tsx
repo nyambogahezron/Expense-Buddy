@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TextInput } from 'react-native';
-import { ThemedText, ThemedView } from './Themed';
+import { ThemedText, ThemedView } from '../Themed';
 import { useTheme } from '@/context/ThemeProvider';
 import { CustomTextInputProps } from '@/types';
 

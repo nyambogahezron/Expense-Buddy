@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   View,
-  Modal,
   Text,
   TouchableOpacity,
   ScrollView,
@@ -10,11 +9,10 @@ import {
 import { BarChart, PieChart } from 'react-native-chart-kit';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { transactions } from '@/data';
-import { TransactionProps, TransactionCategoryProps } from '@/types';
+import { TransactionProps } from '@/types';
 import { data, chartConfig, pieData, PieChartConfig } from '@/data/ChartsData';
-import CategoryCard from '@/components/CategoryCard';
-import CategoryActionCard from '@/components/CategoryActionCard';
+import CategoryCard from '@/components/cards/CategoryCard';
+import CategoryActionCard from '@/components/cards/CategoryCard/CategoryActionCardModel';
 import LoadMoreBtn from '@/components/LoadMoreBtn';
 import { useTheme } from '@/context/ThemeProvider';
 import {
@@ -22,63 +20,29 @@ import {
   ThemedText,
   ThemedView,
 } from '@/components/Themed';
-import { supabase } from '@/utils/supabase';
-import { useGlobalContext } from '@/context/GlobalProvider';
+import { useDataContext } from '@/context/DataProvider';
+import TransactionCard from '@/components/cards/TransactionCard';
 
 const width = Dimensions.get('window').width;
 
 export default function Statistics() {
-  const { User } = useGlobalContext();
+  const { theme } = useTheme();
+  const { transactionsData, categoriesData } = useDataContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [activeCategory, setActiveCategory] = useState<'income' | 'expense'>(
     'income'
   );
-  const [Transactions, setTransactions] = useState<TransactionProps[]>([]);
-  const [categoriesData, setCategoriesData] = useState<
-    TransactionCategoryProps[]
-  >([]);
-  const { theme } = useTheme();
-  const handleOpenPress = () => setModalVisible(true);
+  const [activeTransaction, setActiveTransaction] = useState();
+
+  // open and close actions modal
+  const handleOpenPress = (item: any) => {
+    setModalVisible(true);
+    setActiveTransaction(item);
+  };
   const handleClosePress = () => setModalVisible(false);
 
-  // get top five transactions
-  useEffect(() => {
-    const filteredTransactions: TransactionProps[] = transactions
-      .filter(
-        (transaction: TransactionProps) => transaction.type === activeCategory
-      )
-      .sort((a, b) => Number(b.amount) - Number(a.amount))
-      .slice(0, 5);
-
-    setTransactions(filteredTransactions);
-  }, [activeCategory]);
-
-  const handleCatagories = (category: 'income' | 'expense') => {
+  const handleCatagories = (category: 'income' | 'expense') =>
     setActiveCategory(category);
-    console.log(activeCategory);
-  };
-
-  //fetch categories
-  useEffect(() => {
-    async function fetchCategories() {
-      const { data: fetchedCategoriesData, error } = await supabase
-        .from('categories')
-        .select('*')
-        .eq('userId', User?.sub)
-        .limit(5)
-        .order('id', { ascending: true });
-      if (error) {
-        throw new Error(error.message);
-      }
-      if (data) {
-        setCategoriesData(fetchedCategoriesData);
-      } else {
-        setCategoriesData([]);
-      }
-    }
-
-    fetchCategories();
-  }, []);
 
   return (
     <ThemedSafeAreaView>
@@ -91,7 +55,7 @@ export default function Statistics() {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
       >
-        <ThemedView className='px-3'>
+        <ThemedView className='px-3 mb-20'>
           <View className='items-center w-full px-2'>
             {/* Income and Expenses Summary */}
             <View className='flex-row justify-between mb-4 mt-2'>
@@ -175,47 +139,16 @@ export default function Statistics() {
             </ThemedView>
 
             {/* Expense Detail */}
-            {Transactions.map((item) => {
-              const { id, title, type, amount, date, category } = item;
-              return (
-                <TouchableOpacity
-                  onPress={() =>
-                    router.push({
-                      pathname: '/(transactions)/details',
-                      params: { item: JSON.stringify(item) },
-                    })
-                  }
-                  activeOpacity={0.7}
-                  key={id}
-                  className={`flex-row justify-between items-center bg-red-100 p-4 rounded-lg mb-1  ${
-                    theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'
-                  }`}
-                >
-                  <View className='flex-row items-center'>
-                    <View className='bg-red-200 p-3 rounded-full mr-4'>
-                      <Text>{category.icon}</Text>
-                    </View>
-                    <View>
-                      <ThemedText className='font-bold '>{title}</ThemedText>
-                      <ThemedText
-                        darkColor='#ccc'
-                        lightColor='#6b7280 '
-                        className='text-sm'
-                      >
-                        {date}
-                      </ThemedText>
-                    </View>
-                  </View>
-                  <Text
-                    className={` font-bold ${
-                      type === 'expense' ? 'text-red-600' : 'text-green-600'
-                    }`}
-                  >
-                    {'KSH' + amount}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
+            {transactionsData
+              .filter(
+                (transaction: TransactionProps) =>
+                  transaction.type === activeCategory
+              )
+              .sort((a: any, b: any) => Number(b.amount) - Number(a.amount))
+              .slice(0, 5)
+              .map((item: any) => {
+                return <TransactionCard item={item} />;
+              })}
 
             <LoadMoreBtn
               title='View All'
@@ -252,7 +185,7 @@ export default function Statistics() {
               Categories
             </ThemedText>
           </ThemedView>
-          {categoriesData.slice(0, 5).map((item) => {
+          {categoriesData.slice(0, 5).map((item: any) => {
             const { id, name, icon } = item;
             return (
               <CategoryCard
@@ -263,7 +196,7 @@ export default function Statistics() {
                     params: { item: JSON.stringify(item) },
                   })
                 }
-                handleOpenPress={handleOpenPress}
+                handleOpenPress={() => handleOpenPress({ item })}
                 id={id}
                 name={name}
                 icon={icon}
@@ -278,10 +211,12 @@ export default function Statistics() {
         </ThemedView>
       </ScrollView>
 
-      {/* actions BottomSheet */}
-      <Modal animationType='slide' transparent={true} visible={modalVisible}>
-        <CategoryActionCard handleClosePress={handleClosePress} />
-      </Modal>
+      {/* actions BottomSheet model */}
+      <CategoryActionCard
+        handleClosePress={handleClosePress}
+        item={activeTransaction}
+        modalVisible={modalVisible}
+      />
     </ThemedSafeAreaView>
   );
 }

@@ -10,13 +10,13 @@ import {
   ThemedText,
   ThemedView,
 } from '@/components/Themed';
-import BackButton from '@/components/BackButton';
-import CustomTextInput from '@/components/CustomTextInput';
-import DatePicker from '@/components/DatePicker';
+import BackButton from '@/components/navigation/BackButton';
+import CustomTextInput from '@/components/Form/CustomTextInput';
+import DatePicker from '@/components/Form/DatePicker';
 import CustomButton from '@/components/CustomButton';
 import BottomSheet from '@gorhom/bottom-sheet';
-import CategoryListBottomSheet from '@/components/CategoryListBottomSheet';
-import TransactionTypePicker from '@/components/TransactionTypePicker';
+import CategoryListBottomSheet from '@/components/cards/CategoryCard/CategoryListBottomSheet';
+import TransactionTypePicker from '@/components/Form/TransactionTypePicker';
 import { supabase } from '@/utils/supabase';
 import { useDataContext } from '@/context/DataProvider';
 import { useGlobalContext } from '@/context/GlobalProvider';

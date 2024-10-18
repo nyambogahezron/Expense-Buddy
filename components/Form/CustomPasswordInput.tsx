@@ -1,5 +1,5 @@
 import { View, TextInput, TouchableOpacity } from 'react-native';
-import { ThemedText } from './Themed';
+import { ThemedText } from '../Themed';
 import { useTheme } from '@/context/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { CustomPasswordTextInputProps } from '@/types';

@@ -18,8 +18,8 @@ import {
   ThemedView,
 } from '@/components/Themed';
 import OptionContainer from '@/components/OptionContainer';
-import BackButton from '@/components/BackButton';
-import HeaderRightIconCard from '@/components/HeaderRightIconCard';
+import BackButton from '@/components/navigation/BackButton';
+import HeaderRightIconCard from '@/components/navigation/HeaderRightIconCard';
 import { supabase } from '@/utils/supabase';
 import { useGlobalContext } from '@/context/GlobalProvider';
 

@@ -3,7 +3,7 @@ import React from 'react';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
-import { ThemedText, ThemedView } from './Themed';
+import { ThemedText, ThemedView } from '../Themed';
 
 type DatePickerProps = {
   setShowDatePicker: (value: React.SetStateAction<boolean>) => void;

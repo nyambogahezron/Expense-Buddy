@@ -8,7 +8,7 @@ import { useTheme } from '@/context/ThemeProvider';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { StatusBar } from 'expo-status-bar';
 import { ThemedSafeAreaView, ThemedView } from '@/components/Themed';
-import BackButton from '@/components/BackButton';
+import BackButton from '@/components/navigation/BackButton';
 import CurrencyContainer from '@/components/CurrencyContainer';
 
 export default function Settings() {

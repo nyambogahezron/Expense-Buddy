@@ -4,7 +4,6 @@ import { TextInput } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import { Link, router } from 'expo-router';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { useTheme } from '@/context/ThemeProvider';
 import Feather from '@expo/vector-icons/Feather';
@@ -17,22 +16,17 @@ const CustomHeader = ({ isForExplore }: { isForExplore?: boolean }) => {
   const styles = createStyles(theme);
 
   return (
-    <GestureHandlerRootView
-      style={{
-        flex: 1,
-        backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
-      }}
-    >
-      <BlurView intensity={3} tint={'extraLight'} style={{ paddingTop: top }}>
-        <View
-          className='flex-row justify-between items-center'
-          style={{
-            height: 60,
-            gap: 10,
-            paddingHorizontal: 20,
-            backgroundColor: 'transparent',
-          }}
-        >
+    <BlurView intensity={1} tint={'extraLight'} style={{ paddingTop: top }}>
+      <View
+        className='flex-1'
+        style={{
+          height: 60,
+          gap: 10,
+          paddingHorizontal: 20,
+          backgroundColor: 'transparent',
+        }}
+      >
+        <View className='flex-row justify-between items-center gap-row-2'>
           <View className='-ml-3' style={styles.searchSection}>
             <Ionicons
               style={styles.searchIcon}
@@ -50,7 +44,7 @@ const CustomHeader = ({ isForExplore }: { isForExplore?: boolean }) => {
           </View>
 
           {!isForExplore && (
-            <View className='flex-row gap-2'>
+            <View className='flex-row gap-2 ml-1'>
               <Link href={'/(tabs)/profile'}>
                 <View style={styles.circle}>
                   {User?.name ? (
@@ -98,8 +92,8 @@ const CustomHeader = ({ isForExplore }: { isForExplore?: boolean }) => {
             </Link>
           )}
         </View>
-      </BlurView>
-    </GestureHandlerRootView>
+      </View>
+    </BlurView>
   );
 };
 

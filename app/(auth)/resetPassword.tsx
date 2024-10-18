@@ -4,9 +4,9 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
 import { ThemedSafeAreaView } from '@/components/Themed';
-import AuthHeader from '@/components/AuthHeader';
-import { CustomButton } from '@/components';
-import CustomPasswordInput from '@/components/CustomPasswordInput';
+import AuthHeader from '@/components/Form/AuthHeader';
+import CustomButton from '@/components/CustomButton';
+import CustomPasswordInput from '@/components/Form/CustomPasswordInput';
 
 const { width, height } = Dimensions.get('window');
 
