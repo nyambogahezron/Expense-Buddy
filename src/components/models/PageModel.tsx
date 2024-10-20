@@ -33,13 +33,11 @@ export default function PageModel({
           {
             height: height,
             width: width,
-            backgroundColor: 'rgba(0,0,0,0.5)',
           },
         ]}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(!modalVisible)}

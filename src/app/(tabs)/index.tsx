@@ -33,21 +33,18 @@ export default function HomeScreen() {
         backgroundColor={theme === 'light' ? '#f2f2f2' : 'rgba(7, 11, 17,0.1)'}
       />
 
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <View className='mt-12'>
-          <FlatList
-            refreshing={false}
-            onRefresh={onRefresh}
-            data={data}
-            keyExtractor={(item) => item.key}
-            renderItem={({ item }) => <View>{item.component}</View>}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-          />
-        </View>
-      )}
+      {isLoading && <Loading />}
+      <View className='mt-12'>
+        <FlatList
+          refreshing={false}
+          onRefresh={onRefresh}
+          data={data}
+          keyExtractor={(item) => item.key}
+          renderItem={({ item }) => <View>{item.component}</View>}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
     </ThemedSafeAreaView>
   );
 }

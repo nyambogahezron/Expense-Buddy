@@ -1,4 +1,4 @@
-import { Redirect, router, Stack } from 'expo-router';
+import { Redirect,  Stack } from 'expo-router';
 import { useGlobalContext } from '@/context/GlobalProvider';
 
 export default function AuthLayout() {

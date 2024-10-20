@@ -15,7 +15,6 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import LockScreen from '@/app/(profile)/lockScreen';
 
 const OFFSET = 20;
 const TIME = 80;
@@ -26,7 +25,6 @@ export default function PinLockScreen() {
     setIsUnlocked,
     isLockPinSet,
     isBiometricEnabled,
-    isBiometricSupported,
   } = useGlobalContext();
   const [code, setCode] = useState<number[]>([]);
   const codeLength = Array(6).fill(0);
@@ -62,7 +60,7 @@ export default function PinLockScreen() {
   };
 
   return (
-    <SafeAreaProvider className='flex flex-1 bg-dark'>
+    <SafeAreaProvider className='flex flex-1 bg-dark bg-black'>
       {!isBiometricEnabled && !isLockPinSet ? (
         <View className='flex-1 bg-red-400'>
           <Text>No</Text>

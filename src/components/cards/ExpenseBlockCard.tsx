@@ -1,14 +1,15 @@
 import {
   FlatList,
-  ListRenderItem,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React from 'react';
-
 import { Feather } from '@expo/vector-icons';
+import TransactionOverview from '../Charts/TransationOverview';
+import PageModel from '../models/PageModel';
+
 
 const expenseList = [
   {
@@ -46,6 +47,7 @@ const Colors = {
 };
 
 export default function ExpenseBlockCard() {
+  const [modalVisible, setModalVisible] = React.useState(false);
   const renderItem = ({ item, index }: { item: any; index: number }) => {
     if (index == 0) {
       return (
@@ -128,13 +130,17 @@ export default function ExpenseBlockCard() {
   const staticItem = [{ name: 'Add Item' }];
 
   return (
-    <View style={{ paddingVertical: 20 }}>
+    <View>
+      <View className='mb-4'>
+        <TransactionOverview />
+      </View>
       <FlatList
         data={staticItem.concat(expenseList)}
         renderItem={renderItem}
         horizontal
         showsHorizontalScrollIndicator={false}
       />
+      {/* <PageModel/> */}
     </View>
   );
 }
