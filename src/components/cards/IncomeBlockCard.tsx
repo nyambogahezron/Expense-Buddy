@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -5,81 +6,30 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
-
-import { Feather, FontAwesome } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import ListHeader from './TransactionCard/ListHeader';
 import { router } from 'expo-router';
+import { useDataContext } from '@/context/DataProvider';
 
-const Colors = {
-  black: '#1A1A1A',
-  grey: '#242424',
-  white: '#FCFCFC',
-  tintColor: '#723FEB',
-  blue: '#97E0F7',
-};
-const incomeList = [
-  {
-    id: '1',
-    name: 'Salary',
-    amount: '1,500.00',
-  },
-  {
-    id: '2',
-    name: 'Freelancing',
-    amount: '850.99',
-  },
-  {
-    id: '3',
-    name: 'Interest',
-    amount: '200.95',
-  },
-];
 export default function IncomeBlockCard() {
-  const renderItem = ({ item }: { item: any }) => {
-    let icon = <FontAwesome name='money' size={22} color={Colors.white} />;
-    if (item.name == 'Freelancing') {
-      icon = <FontAwesome name='money' size={22} color={Colors.white} />;
-    } else if (item.name == 'Interest') {
-      icon = <FontAwesome name='money' size={22} color={Colors.white} />;
-    }
+  const { incomeList } = useDataContext();
 
+  const renderItem = ({ item }: { item: any }) => {
     let amount = item.amount.split('.');
     return (
-      <View
-        style={{
-          backgroundColor: Colors.grey,
-          padding: 20,
-          borderRadius: 10,
-          marginRight: 15,
-          width: 150,
-          gap: 10,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <View
-            style={{
-              borderColor: '#666',
-              borderWidth: 1,
-              borderRadius: 50,
-              padding: 5,
-              alignSelf: 'flex-start',
-            }}
-          >
-            {icon}
+      <View style={styles.container}>
+        <View style={styles.wrapper}>
+          <View style={styles.body}>
+            <Text className='text-white'>
+              {item.icon ? item.icon : item.name.charAt(0).toUpperCase()}
+            </Text>
           </View>
           <TouchableOpacity onPress={() => {}}>
-            <Feather name='more-horizontal' size={20} color={Colors.white} />
+            <Feather name='more-horizontal' size={20} color={'#FCFCFC'} />
           </TouchableOpacity>
         </View>
-        <Text style={{ color: Colors.white }}>{item.name}</Text>
-        <Text style={{ color: Colors.white, fontSize: 18, fontWeight: '600' }}>
+        <Text style={{ color: '#FCFCFC' }}>{item.name}</Text>
+        <Text style={{ color: '#FCFCFC', fontSize: 18, fontWeight: '600' }}>
           ${amount[0]}.
           <Text style={{ fontSize: 12, fontWeight: '400' }}>{amount[1]}</Text>
         </Text>
@@ -88,7 +38,7 @@ export default function IncomeBlockCard() {
   };
 
   return (
-    <View>
+    <View className='mt-5'>
       <ListHeader
         title='Incomes'
         containerStyle='mb-4'
@@ -105,4 +55,25 @@ export default function IncomeBlockCard() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#242424',
+    padding: 20,
+    borderRadius: 10,
+    marginRight: 15,
+    width: 150,
+    gap: 10,
+  },
+  wrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  body: {
+    borderColor: '#666',
+    borderWidth: 1,
+    borderRadius: 50,
+    padding: 5,
+    alignSelf: 'flex-start',
+  },
+});

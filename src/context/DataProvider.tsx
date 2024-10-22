@@ -18,6 +18,10 @@ export default function DataProvider({
   const [isLoading, setIsLoading] = React.useState(false);
   const [transactionsData, setTransactionsData] = React.useState<any>();
   const [categoriesData, setCategoriesData] = React.useState<any>();
+  const [totalExpense, setTotalExpense] = React.useState<number>(0);
+  const [totalIncome, setTotalIncome] = React.useState<number>(0);
+  const [expenseList, setExpenseList] = React.useState<any>([]);
+  const [incomeList, setIncomeList] = React.useState<any>([]);
 
   // ######### transactions #########
 
@@ -38,6 +42,99 @@ export default function DataProvider({
       if (transactions) {
         setIsLoading(false);
         setTransactionsData(transactions);
+        // console.log('Transactions:', transactions);
+
+        // get total expense and income
+        const totalExpense = transactions.reduce(
+          (sum: number, transaction: any) =>
+            transaction.type === 'expense' ? sum + transaction.amount : sum,
+          0
+        );
+        setTotalExpense(totalExpense);
+
+        const totalIncome = transactions.reduce(
+          (sum: number, transaction: any) =>
+            transaction.type === 'income' ? sum + transaction.amount : sum,
+          0
+        );
+        setTotalIncome(totalIncome);
+
+        // categorize expenses and incomes by category ID
+        const expenseCategories: {
+          [key: string]: {
+            name: string;
+            amount: number;
+            icon: string;
+          };
+        } = {};
+        const incomeCategories: {
+          [key: string]: {
+            name: string;
+            amount: number;
+            icon: string;
+          };
+        } = {};
+
+        transactions.forEach((transaction: any) => {
+          const categoryId = transaction.category.id;
+          const categoryName = transaction.category.name || 'Others';
+          const categoryIcon = transaction.category.icon || '';
+
+          if (transaction.type === 'expense') {
+            if (!expenseCategories[categoryId]) {
+              expenseCategories[categoryId] = {
+                name: categoryName,
+                amount: 0,
+                icon: categoryIcon,
+              };
+            }
+            expenseCategories[categoryId].amount += transaction.amount;
+          } else if (transaction.type === 'income') {
+            if (!incomeCategories[categoryId]) {
+              incomeCategories[categoryId] = {
+                name: categoryName,
+                amount: 0,
+                icon: categoryIcon,
+              };
+            }
+            incomeCategories[categoryId].amount += transaction.amount;
+          }
+        });
+
+        // create expense list for chart
+        const expenseList = Object.keys(expenseCategories).map(
+          (categoryId, index) => {
+            const { name, amount, icon } = expenseCategories[categoryId];
+            const percentage = Math.floor((amount * 100) / totalExpense);
+            return {
+              id: (index + 1).toString(),
+              name: name,
+              amount: amount.toFixed(2),
+              percentage: percentage.toString(),
+              icon: icon,
+            };
+          }
+        );
+
+        // create income list for chart
+        const incomeList = Object.keys(incomeCategories).map(
+          (categoryId, index) => {
+            const { name, amount, icon } = incomeCategories[categoryId];
+            const percentage = Math.floor((amount * 100) / totalIncome);
+            return {
+              id: (index + 1).toString(),
+              name: name,
+              amount: amount.toFixed(2),
+              percentage: percentage.toString(),
+              icon: icon,
+            };
+          }
+        );
+
+        // console.log('Expense List:', expenseList);
+        // console.log('Income List:', incomeList);
+        setIncomeList(incomeList);
+        setExpenseList(expenseList);
       } else {
         setTransactionsData([]);
       }
@@ -312,6 +409,10 @@ export default function DataProvider({
         deleteImage,
         uploadFile,
         deleteFile,
+        totalExpense,
+        totalIncome,
+        expenseList,
+        incomeList,
       }}
     >
       {children}

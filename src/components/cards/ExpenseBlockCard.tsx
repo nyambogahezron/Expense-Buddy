@@ -5,53 +5,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 import TransactionOverview from '../Charts/TransationOverview';
 import PageModel from '../models/PageModel';
-
-
-const expenseList = [
-  {
-    id: '1',
-    name: 'Housing',
-    amount: '955.75',
-    percentage: '61',
-  },
-  {
-    id: '2',
-    name: 'Food',
-    amount: '300.55',
-    percentage: '19',
-  },
-  {
-    id: '3',
-    name: 'Saving',
-    amount: '200.95',
-    percentage: '13',
-  },
-  {
-    id: '4',
-    name: 'Miscleneous',
-    amount: '70.95',
-    percentage: '5',
-  },
-];
-
-const Colors = {
-  black: '#1A1A1A',
-  grey: '#242424',
-  white: '#FCFCFC',
-  tintColor: '#723FEB',
-  blue: '#97E0F7',
-};
+import AddTransaction from '../Form/AddTransaction';
+import { useDataContext } from '@/context/DataProvider';
 
 export default function ExpenseBlockCard() {
-  const [modalVisible, setModalVisible] = React.useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const { expenseList } = useDataContext();
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   const renderItem = ({ item, index }: { item: any; index: number }) => {
     if (index == 0) {
       return (
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => toggleModal()}>
           <View style={styles.addItemBtn}>
             <Feather name='plus' size={22} color={'#ccc'} />
           </View>
@@ -59,74 +31,23 @@ export default function ExpenseBlockCard() {
       );
     }
 
-    let amount = item?.amount.split('.');
+    const amount = item.amount.split('.');
 
     return (
-      <View
-        style={[
-          styles.expenseBlock,
-          {
-            backgroundColor:
-              item.name == 'Food'
-                ? Colors.blue
-                : item.name == 'Saving'
-                ? Colors.white
-                : Colors.tintColor,
-          },
-        ]}
-      >
-        <Text
-          style={[
-            styles.expenseBlockTxt1,
-            {
-              color:
-                item.name == 'Food'
-                  ? Colors.black
-                  : item.name == 'Saving'
-                  ? Colors.black
-                  : Colors.white,
-            },
-          ]}
-        >
-          {item.name}
+      <View style={styles.expenseBlock}>
+        <Text style={styles.expenseBlockTxt1}>
+          {item.name.length > 10 ? item.name.slice(0, 10) + '...' : item.name}
         </Text>
-        <Text
-          style={[
-            styles.expenseBlockTxt2,
-            {
-              color:
-                item.name == 'Food'
-                  ? Colors.black
-                  : item.name == 'Saving'
-                  ? Colors.black
-                  : Colors.white,
-            },
-          ]}
-        >
+        <Text style={styles.expenseBlockTxt2}>
           ${amount[0]}.
           <Text style={styles.expenseBlockTxt2Span}>{amount[1]}</Text>
         </Text>
         <View style={styles.expenseBlock3View}>
-          <Text
-            style={[
-              styles.expenseBlockTxt1,
-              {
-                color:
-                  item.name == 'Food'
-                    ? Colors.black
-                    : item.name == 'Saving'
-                    ? Colors.black
-                    : Colors.white,
-              },
-            ]}
-          >
-            {item.percentage}%
-          </Text>
+          <Text style={styles.expenseBlockTxt1}>{item.percentage}%</Text>
         </View>
       </View>
     );
   };
-
   const staticItem = [{ name: 'Add Item' }];
 
   return (
@@ -140,7 +61,13 @@ export default function ExpenseBlockCard() {
         horizontal
         showsHorizontalScrollIndicator={false}
       />
-      {/* <PageModel/> */}
+      <PageModel
+        isModalVisible={isModalVisible}
+        toggleModal={toggleModal}
+        title='Add Transaction'
+      >
+        <AddTransaction />
+      </PageModel>
     </View>
   );
 }
@@ -158,21 +85,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   expenseBlock: {
-    backgroundColor: Colors.tintColor,
+    backgroundColor: '#723FEB',
     width: 100,
     padding: 15,
-    borderRadius: 15,
+    borderRadius: 10,
     marginRight: 20,
     gap: 8,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
   expenseBlockTxt1: {
-    color: Colors.white,
+    color: '#fff',
     fontSize: 14,
   },
   expenseBlockTxt2: {
-    color: Colors.white,
+    color: '#fff',
     fontSize: 16,
     fontWeight: '600',
   },

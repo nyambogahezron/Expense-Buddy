@@ -33,4 +33,8 @@ export const DataProviderInitialValues = {
   deleteImage: async () => {},
   uploadFile: async () => {},
   deleteFile: async () => {},
+  totalExpense: 0,
+  totalIncome: 0,
+  expenseList: [],
+  incomeList: [],
 };

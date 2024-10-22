@@ -50,6 +50,7 @@ const CustomToast = ({ message, type }: CustomToastProps) => {
         flexDirection: 'row',
         alignItems: 'center',
         width: width * 0.85,
+        zIndex: 1,
       }}
     >
       <MaterialIcons name={iconName} size={24} color='white' />

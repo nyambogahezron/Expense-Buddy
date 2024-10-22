@@ -1,43 +1,36 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text } from 'react-native';
 import React from 'react';
 import { PieChart } from 'react-native-gifted-charts';
 import { ThemedText } from '../Themed';
-const Colors = {
-  black: '#1A1A1A',
-  grey: '#242424',
-  white: '#FCFCFC',
-  tintColor: '#723FEB',
-  blue: '#97E0F7',
-};
+import { useDataContext } from '@/context/DataProvider';
+import { useGlobalContext } from '@/context/GlobalProvider';
+
 export default function TransactionOverview() {
+  const { totalExpense, totalIncome } = useDataContext();
+  const { UserCurrency } = useGlobalContext();
+  const percentageExpense = Math.floor((totalExpense * 100) / totalIncome);
+  // console.log(totalExpense, totalIncome, percentageExpense);
+
   const pieData = [
     {
-      value: 47,
-      color: Colors.tintColor,
+      value: percentageExpense,
+      color: 'green',
       focused: true,
-      text: '47%',
+      text: `${percentageExpense}%`,
     },
     {
-      value: 40,
-      color: Colors.blue,
-      text: '40%',
+      value: 100 - percentageExpense,
+      color: 'red',
+      text: `${100 - percentageExpense}%`,
     },
-    {
-      value: 16,
-      color: Colors.white,
-      text: '16%',
-    },
-    { value: 3, color: '#FFA5BA', gradientCenterColor: '#FF7F97', text: '3%' },
   ];
 
   return (
     <View className='flex flex-row items-center px-2 justify-between'>
       <View className='flex-col gap-4'>
-        <ThemedText type='defaultSemiBold' className='text-sm'>
-          Expense Summary
-        </ThemedText>
+        <ThemedText type='defaultSemiBold'>Expense Summary</ThemedText>
         <ThemedText type='title' className='font-pbold text-3xl'>
-          USD.120.00
+          {UserCurrency}. {totalExpense || 0}
         </ThemedText>
       </View>
       <View style={{ paddingVertical: 20, alignItems: 'center' }}>
@@ -49,7 +42,7 @@ export default function TransactionOverview() {
           semiCircle
           radius={70}
           innerRadius={55}
-          innerCircleColor={Colors.black}
+          innerCircleColor='#1A1A1A'
           centerLabelComponent={() => {
             return (
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -60,7 +53,7 @@ export default function TransactionOverview() {
                     fontWeight: 'bold',
                   }}
                 >
-                  47%
+                  {100 - percentageExpense || 0}%
                 </Text>
               </View>
             );

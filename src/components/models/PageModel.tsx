@@ -1,100 +1,92 @@
 import {
+  Dimensions,
+  StyleSheet,
   View,
   Text,
-  Modal,
-  StyleSheet,
-  Dimensions,
-  Pressable,
+  TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import Modal from 'react-native-modal';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { ThemedView } from '../Themed';
+import { useTheme } from '@/context/ThemeProvider';
+
 const { height, width } = Dimensions.get('window');
 
-type PageModelProps = {
-  modalVisible: boolean;
-  setModalVisible: (modalVisible: boolean) => void;
+type pageModelProps = {
+  isModalVisible: boolean;
+  toggleModal: () => void;
+  title?: string;
+  children: React.ReactNode;
 };
+
 export default function PageModel({
-  modalVisible,
-  setModalVisible,
-}: PageModelProps) {
+  isModalVisible,
+  toggleModal,
+  title,
+  children,
+}: pageModelProps) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
+
   return (
-    <Modal
-      animationType='slide'
-      transparent={true}
-      presentationStyle='overFullScreen'
-      visible={modalVisible}
-      onRequestClose={() => {
-        setModalVisible(!modalVisible);
-      }}
-    >
-      <View
-        className='border border-red-500'
-        style={[
-          {
-            height: height,
-            width: width,
-          },
-        ]}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
+    <Modal isVisible={isModalVisible} deviceWidth={width} deviceHeight={height}>
+      <ThemedView style={styles.container}>
+        <View style={styles.modalView}>
+          <View style={styles.header}>
+            {title && <Text style={styles.title}>{title}</Text>}
+            <TouchableOpacity onPress={toggleModal}>
+              <AntDesign
+                name='close'
+                size={24}
+                color={theme === 'light' ? '#000' : '#fff'}
+              />
+            </TouchableOpacity>
           </View>
+          {children}
         </View>
-      </View>
+      </ThemedView>
     </Modal>
   );
 }
 
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-    height: '100%',
-    width: width,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
+const createStyles = (theme: any) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    height: '100%',
-    width: width,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-});
+    modalView: {
+      alignItems: 'center',
+      height: '100%',
+      width: width,
+      borderTopRightRadius: 5,
+      borderTopLeftRadius: 5,
+    },
+    header: {
+      flexDirection: 'row',
+      top: 0,
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '100%',
+      padding: 8,
+      borderBottomColor: theme === 'light' ? '#ccc' : '#000',
+      borderBottomWidth: 1,
+      borderTopRightRadius: 5,
+      borderTopLeftRadius: 5,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+      backgroundColor: theme === 'light' ? '#f9f9f9' : '#070B11',
+      zIndex: 1,
+    },
+    title: {
+      fontSize: 15,
+      fontWeight: 'bold',
+      color: theme === 'light' ? '#333' : '#fff',
+    },
+  });

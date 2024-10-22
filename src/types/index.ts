@@ -2,7 +2,7 @@ import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { Session } from '@supabase/supabase-js';
 import React from 'react';
 
-type TransactionProps = {
+export type TransactionProps = {
   id: string;
   title: string;
   date: string;
@@ -23,13 +23,13 @@ type TransactionProps = {
   receipt?: string;
 };
 
-type TransactionCategoryProps = {
+export type TransactionCategoryProps = {
   id: number;
   name: string;
   icon: string;
 };
 
-type GlobalContextType = {
+export type GlobalContextType = {
   isUnlocked: boolean;
   appInactive: boolean;
   isAuthenticated: boolean;
@@ -49,7 +49,7 @@ type GlobalContextType = {
   isBiometricEnabled: boolean;
 };
 
-type CustomTextInputProps = {
+export type CustomTextInputProps = {
   title: string;
   onChangeText: React.Dispatch<React.SetStateAction<any>>;
   placeholder?: string;
@@ -61,20 +61,20 @@ type CustomTextInputProps = {
   multiline?: boolean;
 };
 
-type CustomPasswordTextInputProps = CustomTextInputProps & {
+export type CustomPasswordTextInputProps = CustomTextInputProps & {
   handleOnPress?: () => void;
   passwordVisible?: boolean;
   isForConfirmation?: boolean;
 };
 
-type CategoryPickerProps = {
+export type CategoryPickerProps = {
   selectedCategory?: string;
   setSelectedCategory: (value: string) => void;
   bottomSheetRef: React.RefObject<BottomSheetMethods>;
   setSelectedCategoryObj: React.Dispatch<React.SetStateAction<any>>;
 };
 
-type createContextProps = {
+export type createContextProps = {
   transactionsData: any;
   isLoading: boolean;
   fetchTransactions: () => Promise<void>;
@@ -90,14 +90,10 @@ type createContextProps = {
   deleteImage: (imagePath: string) => Promise<void>;
   uploadFile: (file: any) => Promise<any>;
   deleteFile: (filePath: string) => Promise<void>;
+  totalExpense: number;
+  totalIncome: number;
+  expenseList: any;
+  incomeList: any;
 };
 
-export {
-  TransactionProps,
-  TransactionCategoryProps,
-  GlobalContextType,
-  CustomTextInputProps,
-  CustomPasswordTextInputProps,
-  CategoryPickerProps,
-  createContextProps,
-};
+
