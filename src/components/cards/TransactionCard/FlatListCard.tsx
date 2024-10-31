@@ -14,31 +14,35 @@ export default function TransactionFlatList({
 }) {
   return (
     <View className='mt-4'>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        data={transactionsData.slice(0, 8)}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <TransactionCard item={item} />}
-        ListHeaderComponent={
-          <TransactionHeader
-            viewMore={true}
-            title='Transactions'
-            onPressViewMore={() => router.push('/(tabs)/explore')}
-          />
-        }
-        ListFooterComponent={
-          <View>
-            {transactionsData && transactionsData.length > 8 && (
-              <LoadMoreBtn
-                handleOnPress={() => router.push('/(tabs)/explore')}
-                title='View All'
+      {transactionsData && (
+        <>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            data={transactionsData?.slice(0, 8) || []}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => <TransactionCard item={item} />}
+            ListHeaderComponent={
+              <TransactionHeader
+                viewMore={true}
+                title='Transactions'
+                onPressViewMore={() => router.push('/(tabs)/explore')}
               />
-            )}
-          </View>
-        }
-        ListEmptyComponent={<EmptyListCard />}
-      />
+            }
+            ListFooterComponent={
+              <View>
+                {transactionsData && transactionsData.length > 8 && (
+                  <LoadMoreBtn
+                    handleOnPress={() => router.push('/(tabs)/explore')}
+                    title='View All'
+                  />
+                )}
+              </View>
+            }
+            ListEmptyComponent={<EmptyListCard />}
+          />
+        </>
+      )}
     </View>
   );
 }

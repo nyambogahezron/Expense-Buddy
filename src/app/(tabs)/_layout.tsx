@@ -8,28 +8,20 @@ import { useTheme } from '@/context/ThemeProvider';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import Loading from '@/components/Loading';
 import { BlurView } from 'expo-blur';
 import CustomHeader from '@/components/CustomHeader';
 import BackButton from '@/components/navigation/BackButton';
 import HeaderRightIconCard from '@/components/navigation/HeaderRightIconCard';
 
 export default function TabLayout() {
-  const [isMounted, setIsMounted] = useState(false);
   const colorScheme = useColorScheme();
   const { theme } = useTheme();
   const { session, loading } = useGlobalContext();
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
   useEffect(() => {
     if (!session && !loading) return router.replace('/');
   }, [session]);
 
-  if (!isMounted) return <Loading />;
-
-  return (
+    return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,

@@ -38,11 +38,11 @@ function RootLayoutContent() {
     }
   }, [loaded, error]);
 
-  useEffect(() => {
-    if (!isUnlocked && session) {
-      authenticate();
-    }
-  }, [isUnlocked, session]);
+  // useEffect(() => {
+  //   if (!isUnlocked && session) {
+  //     authenticate();
+  //   }
+  // }, [isUnlocked, session]);
 
   if (!loaded) return null;
 

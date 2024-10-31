@@ -38,20 +38,26 @@ export default function IncomeBlockCard() {
   };
 
   return (
-    <View className='mt-5'>
-      <ListHeader
-        title='Incomes'
-        containerStyle='mb-4'
-        viewMore={true}
-        onPressViewMore={() => router.push('/(tabs)/explore')}
-      />
-      <FlatList
-        data={incomeList}
-        renderItem={renderItem}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      />
-    </View>
+    <>
+      {incomeList && (
+        <View>
+          <View className='mt-5'>
+            <ListHeader
+              title='Incomes'
+              containerStyle='mb-4'
+              viewMore={true}
+              onPressViewMore={() => router.push('/(tabs)/explore')}
+            />
+            <FlatList
+              data={incomeList}
+              renderItem={renderItem}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
+        </View>
+      )}
+    </>
   );
 }
 

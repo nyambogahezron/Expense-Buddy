@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { ThemedSafeAreaView } from '@/components/Themed';
 import { useTheme } from '@/context/ThemeProvider';
@@ -8,6 +8,7 @@ import { useDataContext } from '@/context/DataProvider';
 import ExpenseBlock from '@/components/cards/ExpenseBlockCard';
 import IncomeBlockCard from '@/components/cards/IncomeBlockCard';
 import TransactionFlatList from '@/components/cards/TransactionCard/FlatListCard';
+import Animated from 'react-native-reanimated';
 
 export default function HomeScreen() {
   const { transactionsData, isLoading, fetchTransactions } = useDataContext();
@@ -35,7 +36,7 @@ export default function HomeScreen() {
 
       {isLoading && <Loading />}
       <View className='mt-12'>
-        <FlatList
+        <Animated.FlatList
           refreshing={false}
           onRefresh={onRefresh}
           data={data}

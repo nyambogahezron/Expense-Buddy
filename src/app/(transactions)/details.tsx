@@ -1,19 +1,24 @@
 import { View, Text, ScrollView } from 'react-native';
 import React from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
-import { FontAwesome } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { TransactionProps } from '@/types';
 import { StatusBar } from 'expo-status-bar';
 import { Dimensions } from 'react-native';
 import { useTheme } from '@/context/ThemeProvider';
 import { ThemedText, ThemedView } from '@/components/Themed';
-import BackButton from '@/components/navigation/BackButton';
 import isEmoji from '@/utils/isEmoji';
 import { useDataContext } from '@/context/DataProvider';
 import { useToast } from 'react-native-toast-notifications';
+import { ThemedSafeAreaView } from '@/components/Themed';
+import Animated, {
+  FadeIn,
+  FadeOut,
+  FadeInRight,
+} from 'react-native-reanimated';
+
 const { width } = Dimensions.get('window');
 
 export default function TransactionDetails() {
@@ -45,28 +50,14 @@ export default function TransactionDetails() {
   ];
 
   return (
-    <GestureHandlerRootView
-      style={{ backgroundColor: theme === 'light' ? '#f3f4f6' : '#070B11' }}
-      className='flex flex-1 px-2'
-    >
+    <ThemedSafeAreaView className='flex flex-1 px-2 relative'>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
-        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+        backgroundColor={theme === 'light' ? '#f2f2f2' : '#070B11'}
       />
       <Stack.Screen
         options={{
-          title: 'Transaction Details',
-          headerShown: true,
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
-          },
-          headerLeft: () => <BackButton containerStyles='-ml-2' />,
-          headerTitleStyle: {
-            color: theme === 'light' ? '#333' : '#fff',
-            fontSize: 20,
-            fontWeight: 'bold',
-          },
+          headerShown: false,
         }}
       />
 
@@ -74,88 +65,116 @@ export default function TransactionDetails() {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ alignItems: 'center' }}
-        className='flex flex-1 mb-8'
+        className='flex flex-1 mb-8 relative'
       >
-        {/* Title  */}
-        <ThemedView
-          darkColor='#1c1c1e'
-          lightColor='#f2f2f2'
-          className='relative flex flex-row items-center rounded-sm h-12 w-full mt-5 mb-8 ml-10'
+        {/* close btn */}
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => router.back()}
+          className='absolute top-0 left-0 m-2'
         >
-          <View
-            className='absolute -ml-4 flex items-center justify-center h-14 w-14 rounded-full mr-3 p-2'
-            style={{
-              backgroundColor: iconColor ? iconColor : '#3030cc',
-            }}
-          >
-            <Text className='text-lg font-bold text-white'>
-              {category.icon && isEmoji(category.icon)
-                ? category.icon
-                : title.charAt(0)}
-            </Text>
-          </View>
+          <AntDesign name='closecircleo' size={26} color='#f97316' />
+        </TouchableOpacity>
 
-          <ThemedText className='text-lg font-bold ml-16'>{title}</ThemedText>
-        </ThemedView>
-
-        {/* Transaction Details */}
-        {transactionDetails.map((detail, index) => (
-          <View
-            key={index}
-            className='mb-5 relative'
-            style={{ width: width * 0.92 }}
+        <Animated.View
+          entering={FadeIn}
+          exiting={FadeOut}
+          className='relative items-center justify-center border-2 p-1 pb-3 rounded-[18px] mt-14 shadow-lg'
+          style={{
+            borderColor: theme === 'light' ? '#f2f2f2' : '#1c1c1e',
+          }}
+        >
+          {/* Title  */}
+          <ThemedView
+            darkColor='#1c1c1e'
+            lightColor='#f2f2f2'
+            className='absolute top-0 flex flex-col items-center rounded-full p-1  -mt-10 mb-8 border-2 border-orange-500 '
           >
-            <ThemedText className=' mb-1 ml-1 font-pbold'>
-              {detail.label}
-            </ThemedText>
-            <ThemedView
-              darkColor='#1c1c1e'
-              lightColor='#ffffff'
-              className='p-4 rounded-lg '
+            <View
+              className='flex items-center justify-center h-14 w-14 rounded-full p-2'
+              style={{
+                backgroundColor: iconColor ? iconColor : '#3030cc',
+              }}
             >
-              <ThemedText
-                darkColor='#ccc'
-                className='text-[14.3px] capitalize font-pregular'
-              >
-                {detail.value}
-              </ThemedText>
-            </ThemedView>
-          </View>
-        ))}
+              <Text className='text-lg font-bold text-white'>
+                {category.icon && isEmoji(category.icon)
+                  ? category.icon
+                  : title.charAt(0)}
+              </Text>
+            </View>
+          </ThemedView>
+          <View className='mt-14'>
+            {/* Transaction Details */}
+            {transactionDetails.map(
+              (detail, index) =>
+                detail && (
+                  <View
+                    key={index}
+                    className='mb-4 relative px-2'
+                    style={{ width: width * 0.92 }}
+                  >
+                    <ThemedView
+                      darkColor='#1c1c1e'
+                      lightColor='#ffffff'
+                      className='p-2 rounded-lg '
+                    >
+                      <ThemedText className='ml-2 font-pbold text-[15px]'>
+                        {detail.label}
+                      </ThemedText>
 
+                      <ThemedText
+                        darkColor='#ccc'
+                        className='text-[14px] capitalize font-pregular ml-2'
+                      >
+                        {detail.value}
+                      </ThemedText>
+                    </ThemedView>
+                  </View>
+                )
+            )}
+          </View>
+        </Animated.View>
         {/* Action Buttons */}
-        <View className='flex w-full flex-row justify-end gap-4 mr-4'>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() =>
-              router.push({
-                pathname: '/(transactions)/edit',
-                params: { transaction: JSON.stringify(transaction) },
-              })
-            }
-            className='p-3 border border-green-500 rounded-lg'
-          >
-            <View className='flex flex-row items-center gap-2'>
-              <FontAwesome name='edit' size={18} color='#fff' />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => {
-              deleteTransaction(transaction.id);
-              router.push('/(tabs)/');
-              toast.show('Transaction deleted successfully', {
-                type: 'success',
-              });
-            }}
-            className='p-3 rounded-lg border border-red-500'
-          >
-            <View className='flex flex-row items-center gap-2'>
-              <FontAwesome name='trash' size={18} color='red' />
-            </View>
-          </TouchableOpacity>
+        <View className='flex w-full flex-row justify-end gap-2 mr-4 mt-4'>
+          <Animated.View entering={FadeInRight.delay(200)}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() =>
+                router.push({
+                  pathname: '/(transactions)/edit',
+                  params: { transaction: JSON.stringify(transaction) },
+                })
+              }
+              className='p-3  rounded-lg'
+            >
+              <View className='flex flex-row items-center gap-2'>
+                <FontAwesome
+                  name='edit'
+                  size={18}
+                  color={theme === 'light' ? '#000' : '#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          </Animated.View>
+          <Animated.View entering={FadeInRight.delay(300)}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => {
+                deleteTransaction(transaction.id);
+                router.push('/(tabs)/');
+                toast.show('Transaction deleted successfully', {
+                  type: 'success',
+                });
+              }}
+              className='p-3 rounded-lg'
+            >
+              <View className='flex flex-row items-center gap-2'>
+                <FontAwesome name='trash' size={18} color='red' />
+              </View>
+            </TouchableOpacity>
+          </Animated.View>
         </View>
       </ScrollView>
-    </GestureHandlerRootView>
+    </ThemedSafeAreaView>
   );
 }

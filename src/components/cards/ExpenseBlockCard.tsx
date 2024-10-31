@@ -34,7 +34,7 @@ export default function ExpenseBlockCard() {
     const amount = item.amount.split('.');
 
     return (
-      <View style={styles.expenseBlock}>
+      <View style={styles.expenseBlock} className='bg-gray-900'>
         <Text style={styles.expenseBlockTxt1}>
           {item.name.length > 10 ? item.name.slice(0, 10) + '...' : item.name}
         </Text>
@@ -52,22 +52,26 @@ export default function ExpenseBlockCard() {
 
   return (
     <View>
-      <View className='mb-4'>
-        <TransactionOverview />
-      </View>
-      <FlatList
-        data={staticItem.concat(expenseList)}
-        renderItem={renderItem}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      />
-      <PageModel
-        isModalVisible={isModalVisible}
-        toggleModal={toggleModal}
-        title='Add Transaction'
-      >
-        <AddTransaction />
-      </PageModel>
+      {expenseList && (
+        <>
+          <View className='mb-4'>
+            <TransactionOverview />
+          </View>
+          <FlatList
+            data={staticItem.concat(expenseList)}
+            renderItem={renderItem}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          />
+          <PageModel
+            isModalVisible={isModalVisible}
+            toggleModal={toggleModal}
+            title='Add Transaction'
+          >
+            <AddTransaction />
+          </PageModel>
+        </>
+      )}
     </View>
   );
 }
@@ -85,7 +89,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   expenseBlock: {
-    backgroundColor: '#723FEB',
     width: 100,
     padding: 15,
     borderRadius: 10,
