@@ -26,8 +26,8 @@ const CustomHeader = ({ isForExplore }: { isForExplore?: boolean }) => {
           backgroundColor: 'transparent',
         }}
       >
-        <View className='flex-row justify-between items-center gap-row-2'>
-          <View className='-ml-3' style={styles.searchSection}>
+        <View className='flex-row justify-end items-center gap-row-2'>
+          {/* <View className='-ml-3' style={styles.searchSection}>
             <Ionicons
               style={styles.searchIcon}
               name='search'
@@ -41,7 +41,7 @@ const CustomHeader = ({ isForExplore }: { isForExplore?: boolean }) => {
               placeholderTextColor={theme === 'light' ? '#141518' : '#f2f2f2'}
               onFocus={() => router.push('/modals/search')}
             />
-          </View>
+          </View> */}
 
           {!isForExplore && (
             <View className='flex-row gap-2 ml-1'>
