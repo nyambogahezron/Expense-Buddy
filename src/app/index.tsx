@@ -21,7 +21,7 @@ export default function LandingPage() {
 
   useEffect(() => {
     if (session && isMounted) {
-      router.replace('/(tabs)/');
+      router.replace('/(tabs)');
     }
   }, []);
 

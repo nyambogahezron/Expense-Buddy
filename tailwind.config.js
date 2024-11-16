@@ -4,6 +4,7 @@ module.exports = {
     './src/app/**/*.{js,jsx,ts,tsx}',
     './src/components/**/*.{js,jsx,ts,tsx}',
   ],
+  presets: [require('nativewind/preset')],
   theme: {
     extend: {
       fontFamily: {
@@ -24,6 +25,7 @@ module.exports = {
         redCrl: '#EE401B',
         bgPrimaryLight: '#f3f4f6',
         orangeClr: '#F38D1B',
+        orangeClrLight: '#FF7F50',
       },
     },
   },

@@ -2,12 +2,12 @@ import { Tabs } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { Feather, Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native';
 import { useTheme } from '@/context/ThemeProvider';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { BlurView } from 'expo-blur';
 import CustomHeader from '@/components/CustomHeader';
 import BackButton from '@/components/navigation/BackButton';
@@ -21,7 +21,7 @@ export default function TabLayout() {
     if (!session && !loading) return router.replace('/');
   }, [session]);
 
-    return (
+  return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -30,7 +30,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          height: 70,
+          height: 50,
           borderTopWidth: 0,
           ...styles.shadow,
           backgroundColor: 'transparent',
@@ -61,7 +61,7 @@ export default function TabLayout() {
           title: 'Home',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? 'home' : 'home-outline'}
+              name={focused ? 'home' : 'home'}
               color={color}
               focused
               iconName='Home'
@@ -83,7 +83,7 @@ export default function TabLayout() {
           title: 'Explore',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? 'compass' : 'compass-outline'}
+              name={focused ? 'compass' : 'compass'}
               color={color}
               focused
               iconName='Explore'
@@ -107,13 +107,13 @@ export default function TabLayout() {
               style={{
                 backgroundColor: theme === 'light' ? '#f3f3f3' : '#1c1c1e',
               }}
-              className='relative flex items-center justify-center p-2 -mt-12 rounded-full w-18 h-18  '
+              className='relative flex items-center justify-center p-1 -mt-8 rounded-full w-18 h-18  '
             >
-              <View className='w-14 h-14 rounded-full bg-[#FF7F50] flex items-center justify-center  shadow-lg'>
-                <FontAwesome5
+              <View className='w-12 h-12 rounded-full bg-orangeClrLight flex items-center justify-center shadow-lg'>
+                <Feather
                   name='plus'
-                  size={20}
-                  color={`${focused ? 'white' : '#1c1c1e'}`}
+                  size={22}
+                  color={`${focused ? 'white' : '#222'}`}
                 />
               </View>
             </View>
@@ -160,7 +160,7 @@ export default function TabLayout() {
           ),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? 'stats-chart' : 'stats-chart-outline'}
+              name={focused ? 'bar-chart-2' : 'bar-chart-2'}
               color={color}
               focused
               iconName='Reports'
@@ -175,7 +175,7 @@ export default function TabLayout() {
           title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? 'person' : 'person-outline'}
+              name={focused ? 'user' : 'user'}
               color={color}
               focused
               iconName='Profile'

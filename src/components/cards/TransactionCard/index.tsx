@@ -24,7 +24,7 @@ const TransactionCard = ({ item }: TransactionCardProps) => {
   }
 
   return (
-    <View className='justify-center flex-1'>
+    <View key={item.id} className='justify-center flex-1'>
       <AppleStyleSwipeableRow
         onDelete={() => onDelete(item?.id)}
         onEdit={() =>

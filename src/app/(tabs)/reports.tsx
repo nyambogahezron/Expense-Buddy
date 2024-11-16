@@ -23,7 +23,6 @@ const width = Dimensions.get('window').width;
 
 export default function Statistics() {
   const { theme } = useTheme();
-  const { expenseList } = useDataContext();
   const { transactionsData, categoriesData, totalExpense, totalIncome } =
     useDataContext();
   const { UserCurrency } = useGlobalContext();
@@ -175,3 +174,5 @@ export default function Statistics() {
     </ThemedSafeAreaView>
   );
 }
+
+// TODO work on categories crud

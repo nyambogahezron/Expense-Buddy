@@ -1,9 +1,10 @@
+import { Feather } from '@expo/vector-icons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Text, View } from 'react-native';
 
 type TabBarIconProps = {
   color: string;
-  name: string;
+  name: React.ComponentProps<typeof Feather>['name'];
   focused: boolean;
   style?: any;
   iconName: string;
@@ -12,20 +13,20 @@ type TabBarIconProps = {
 export function TabBarIcon({ color, name, focused, style, iconName }: TabBarIconProps) {
   return (
     <View className='flex items-center justify-center gap-2'>
-      <Ionicons
+      <Feather
         name={name}
-        size={19}
+        size={22}
         color={color}
         style={[{ marginBottom: -3 }, style]}
       />
-      <Text
+      {/* <Text
         className={`capitalize ${
           focused ? 'font-psemibold' : 'font-pregular'
         } text-xs`}
         style={{ color: color }}
       >
         {iconName}
-      </Text>
+      </Text> */}
     </View>
   );
 }

@@ -11,6 +11,7 @@ import DataProvider from '@/context/DataProvider';
 import LockScreen from '../components/PinLockScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ToastProviderContext from '@/context/ToastProvider';
+import './global.css';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase";
+import { supabase } from '@/utils/supabase';
 
 export const fetchWeeklyData = async (
   startDate: string,
@@ -7,7 +7,7 @@ export const fetchWeeklyData = async (
 ) => {
   try {
     const { data, error } = await supabase
-      .from('transactions') 
+      .from('transactions')
       .select('date, amount, type')
       .gte('date', startDate)
       .lte('date', endDate)
