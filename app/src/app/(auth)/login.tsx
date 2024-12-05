@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import {
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  StyleSheet,
+} from 'react-native';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
-import { ThemedSafeAreaView } from '@/components/Themed';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
 import CustomTextInput from '@/components/Form/CustomTextInput';
 import CustomPasswordInput from '@/components/Form/CustomPasswordInput';
 import AuthFooter from '@/components/Form/AuthFooter';
 import AuthHeader from '@/components/Form/AuthHeader';
-import CustomButton from '@/components/CustomButton';
+import Button from '@/components/ui/Button';
 import { supabase } from '@/utils/supabase';
 import { useToast } from 'react-native-toast-notifications';
+
 
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -36,14 +43,14 @@ export default function Login() {
   }
 
   return (
-    <ThemedSafeAreaView className='flex-1 px-3 w-full justify-center'>
+    <ThemedSafeAreaView style={styles.container}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#f3f4f6' : '#070B11'}
       />
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView
-        className='mt-14'
+        style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
@@ -74,12 +81,12 @@ export default function Login() {
         </TouchableOpacity>
 
         {/* Login Button */}
-        <CustomButton
+        <Button
           isLoading={loading}
           title={loading ? 'Loading...' : 'Login'}
-          customStyles='bg-blue-600 '
+          customStyles={styles.button}
           handleOpenPress={signInWithUser}
-          textStyles='text-white text-lg font-bold'
+          textStyles={styles.buttonText}
         />
         {/* Signup Option */}
         <AuthFooter
@@ -91,3 +98,23 @@ export default function Login() {
     </ThemedSafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 12,
+    width: '100%',
+    justifyContent: 'center',
+  },
+  scrollView: {
+    marginVertical: 20,
+  },
+  button: {
+    backgroundColor: '#2563eb',
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});

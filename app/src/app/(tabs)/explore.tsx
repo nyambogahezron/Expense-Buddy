@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Text, TouchableOpacity, SectionList, View } from 'react-native';
+import {
+  Text,
+  TouchableOpacity,
+  SectionList,
+  View,
+  StyleSheet,
+} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import TransactionCard from '@/components/cards/TransactionCard';
 import ListHeader from '@/components/cards/TransactionCard/ListHeader';
@@ -7,9 +13,11 @@ import { TransactionProps } from '@/types';
 import EmptyListCard from '@/components/EmptyListCard';
 import LoadMoreBtn from '@/components/LoadMoreBtn';
 import { useTheme } from '@/context/ThemeProvider';
-import { ThemedSafeAreaView, ThemedView } from '@/components/Themed';
+import ThemedText from '@/components/ui/Text';
+import ThemedView from '@/components/ui/View';
 import { useDataContext } from '@/context/DataProvider';
-import Loading from '@/components/Loading';
+import Loading from '@/components/ui/Loading';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
 
 type categoryType = 'All' | 'income' | 'expense';
 
@@ -71,12 +79,12 @@ export default function HomeScreen() {
   ];
 
   return (
-    <ThemedSafeAreaView className='flex-1 px-2'>
+    <ThemedSafeAreaView style={styles.safeArea}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#f2f2f2' : 'rgba(7, 11, 17,0.1)'}
       />
-      <ThemedView className='mt-4'>
+      <ThemedView style={styles.themedView}>
         <SectionList
           onRefresh={() => onRefresh()}
           refreshing={false}
@@ -90,18 +98,21 @@ export default function HomeScreen() {
           renderSectionHeader={() => (
             <ThemedView>
               {!loading && (
-                <ThemedView className='flex-row justify-center gap-0'>
+                <ThemedView style={styles.buttonContainer}>
                   <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={() => setCategory('All')}
-                    className={`p-4 rounded-l-full w-1/3 items-center ${
-                      category === 'All' ? 'bg-orange-500' : 'bg-white'
-                    }`}
+                    style={[
+                      styles.button,
+                      styles.buttonLeft,
+                      category === 'All' && styles.buttonActive,
+                    ]}
                   >
                     <Text
-                      className={`text-black font-bold ${
-                        category === 'All' ? 'text-white' : ''
-                      }`}
+                      style={[
+                        styles.buttonText,
+                        category === 'All' && styles.buttonTextActive,
+                      ]}
                     >
                       All
                     </Text>
@@ -109,14 +120,17 @@ export default function HomeScreen() {
                   <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={() => setCategory('income')}
-                    className={`bg-white p-4 border-l border-r border-gray-200 w-1/3 items-center ${
-                      category === 'income' ? 'bg-orange-500' : 'bg-white'
-                    }`}
+                    style={[
+                      styles.button,
+                      styles.buttonMiddle,
+                      category === 'income' && styles.buttonActive,
+                    ]}
                   >
                     <Text
-                      className={`text-black font-bold ${
-                        category === 'income' ? 'text-white' : ''
-                      }`}
+                      style={[
+                        styles.buttonText,
+                        category === 'income' && styles.buttonTextActive,
+                      ]}
                     >
                       Income
                     </Text>
@@ -124,14 +138,17 @@ export default function HomeScreen() {
                   <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={() => setCategory('expense')}
-                    className={`p-4 rounded-r-full w-1/3 items-center ${
-                      category === 'expense' ? 'bg-orange-500' : 'bg-white'
-                    }`}
+                    style={[
+                      styles.button,
+                      styles.buttonRight,
+                      category === 'expense' && styles.buttonActive,
+                    ]}
                   >
                     <Text
-                      className={`text-black font-bold ${
-                        category === 'expense' ? 'text-white' : ''
-                      }`}
+                      style={[
+                        styles.buttonText,
+                        category === 'expense' && styles.buttonTextActive,
+                      ]}
                     >
                       Expenses
                     </Text>
@@ -160,3 +177,46 @@ export default function HomeScreen() {
     </ThemedSafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    paddingHorizontal: 8,
+  },
+  themedView: {
+    marginTop: 16,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  button: {
+    padding: 16,
+    width: '33.33%',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  buttonLeft: {
+    borderTopLeftRadius: 9999,
+    borderBottomLeftRadius: 9999,
+  },
+  buttonMiddle: {
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  buttonRight: {
+    borderTopRightRadius: 9999,
+    borderBottomRightRadius: 9999,
+  },
+  buttonActive: {
+    backgroundColor: '#f97316',
+  },
+  buttonText: {
+    color: 'black',
+    fontWeight: 'bold',
+  },
+  buttonTextActive: {
+    color: 'white',
+  },
+});

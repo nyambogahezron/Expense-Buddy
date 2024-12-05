@@ -8,12 +8,9 @@ import {
   Dimensions,
 } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
-import CustomButton from '@/components/CustomButton';
 import { useTheme } from '@/context/ThemeProvider';
-import {
-  ThemedText,
-  ThemedView,
-} from '@/components/Themed';
+import ThemedView from '@/components/ui/View';
+import ThemedText from '@/components/ui/Text';
 import CustomTextInput from '@/components/Form/CustomTextInput';
 import DatePicker from '@/components/Form/DatePicker';
 import CategoryListBottomSheet from '@/components/cards/CategoryCard/CategoryListBottomSheet';
@@ -22,6 +19,7 @@ import { useDataContext } from '@/context/DataProvider';
 import { Picker } from '@react-native-picker/picker';
 import { useToast } from 'react-native-toast-notifications';
 import { router } from 'expo-router';
+import CustomButton from '../CustomButton';
 const width = Dimensions.get('window').width;
 
 export default function AddTransaction() {

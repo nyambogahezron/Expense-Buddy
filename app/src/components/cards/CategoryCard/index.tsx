@@ -2,7 +2,7 @@ import { Dispatch } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
 import { useTheme } from '@/context/ThemeProvider';
-import { ThemedText } from '@/components/Themed';
+import ThemedText from '@/components/ui/Text';
 
 type CategoryCardProps = {
   handleOnPress: () => void;

@@ -1,10 +1,11 @@
-import { ScrollView } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { Stack } from 'expo-router';
-import CustomButton from '@/components/CustomButton';
+import Button from '@/components/ui/Button';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import { ThemedView, ThemedSafeAreaView } from '@/components/Themed';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedView from '@/components/ui/View';
 import { useTheme } from '@/context/ThemeProvider';
 import BackButton from '@/components/navigation/BackButton';
 import CustomTextInput from '@/components/Form/CustomTextInput';
@@ -23,7 +24,7 @@ export default function CreateCategory() {
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
       />
-      <ThemedSafeAreaView className='flex-1 w-full h-full justify-center'>
+      <ThemedSafeAreaView style={styles.safeAreaView}>
         <Stack.Screen
           options={{
             title: 'Create Categories',
@@ -40,8 +41,8 @@ export default function CreateCategory() {
             },
           }}
         />
-        <ScrollView className='mt-[20%]'>
-          <ThemedView className='px-4 my-auto h-full'>
+        <ScrollView style={styles.scrollView}>
+          <ThemedView style={styles.themedView}>
             {/* Title */}
 
             <CustomTextInput
@@ -58,11 +59,11 @@ export default function CreateCategory() {
               placeholder='Choose Emoji For Icon'
             />
 
-            <CustomButton
+            <Button
               title='Create'
               handleOpenPress={() => handleOnSubmit()}
-              customStyles='bg-orange-500 mt-5'
-              textStyles='text-white'
+              customStyles={styles.customButton}
+              textStyles={styles.buttonText}
             />
           </ThemedView>
         </ScrollView>
@@ -70,3 +71,27 @@ export default function CreateCategory() {
     </GestureHandlerRootView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+  },
+  scrollView: {
+    marginTop: '20%',
+  },
+  themedView: {
+    paddingHorizontal: 16,
+    marginVertical: 'auto',
+    height: '100%',
+  },
+  customButton: {
+    backgroundColor: 'orange',
+    marginTop: 20,
+  },
+  buttonText: {
+    color: 'white',
+  },
+});

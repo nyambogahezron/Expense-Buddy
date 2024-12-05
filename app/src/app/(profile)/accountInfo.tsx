@@ -13,13 +13,14 @@ import { Stack } from 'expo-router';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import { ThemedSafeAreaView } from '@/components/Themed';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
 import { useTheme } from '@/context/ThemeProvider';
-import CustomButton from '@/components/CustomButton';
+import Button from '@/components/ui/Button';
 import CustomTextInput from '@/components/Form/CustomTextInput';
 import BackButton from '@/components/navigation/BackButton';
 import * as ImagePicker from 'expo-image-picker';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import CustomButton from '@/components/CustomButton';
 
 const { width } = Dimensions.get('window');
 

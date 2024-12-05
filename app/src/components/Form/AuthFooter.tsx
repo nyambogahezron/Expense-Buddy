@@ -1,5 +1,6 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React from 'react';
+import { useTheme } from '@/context/ThemeProvider';
 
 type AuthFooterProps = {
   title: string;
@@ -8,12 +9,33 @@ type AuthFooterProps = {
 };
 
 export default function AuthFooter({ title, handleOnPress, buttonText }: AuthFooterProps) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
+
   return (
-    <View className='flex-row justify-center mt-8 mb-3'>
-      <Text className='text-gray-500'>{title}</Text>
+    <View style={styles.container}>
+      <Text style={styles.text}>{title}</Text>
       <TouchableOpacity activeOpacity={0.7} onPress={handleOnPress}>
-        <Text className='text-blue-600 font-bold ml-2'>{buttonText}</Text>
+        <Text style={styles.buttonText}>{buttonText}</Text>
       </TouchableOpacity>
     </View>
   );
 }
+
+const createStyles = (theme: any) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginTop: 32,
+      marginBottom: 12,
+    },
+    text: {
+      color: theme === 'light' ? '#6B7280' : '#E5E7EB',
+    },
+    buttonText: {
+      color: theme === 'light' ? '#2563EB' : '#93C5FD',
+      fontWeight: 'bold',
+      marginLeft: 8,
+    },
+  });

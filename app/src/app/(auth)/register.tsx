@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { Alert, ScrollView } from 'react-native';
+import { Alert, ScrollView, StyleSheet } from 'react-native';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
-import { ThemedSafeAreaView } from '@/components/Themed';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
 import CustomTextInput from '@/components/Form/CustomTextInput';
 import CustomPasswordInput from '@/components/Form/CustomPasswordInput';
 import AuthFooter from '@/components/Form/AuthFooter';
 import AuthHeader from '@/components/Form/AuthHeader';
-import  CustomButton  from '@/components/CustomButton';
+import Button from '@/components/ui/Button';
 import { supabase } from '@/utils/supabase';
 import { useToast } from 'react-native-toast-notifications';
+import defaultCategories from '@/data/defaultCategories';
 
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -22,6 +23,8 @@ export default function Login() {
 
   const { theme } = useTheme();
   const toast = useToast();
+
+  const defaultCategoriesData = defaultCategories;
 
   async function signUpWithUser() {
     if (!email || !password || !username || !confirmPassword)
@@ -46,48 +49,9 @@ export default function Login() {
     });
     if (session) {
       // insert default categories
-      const { error } = await supabase.from('categories').insert([
-        { name: 'Food', icon: '🍜', userId: session?.user?.id },
-        {
-          name: 'Transport',
-          icon: '🚗',
-          userId: session?.user?.id,
-        },
-        { name: 'Home', icon: '🏠', userId: session?.user?.id },
-        { name: 'Health', icon: '🚑', userId: session?.user?.id },
-        {
-          name: 'Entertainment',
-          icon: '🎬',
-          userId: session?.user?.id,
-        },
-        {
-          name: 'Shopping',
-          icon: '🛍️',
-          userId: session?.user?.id,
-        },
-        {
-          name: 'Online Services Subscription',
-          icon: '💻',
-          userId: session?.user?.id,
-        },
-        { name: 'Salary', icon: '💰', userId: session?.user?.id },
-        {
-          name: 'Business',
-          icon: '🏢',
-          userId: session?.user?.id,
-        },
-        {
-          name: 'Investment',
-          icon: '📈',
-          userId: session?.user?.id,
-        },
-        {
-          name: 'Clothing',
-          icon: '👔',
-          userId: session?.user?.id,
-        },
-        { name: 'Other', icon: '❓', userId: session?.user?.id },
-      ]);
+      const { error } = await supabase
+        .from('categories')
+        .insert([defaultCategoriesData]);
       if (error) {
         console.log('Error inserting default:', error);
       }
@@ -98,7 +62,7 @@ export default function Login() {
   }
 
   return (
-    <ThemedSafeAreaView className='flex-1 px-3 w-full justify-center'>
+    <ThemedSafeAreaView style={styles.container}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#f3f4f6' : '#070B11'}
@@ -140,12 +104,12 @@ export default function Login() {
           isForConfirmation={true}
         />
 
-        <CustomButton
+        <Button
           isLoading={loading}
           title={loading ? 'Loading...' : 'Register'}
-          customStyles='bg-blue-600'
+          customStyles={styles.registerButton}
           handleOpenPress={signUpWithUser}
-          textStyles='text-white text-lg font-bold'
+          textStyles={styles.registerButtonText}
         />
 
         {/* SignUp Option */}
@@ -158,3 +122,20 @@ export default function Login() {
     </ThemedSafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 12,
+    width: '100%',
+    justifyContent: 'center',
+  },
+  registerButton: {
+    backgroundColor: '#1D4ED8',
+  },
+  registerButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});

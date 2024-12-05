@@ -1,5 +1,11 @@
 import React, { useMemo } from 'react';
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  StyleSheet,
+} from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { useTheme } from '@/context/ThemeProvider';
 import { useGlobalContext } from '@/context/GlobalProvider';
@@ -7,7 +13,7 @@ import { currencies } from '@/data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { useToast } from 'react-native-toast-notifications';
-import { ThemedText } from './Themed';
+import ThemedText  from './ui/Text';
 
 const width = Dimensions.get('window').width;
 
@@ -51,29 +57,66 @@ export default function CurrencyContainer({
         backgroundColor: theme === 'light' ? '#fff' : '#070B11',
       }}
     >
-      <View className='w-full p-2 ml-2' style={{ width: width * 0.95 }}>
-        <ThemedText className='text-lg font-bold'>Choose Currency</ThemedText>
+      <View style={[styles.container, { width: width * 0.95 }]}>
+        <ThemedText style={styles.title}>Choose Currency</ThemedText>
       </View>
       <BottomSheetFlatList
         data={currencies}
         keyExtractor={(item) => item.code.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={{ width: width * 0.95 }}
+            style={[
+              styles.currencyItem,
+              { width: width * 0.95 },
+              item.code === UserCurrency && styles.selectedCurrency,
+            ]}
             key={item.code}
             onPress={() => handleCurrencySelect(item)}
-            className={`mt-2 p-2 bg-gray-800 rounded-lg w-full ${
-              item.code === UserCurrency ? 'border-2 border-green-600' : ''
-            }`}
           >
-            <View className='flex-row gap-2 items-center py-2'>
-              <Text className='text-white'>{item.code}</Text>
-              <Text className='text-white'>{item.name}</Text>
+            <View style={styles.currencyInfo}>
+              <Text style={styles.currencyText}>{item.code}</Text>
+              <Text style={styles.currencyText}>{item.name}</Text>
             </View>
           </TouchableOpacity>
         )}
-        contentContainerStyle={{ alignItems: 'center', paddingBottom: 10 }}
+        contentContainerStyle={styles.flatListContent}
       />
     </BottomSheet>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    padding: 8,
+    marginLeft: 8,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  currencyItem: {
+    marginTop: 8,
+    padding: 8,
+    backgroundColor: '#333',
+    borderRadius: 8,
+    width: '100%',
+  },
+  selectedCurrency: {
+    borderWidth: 2,
+    borderColor: '#38a169',
+  },
+  currencyInfo: {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  currencyText: {
+    color: '#fff',
+  },
+  flatListContent: {
+    alignItems: 'center',
+    paddingBottom: 10,
+  },
+});

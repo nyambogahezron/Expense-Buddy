@@ -1,12 +1,13 @@
-import { View, ScrollView, Alert } from 'react-native';
+import { View, ScrollView, Alert, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { router } from 'expo-router';
-import { ThemedSafeAreaView } from '@/components/Themed';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
 import CustomPasswordInput from '@/components/Form/CustomPasswordInput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Loading from '@/components/Loading';
+import Loading from '@/components/ui/Loading';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import CustomButton from './CustomButton';
+import Button from './ui/Button';
 
 export default function LockScreen() {
   const { lockPin } = useGlobalContext();
@@ -48,16 +49,16 @@ export default function LockScreen() {
   };
 
   return (
-    <ThemedSafeAreaView className='flex flex-1 h-full items-center justify-center w-full'>
+    <ThemedSafeAreaView style={styles.safeAreaView}>
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        className='flex-1 mb-5 px-2'
+        style={styles.scrollView}
       >
         {isLoading ? (
           <Loading />
         ) : (
-          <View className='flex flex-col px-3 mt-20'>
+          <View style={styles.container}>
             {lockPin ? (
               <>
                 <CustomPasswordInput
@@ -83,11 +84,11 @@ export default function LockScreen() {
                   isForConfirmation={true}
                 />
 
-                <CustomButton
+                <Button
                   isLoading={isLoading}
                   title={isLoading ? 'Loading...' : 'Edit Pin'}
-                  customStyles='bg-orange-600'
-                  textStyles='text-white text-lg font-bold'
+                  customStyles={styles.button}
+                  textStyles={styles.buttonText}
                   handleOpenPress={() => HandleSubmit()}
                 />
               </>
@@ -109,11 +110,11 @@ export default function LockScreen() {
                   keyboardType='numeric'
                 />
 
-                <CustomButton
+                <Button
                   isLoading={isLoading}
                   title={isLoading ? 'Loading...' : 'Set Pin'}
-                  customStyles='bg-orange-600'
-                  textStyles='text-white text-lg font-bold'
+                  customStyles={styles.button}
+                  textStyles={styles.buttonText}
                   handleOpenPress={() => HandleSubmit()}
                 />
               </>
@@ -124,3 +125,32 @@ export default function LockScreen() {
     </ThemedSafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  scrollView: {
+    flex: 1,
+    marginBottom: 5,
+    paddingHorizontal: 2,
+  },
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    paddingHorizontal: 3,
+    marginTop: 20,
+  },
+  button: {
+    backgroundColor: 'orange',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});

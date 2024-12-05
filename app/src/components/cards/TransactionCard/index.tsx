@@ -3,7 +3,8 @@ import isEmoji from '@/utils/isEmoji';
 import { router } from 'expo-router';
 import { Text, TouchableOpacity, View } from 'react-native';
 const userCurrency = 'Ksh';
-import { ThemedText, ThemedView } from '@/components/Themed';
+import ThemedView from '@/components/ui/View';
+import ThemedText from '@/components/ui/Text';
 import AppleStyleSwipeableRow from '@/components/cards/TransactionCard/SwipeableRow';
 import { useDataContext } from '@/context/DataProvider';
 import { useToast } from 'react-native-toast-notifications';
@@ -33,7 +34,7 @@ const TransactionCard = ({ item }: TransactionCardProps) => {
         onDelete={() => onDelete(item?.id)}
         onEdit={() =>
           router.push({
-            pathname: '/(transactions)/details', // TODO push to edit screen, fix local params error
+            pathname: '/(transactions)/edit', // TODO push to edit screen, fix local params error
             params: { item: JSON.stringify(item) },
           })
         }

@@ -1,7 +1,14 @@
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  StyleSheet,
+} from 'react-native';
 import React from 'react';
 import { router } from 'expo-router';
-import { ThemedText, ThemedView } from '@/components/Themed';
+import ThemedView from '@/components/ui/View';
+import ThemedText from '@/components/ui/Text';
 
 const width = Dimensions.get('window').width;
 type EmptyListCardProps = {
@@ -16,31 +23,70 @@ export default function EmptyListCard({
   buttonText = 'Add Transaction',
 }: EmptyListCardProps) {
   return (
-    <ThemedView className='flex justify-center items-center mt-10'>
-      <View className='my-8'>
-        <Text className='text-4xl font-pbold text-yellow-500'>
-          Oops<Text className='text-4xl text-red-600'>!</Text>
+    <ThemedView style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.titleText}>
+          Oops<Text style={styles.exclamationText}>!</Text>
         </Text>
       </View>
-      <ThemedText
-        lightColor='#6b7280'
-        className='text-gray-500 font-bold text-xl'
-      >
+      <ThemedText lightColor='#6b7280' style={styles.subtitleText}>
         {title}
       </ThemedText>
 
       <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
-        <View
-          className='flex items-center justify-center bg-blue-600 h-12 mr-3 rounded-lg mt-6 mb-5'
-          style={{ width: width * 0.89 }}
-        >
-          <View className='flex-row items-center'>
-            <ThemedText className='text-[15px] font-semibold  text-white'>
-              {buttonText}
-            </ThemedText>
+        <View style={styles.buttonContainer}>
+          <View style={styles.buttonInnerContainer}>
+            <ThemedText style={styles.buttonText}>{buttonText}</ThemedText>
           </View>
         </View>
       </TouchableOpacity>
     </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  titleContainer: {
+    marginVertical: 8,
+  },
+  titleText: {
+    fontSize: 32,
+    fontFamily: 'pbold',
+    color: '#F59E0B',
+  },
+  exclamationText: {
+    fontSize: 32,
+    color: '#DC2626',
+  },
+  subtitleText: {
+    color: '#6b7280',
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  buttonContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#2563EB',
+    height: 48,
+    marginRight: 3,
+    borderRadius: 8,
+    marginTop: 6,
+    marginBottom: 5,
+    width: width * 0.89,
+  },
+  buttonText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  buttonInnerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+});

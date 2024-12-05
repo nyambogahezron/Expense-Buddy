@@ -7,9 +7,10 @@ import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from '@/context/ThemeProvider';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { StatusBar } from 'expo-status-bar';
-import { ThemedSafeAreaView, ThemedView } from '@/components/Themed';
+import ThemedView from '@/components/ui/View';
 import BackButton from '@/components/navigation/BackButton';
 import CurrencyContainer from '@/components/CurrencyContainer';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
 
 export default function Settings() {
   const { theme, toggleTheme } = useTheme();
@@ -148,7 +149,7 @@ export default function Settings() {
               className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
                 theme === 'light' ? 'bg-white' : 'bg-[#1c1c1e]'
               }`}
-              onPress={() => router.push('/(tabs)/')}
+              onPress={() => router.push('/(tabs)')}
             >
               <Ionicons name='log-out-outline' size={22} color='#EF4444' />
               <Text className='ml-4 text-red-600 font-bold'>Logout</Text>

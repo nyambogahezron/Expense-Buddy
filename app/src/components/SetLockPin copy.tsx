@@ -1,11 +1,12 @@
-import { View,  Dimensions, TextInput } from 'react-native';
+import { View, Dimensions, TextInput, StyleSheet } from 'react-native';
 import React from 'react';
-import CustomButton from './CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Toaster } from '@/lib/Toaster';
-import { ThemedText, ThemedView } from './Themed';
+import ThemedText from '@/components/ui/Text';
+import ThemedView from '@/components/ui/View';
 import { useTheme } from '@/context/ThemeProvider';
 import { router } from 'expo-router';
+import Button from './ui/Button';
 
 const width = Dimensions.get('window').width;
 
@@ -35,27 +36,11 @@ export default function SetLockPin() {
     }
   };
   return (
-    <ThemedView
-      darkColor='#070B11'
-      lightColor='#fff'
-      className='flex-1 relative items-center'
-    >
-      <View
-        style={{
-          width: width - 10,
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: 20,
-          marginBottom: 20,
-        }}
-      >
-        <ThemedText className='text-xl font-pbold'>Set Lock Pin</ThemedText>
+    <ThemedView darkColor='#070B11' lightColor='#fff' style={styles.container}>
+      <View style={styles.header}>
+        <ThemedText style={styles.headerText}>Set Lock Pin</ThemedText>
       </View>
-      <View
-        style={{
-          width: width - 50,
-        }}
-      >
+      <View style={styles.inputContainer}>
         <TextInput
           placeholder='Enter Pin'
           secureTextEntry={true}
@@ -63,12 +48,14 @@ export default function SetLockPin() {
           maxLength={6}
           keyboardType='numeric'
           placeholderTextColor={theme === 'dark' ? '#fff' : '#000'}
-          className='border-b border-orange-500 rounded-lg h-10  text-center w-full mt-10'
+          style={[
+            styles.textInput,
+            {
+              color: theme === 'dark' ? '#fff' : '#000',
+              borderColor: theme === 'dark' ? '#fff' : '#FFA500',
+            },
+          ]}
           onChangeText={(text) => setPin(text)}
-          style={{
-            color: theme === 'dark' ? '#fff' : '#000',
-            borderColor: theme === 'dark' ? '#fff' : '#FFA500',
-          }}
           onFocus={(e) =>
             e.target.setNativeProps({
               style: { borderColor: theme === 'dark' ? '#fff' : '#000' },
@@ -79,16 +66,57 @@ export default function SetLockPin() {
           }
         />
       </View>
-
-      <View className='absolute bottom-10'>
-        <CustomButton
+      <View style={styles.buttonContainer}>
+        <Button
           isLoading={isLoading}
           title={isLoading ? 'Setting Pin...' : 'Set Lock Pin'}
           handleOpenPress={() => handleSetPin()}
-          customStyles='bg-orange-500 border border-white rounded-lg'
-          textStyles='text-white'
+          customStyles={styles.button}
+          textStyles={styles.buttonText}
         />
       </View>
     </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    position: 'relative',
+    alignItems: 'center',
+  },
+  header: {
+    width: width - 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  headerText: {
+    fontSize: 20,
+    fontFamily: 'pbold',
+  },
+  inputContainer: {
+    width: width - 50,
+  },
+  textInput: {
+    borderBottomWidth: 1,
+    borderRadius: 10,
+    height: 40,
+    textAlign: 'center',
+    width: '100%',
+    marginTop: 10,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 10,
+  },
+  button: {
+    backgroundColor: '#FFA500',
+    borderColor: '#fff',
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: '#fff',
+  },
+});

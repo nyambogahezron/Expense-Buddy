@@ -1,34 +1,24 @@
 import React from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import ListHeader from './TransactionCard/ListHeader';
 import { router } from 'expo-router';
 import { useDataContext } from '@/context/DataProvider';
-import Animated from 'react-native-reanimated';
-import { FadeInRight } from 'react-native-reanimated';
-import { ThemedText, ThemedView } from '../Themed';
+import ThemedView from '@/components/ui/View';
+import ThemedText from '@/components/ui/Text';
 
 export default function IncomeBlockCard() {
   const { incomeList } = useDataContext();
 
-  const renderItem = ({ item, index }: { item: any; index: number }) => {
+  const renderItem = ({ item }: { item: any }) => {
     let amount = item.amount.split('.');
     return (
-      <Animated.View
-        style={styles.container}
-        entering={FadeInRight.duration(300 + (300 * index) / 2)}
-      >
+      <View style={styles.container}>
         <ThemedView style={styles.wrapper}>
           <View style={styles.body}>
-            <ThemedText>
+            <Text>
               {item.icon ? item.icon : item.name.charAt(0).toUpperCase()}
-            </ThemedText>
+            </Text>
           </View>
           <TouchableOpacity onPress={() => {}}>
             <Feather name='more-horizontal' size={20} color={'#FCFCFC'} />
@@ -41,7 +31,7 @@ export default function IncomeBlockCard() {
             {amount[1]}
           </ThemedText>
         </ThemedText>
-      </Animated.View>
+      </View>
     );
   };
 
@@ -56,6 +46,7 @@ export default function IncomeBlockCard() {
               viewMore={true}
               onPressViewMore={() => router.push('/(tabs)/explore')}
             />
+
             <FlatList
               data={incomeList}
               renderItem={renderItem}
@@ -71,8 +62,7 @@ export default function IncomeBlockCard() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#242424',
-    padding: 20,
+       padding: 20,
     borderRadius: 10,
     marginRight: 15,
     width: 150,
@@ -84,10 +74,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   body: {
-    borderColor: '#666',
+    // borderColor: '#666',
     borderWidth: 1,
     borderRadius: 50,
     padding: 5,
     alignSelf: 'flex-start',
+    alignItems: 'center',
   },
 });

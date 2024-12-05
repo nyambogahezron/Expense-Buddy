@@ -1,9 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import {
   Feather,
@@ -11,7 +6,6 @@ import {
   MaterialCommunityIcons,
 } from '@expo/vector-icons';
 import { useGlobalContext } from '@/context/GlobalProvider';
-
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -19,9 +13,6 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import SetLockPin from './SetLockPin';
-
-
 
 const OFFSET = 20;
 const TIME = 80;
@@ -63,136 +54,157 @@ export default function PinLockScreen() {
   };
 
   return (
-    <View className='flex flex-1 bg-dark'>
-      {!isBiometricEnabled || !isLockPinSet ? (
-        <SetLockPin />
-      ) : (
-        <View>
-          <View className='flex items-center justify-center w-full mx-auto mt-20'>
-            <Feather name='lock' size={35} color='#fff' />
-            <Text className='text-white flex items-center  font-bold mt-2 text-xl'>
-              Unlock Application
-            </Text>
+    <View style={styles.container}>
+      <View>
+        <View style={styles.header}>
+          <Feather name='lock' size={35} color='#fff' />
+          <Text style={styles.headerText}>Unlock Application</Text>
+        </View>
+        {!isLockPinSet ? (
+          <View style={styles.lockIcon}>
+            <TouchableOpacity
+              style={styles.fingerprintButton}
+              onPress={() => {
+                authenticate();
+              }}
+            >
+              <FontAwesome5 name='fingerprint' size={36} color='#fff' />
+            </TouchableOpacity>
           </View>
-          {!isLockPinSet ? (
-            <View className='items-center justify-center mt-20'>
-              <TouchableOpacity
-                className='p-3 bg-[#1E1E2C] rounded-full w-16 h-16 items-center justify-center'
-                onPress={() => {
-                  authenticate();
+        ) : (
+          <>
+            <Animated.View style={[styles.codeView, animationStyles]}>
+              {codeLength.map((_, index) => (
+                <View
+                  style={[
+                    styles.codeView,
+                    code[index]
+                      ? { backgroundColor: '#1E90FF', borderColor: '#32CD32' }
+                      : { backgroundColor: '#fff' },
+                  ]}
+                  key={index}
+                />
+              ))}
+            </Animated.View>
+            <View style={styles.numberView}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
                 }}
               >
-                <FontAwesome5 name='fingerprint' size={36} color='#fff' />
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <>
-              <Animated.View style={[styles.codeView, animationStyles]}>
-                {codeLength.map((_, index) => (
-                  <View
-                    className={`w-7 h-7 rounded-full border-4 border-blue-600 bg-white ${
-                      code[index] ? 'bg-blue-600 border-green-600' : 'bg-white'
-                    }`}
-                    key={index}
-                  />
-                ))}
-              </Animated.View>
-              <View style={styles.numberView}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  {[1, 2, 3].map((number) => (
-                    <TouchableOpacity
-                      key={number}
-                      onPress={() => onNumberPress(number)}
-                    >
-                      <Text style={styles.number}>{number}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  {[4, 5, 6].map((number) => (
-                    <TouchableOpacity
-                      key={number}
-                      onPress={() => onNumberPress(number)}
-                    >
-                      <Text style={styles.number}>{number}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  {[7, 8, 9].map((number) => (
-                    <TouchableOpacity
-                      key={number}
-                      onPress={() => onNumberPress(number)}
-                    >
-                      <Text style={styles.number}>{number}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}
-                >
+                {[1, 2, 3].map((number) => (
                   <TouchableOpacity
-                    className='p-3 bg-[#1E1E2C] rounded-full w-14 h-14 items-center justify-center'
-                    onPress={() => {
-                      authenticate();
-                    }}
+                    key={number}
+                    onPress={() => onNumberPress(number)}
                   >
-                    <FontAwesome5 name='fingerprint' size={32} color='#fff' />
+                    <Text style={styles.number}>{number}</Text>
                   </TouchableOpacity>
-
-                  <TouchableOpacity onPress={() => onNumberPress(0)}>
-                    <Text style={styles.number}>0</Text>
+                ))}
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                {[4, 5, 6].map((number) => (
+                  <TouchableOpacity
+                    key={number}
+                    onPress={() => onNumberPress(number)}
+                  >
+                    <Text style={styles.number}>{number}</Text>
                   </TouchableOpacity>
-
-                  <View style={{ minWidth: 30 }}>
-                    {code.length > 0 && (
-                      <TouchableOpacity
-                        className='p-3 bg-[#1E1E2C] rounded-full w-14 h-14 items-center justify-center'
-                        onPress={() => numberBackspace()}
-                      >
-                        <MaterialCommunityIcons
-                          name='backspace-outline'
-                          size={26}
-                          color='#fff'
-                        />
-                      </TouchableOpacity>
-                    )}
-                  </View>
+                ))}
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                {[7, 8, 9].map((number) => (
+                  <TouchableOpacity
+                    key={number}
+                    onPress={() => onNumberPress(number)}
+                  >
+                    <Text style={styles.number}>{number}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <TouchableOpacity
+                  style={styles.fingerprintButton}
+                  onPress={() => {
+                    authenticate();
+                  }}
+                >
+                  <FontAwesome5 name='fingerprint' size={32} color='#fff' />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => onNumberPress(0)}>
+                  <Text style={styles.number}>0</Text>
+                </TouchableOpacity>
+                <View style={{ minWidth: 30 }}>
+                  {code.length > 0 && (
+                    <TouchableOpacity
+                      style={styles.backspaceButton}
+                      onPress={() => numberBackspace()}
+                    >
+                      <MaterialCommunityIcons
+                        name='backspace-outline'
+                        size={26}
+                        color='#fff'
+                      />
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
-              <View className=' w-full bottom-10 mt-20 flex items-center justify-center border border-dark p-2'>
-                <Text className=' text-blue-700 font-bold'>
-                  Forgot passcode?
-                </Text>
-              </View>
-            </>
-          )}
-        </View>
-      )}
+            </View>
+            <View style={styles.forgotPasscode}>
+              <Text style={styles.forgotPasscodeText}>Forgot passcode?</Text>
+            </View>
+          </>
+        )}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#1E1E2C',
+  },
+  header: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    marginTop: 20,
+  },
+  headerText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    marginTop: 2,
+    fontSize: 20,
+  },
+  lockIcon: {
+    marginTop: 20,
+  },
+  fingerprintButton: {
+    padding: 12,
+    backgroundColor: '#1E1E2C',
+    borderRadius: 50,
+    width: 64,
+    height: 64,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   codeView: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -216,5 +228,28 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     textAlign: 'center',
+  },
+  backspaceButton: {
+    padding: 12,
+    backgroundColor: '#1E1E2C',
+    borderRadius: 50,
+    width: 56,
+    height: 56,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  forgotPasscode: {
+    width: '100%',
+    position: 'absolute',
+    bottom: 10,
+    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: '#1E1E2C',
+    padding: 8,
+  },
+  forgotPasscodeText: {
+    color: '#1E90FF',
+    fontWeight: 'bold',
   },
 });

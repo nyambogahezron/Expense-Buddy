@@ -2,14 +2,15 @@ import { View, ScrollView, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { ThemedSafeAreaView } from '@/components/Themed';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
 import { useTheme } from '@/context/ThemeProvider';
-import CustomButton from '@/components/CustomButton';
+import Button from '@/components/ui/Button';
 import BackButton from '@/components/navigation/BackButton';
 import CustomPasswordInput from '@/components/Form/CustomPasswordInput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Loading from '@/components/Loading';
+import Loading from '@/components/ui/Loading';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import CustomButton from '@/components/CustomButton';
 
 export default function LockScreen() {
   const { theme } = useTheme();

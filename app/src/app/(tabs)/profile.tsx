@@ -6,22 +6,21 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  StyleSheet,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { ExternalLink } from '@/components/ExternalLink';
+import { ExternalLink } from '@/components/navigation/ExternalLink';
 import { useTheme } from '@/context/ThemeProvider';
-import {
-  ThemedSafeAreaView,
-  ThemedText,
-  ThemedView,
-} from '@/components/Themed';
 import OptionContainer from '@/components/OptionContainer';
 import BackButton from '@/components/navigation/BackButton';
 import HeaderRightIconCard from '@/components/navigation/HeaderRightIconCard';
 import { supabase } from '@/utils/supabase';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedView from '@/components/ui/View';
+import ThemedText from '@/components/ui/Text';
 
 const width = Dimensions.get('window').width;
 
@@ -38,7 +37,7 @@ const Profile = () => {
   }
 
   return (
-    <ThemedSafeAreaView className='flex-1'>
+    <ThemedSafeAreaView style={styles.safeArea}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
@@ -73,33 +72,29 @@ const Profile = () => {
         showsVerticalScrollIndicator={false}
       >
         {/* Header and Profile Info */}
-        <View className='flex items-center mb-8'>
+        <View style={styles.profileContainer}>
           <ThemedView
             darkColor='#1c1c1e'
             lightColor='#ffffff'
-            className={`w-28 h-28 flex items-center justify-center rounded-full `}
+            style={styles.profileImageContainer}
           >
             <Image
               source={{
                 uri: 'https://pbs.twimg.com/profile_images/1621376104241004549/c-_rHzLH_400x400.jpg',
               }}
-              className='w-24 h-24 rounded-full'
+              style={styles.profileImage}
             />
           </ThemedView>
-          <ThemedText className='text-lg font-bold mt-4'>
+          <ThemedText style={styles.userName}>
             {User?.name}
           </ThemedText>
-          <ThemedText
-            className={`text-gray-600 ${
-              theme === 'light' ? 'text-gray-600' : 'text-gray-400'
-            }`}
-          >
+          <ThemedText style={styles.userEmail}>
             {User?.email}
           </ThemedText>
         </View>
 
         {/* Account Settings Options */}
-        <View className='px-4'>
+        <View style={styles.optionsContainer}>
           <OptionContainer
             title='Settings'
             icon='settings-outline'
@@ -111,29 +106,24 @@ const Profile = () => {
             handleOnPress={() => router.push('/(profile)/accountInfo')}
           />
 
-          <View className='mb-4 '>
+          <View style={styles.externalLinkContainer}>
             <ExternalLink href='https://nyambogahezron.vercel.app'>
               <ThemedView
                 darkColor='#1c1c1e'
                 lightColor='#e5e7eb'
-                className={`flex-row items-center justify-between rounded-lg  px-4 py-3 `}
-                style={{ width: width }}
+                style={styles.externalLink}
               >
-                <View className='flex-row items-center '>
+                <View style={styles.externalLinkContent}>
                   <Ionicons
                     name='lock-closed-outline'
                     size={22}
                     color='#6B7280'
                   />
-                  <Text
-                    className={`ml-4 ${
-                      theme === 'light' ? 'text-gray-800' : 'text-gray-200'
-                    }`}
-                  >
+                  <Text style={styles.externalLinkText}>
                     Privacy Policy
                   </Text>
                 </View>
-                <View className='absolute flex right-2'>
+                <View style={styles.chevronIcon}>
                   <Ionicons name='chevron-forward' size={22} color='#6B7280' />
                 </View>
               </ThemedView>
@@ -142,18 +132,93 @@ const Profile = () => {
 
           <TouchableOpacity
             activeOpacity={0.7}
-            className={`flex-row items-center rounded-lg px-4 py-3 ${
-              theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'
-            }`}
+            style={[
+              styles.logoutButton,
+              theme === 'light' ? styles.logoutButtonLight : styles.logoutButtonDark,
+            ]}
             onPress={signOut}
           >
             <Ionicons name='log-out-outline' size={22} color='#EF4444' />
-            <Text className='ml-4 text-red-600'>Logout</Text>
+            <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
     </ThemedSafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+  profileContainer: {
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  profileImageContainer: {
+    width: 112,
+    height: 112,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 56,
+  },
+  profileImage: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 16,
+  },
+  userEmail: {
+    color: '#6B7280',
+  },
+  optionsContainer: {
+    paddingHorizontal: 16,
+  },
+  externalLinkContainer: {
+    marginBottom: 16,
+  },
+  externalLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    width: width,
+  },
+  externalLinkContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  externalLinkText: {
+    marginLeft: 16,
+    color: '#6B7280',
+  },
+  chevronIcon: {
+    position: 'absolute',
+    right: 8,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  logoutButtonLight: {
+    backgroundColor: '#E5E7EB',
+  },
+  logoutButtonDark: {
+    backgroundColor: '#1c1c1e',
+  },
+  logoutText: {
+    marginLeft: 16,
+    color: '#EF4444',
+  },
+});
 
 export default Profile;

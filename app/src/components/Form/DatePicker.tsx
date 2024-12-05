@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
-import { ThemedText, ThemedView } from '../Themed';
+import ThemedView from '@/components/ui/View';
+import ThemedText from '@/components/ui/Text';
 
 type DatePickerProps = {
   setShowDatePicker: (value: React.SetStateAction<boolean>) => void;
@@ -33,21 +34,19 @@ export default function DatePicker({
     return { event, selectedDate: currentDate };
   };
   return (
-    <View className='my-3 w-full'>
-      <ThemedText className='font-pbold l-2 mb-1'>Date</ThemedText>
+    <View style={styles.container}>
+      <ThemedText style={styles.title}>Date</ThemedText>
       <ThemedView
         darkColor='#1c1c1e'
         lightColor='#e5e7eb'
-        className='flex-row justify-between h-12 items-center  p-4 rounded-lg mb-4'
+        style={styles.datePickerContainer}
       >
-        <ThemedText className='font-psemibold text-sm'>
-          {date.toDateString()}
-        </ThemedText>
+        <ThemedText style={styles.dateText}>{date.toDateString()}</ThemedText>
         <TouchableOpacity
-          className='absolute bg-blue-500 p-3 h-12  rounded-r-lg right-0 items-center justify-center'
+          style={styles.todayButton}
           onPress={() => setShowDatePicker(true)}
         >
-          <ThemedText className='text-sm font-bold'>Today</ThemedText>
+          <ThemedText style={styles.todayButtonText}>Today</ThemedText>
         </TouchableOpacity>
         {showDatePicker && (
           <DateTimePicker
@@ -61,3 +60,41 @@ export default function DatePicker({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginVertical: 12,
+    width: '100%',
+  },
+  title: {
+    fontFamily: 'pbold',
+    marginBottom: 4,
+  },
+  datePickerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: 48,
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  dateText: {
+    fontFamily: 'psemibold',
+    fontSize: 14,
+  },
+  todayButton: {
+    position: 'absolute',
+    backgroundColor: '#3b82f6',
+    padding: 12,
+    height: 48,
+    borderRadius: 8,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  todayButtonText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+});

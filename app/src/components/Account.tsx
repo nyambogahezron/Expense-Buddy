@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabase';
-import { StyleSheet, View, Alert } from 'react-native';
-import { Button, Input } from '@rneui/themed';
+import { StyleSheet, View, Alert, TextInput, Button } from 'react-native';
 import { Session } from '@supabase/supabase-js';
 import Avatar from './Avatar';
 
@@ -81,7 +80,7 @@ export default function Account({ session }: { session: Session }) {
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input label='Email' value={session?.user?.email} disabled />
+        <TextInput  value={session?.user?.email}/>
       </View>
       <View>
         <Avatar
@@ -94,15 +93,15 @@ export default function Account({ session }: { session: Session }) {
         />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input
-          label='Username'
+        <TextInput
+         
           value={username || ''}
           onChangeText={(text) => setUsername(text)}
         />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input
-          label='Website'
+        <TextInput
+          style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
           value={website || ''}
           onChangeText={(text) => setWebsite(text)}
         />

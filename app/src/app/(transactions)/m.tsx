@@ -8,11 +8,12 @@ import { TransactionProps } from '@/types';
 import { StatusBar } from 'expo-status-bar';
 import { Dimensions } from 'react-native';
 import { useTheme } from '@/context/ThemeProvider';
-import { ThemedText, ThemedView } from '@/components/Themed';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedView from '@/components/ui/View';
+import ThemedText from '@/components/ui/Text';
 import isEmoji from '@/utils/isEmoji';
 import { useDataContext } from '@/context/DataProvider';
 import { useToast } from 'react-native-toast-notifications';
-import { ThemedSafeAreaView } from '@/components/Themed';
 import Animated, {
   FadeIn,
   FadeOut,

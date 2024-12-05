@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
 import { useTheme } from '@/context/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,22 +21,55 @@ export default function OptionContainer({
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
-        theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'
-      }`}
+      style={[
+        styles.container,
+        theme === 'light' ? styles.lightBackground : styles.darkBackground,
+      ]}
       onPress={handleOnPress}
     >
       <Ionicons name={icon} size={22} color='#6B7280' />
       <Text
-        className={`ml-4 ${
-          theme === 'light' ? 'text-gray-800' : 'text-gray-200'
-        }`}
+        style={[
+          styles.text,
+          theme === 'light' ? styles.lightText : styles.darkText,
+        ]}
       >
         {title}
       </Text>
-      <View className='absolute flex right-2'>
+      <View style={styles.iconContainer}>
         <Ionicons name='chevron-forward' size={22} color='#6B7280' />
       </View>
     </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 16,
+  },
+  lightBackground: {
+    backgroundColor: '#E5E7EB',
+  },
+  darkBackground: {
+    backgroundColor: '#1c1c1e',
+  },
+  text: {
+    marginLeft: 16,
+  },
+  lightText: {
+    color: '#1F2937',
+  },
+  darkText: {
+    color: '#E5E7EB',
+  },
+  iconContainer: {
+    position: 'absolute',
+    right: 8,
+    display: 'flex',
+  },
+});

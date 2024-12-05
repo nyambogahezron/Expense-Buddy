@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { ScrollView, Dimensions } from 'react-native';
+import { ScrollView, Dimensions, StyleSheet } from 'react-native';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import CustomTextInput from '@/components/Form/CustomTextInput';
 import AuthFooter from '@/components/Form/AuthFooter';
 import { useTheme } from '@/context/ThemeProvider';
-import { ThemedSafeAreaView } from '@/components/Themed';
 import AuthHeader from '@/components/Form/AuthHeader';
-import CustomButton from '@/components/CustomButton';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import Button from '@/components/ui/Button';
 
 const { width, height } = Dimensions.get('window');
 export default function ForgotPassword() {
@@ -19,17 +19,16 @@ export default function ForgotPassword() {
   };
 
   return (
-    <ThemedSafeAreaView className='flex-1 flex px-3 w-full justify-center h-full items-center'>
+    <ThemedSafeAreaView style={styles.container}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#f3f4f6' : '#070B11'}
       />
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView
-        style={{ width: width * 0.93, height: height }}
+        style={[styles.scrollView, { width: width * 0.93, height: height }]}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        className='my-20'
       >
         {/* Logo and Title */}
         <AuthHeader
@@ -44,11 +43,11 @@ export default function ForgotPassword() {
           keyboardType='email-address'
         />
 
-        <CustomButton
+        <Button
           title='Send Code '
-          customStyles='bg-blue-600 '
+          customStyles={styles.button}
           handleOpenPress={handleSubmission}
-          textStyles='text-white text-lg font-bold'
+          textStyles={styles.buttonText}
         />
 
         {/* Signup Option */}
@@ -61,3 +60,25 @@ export default function ForgotPassword() {
     </ThemedSafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 12,
+    width: '100%',
+    justifyContent: 'center',
+    height: '100%',
+    alignItems: 'center',
+  },
+  scrollView: {
+    marginVertical: 80,
+  },
+  button: {
+    backgroundColor: '#2563eb',
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});

@@ -1,8 +1,8 @@
 import { View, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { ThemedText } from '@/components/Themed';
 import { useTheme } from '@/context/ThemeProvider';
+import ThemedText from '@/components/ui/Text';
 
 type ListHeaderProps = {
   viewMore?: boolean;

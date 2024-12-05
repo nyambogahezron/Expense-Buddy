@@ -1,7 +1,8 @@
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { ThemedText, ThemedView } from './Themed';
+import ThemedView from '@/components/ui/View';
+import ThemedText from '@/components/ui/Text';
 import { useTheme } from '@/context/ThemeProvider';
 type LoadMoreBtnProps = {
   handleOnPress: () => void;
@@ -18,13 +19,13 @@ export default function LoadMoreBtn({
       <ThemedView
         darkColor='#1c1c1e'
         lightColor='#f3f4f6'
-        style={{ borderColor: theme === 'light' ? '#ccc' : '#1c1c1e' }}
-        className='flex-row items-center justify-center h-12 w-full mr-3 rounded-[12px] border mt-4 mb-4 px-2'
+        style={[
+          styles.themedView,
+          { borderColor: theme === 'light' ? '#ccc' : '#1c1c1e' },
+        ]}
       >
-        <View className='flex-row items-center justify-between w-full px-2'>
-          <ThemedText className='text-[15px] font-semibold  text-gray-600 ml-4'>
-            {title}
-          </ThemedText>
+        <View style={styles.innerView}>
+          <ThemedText style={styles.text}>{title}</ThemedText>
           <Ionicons
             name='chevron-forward'
             size={20}
@@ -35,3 +36,32 @@ export default function LoadMoreBtn({
     </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  themedView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 48,
+    width: '100%',
+    marginRight: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginTop: 16,
+    marginBottom: 16,
+    paddingHorizontal: 8,
+  },
+  innerView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 8,
+  },
+  text: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#4B5563',
+    marginLeft: 16,
+  },
+});

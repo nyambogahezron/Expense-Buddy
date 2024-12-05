@@ -1,12 +1,12 @@
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text, Dimensions, StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import CustomButton from '@/components/CustomButton';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeInLeft } from 'react-native-reanimated';
+import CustomButton from '@/components/CustomButton';
 
 const { width, height } = Dimensions.get('window');
 
@@ -27,14 +27,16 @@ export default function LandingPage() {
 
   return (
     <SafeAreaView className='flex-1 justify-center items-center bg-dark'>
-      <View className='flex-1'>
+      <StatusBar style='light' backgroundColor='transparent' />
+      <View style={styles.gradientContainer}>
         <LinearGradient
-          className='absolute top-[-50px] right-[-60px] h-[260px] w-[260px] rounded-[50px]'
+          style={styles.gradient}
           colors={['#EE401B', '#F1621B', '#F38D1B']}
-          start={[0, 0.2]}
-          end={[0.9, 0.5]}
+          start={[0.9, 0.8]}
+          end={[0.1, 0.2]}
         />
-
+      </View>
+      <View className='flex-1'>
         {/* card  */}
         <View>
           <View
@@ -77,10 +79,13 @@ export default function LandingPage() {
 
         {/* Description */}
         <View className='flex items-center mb-1 '>
-          <Text className='text-white text-center px-6 mb-1 mt-2 text-[16px] tracking-widest font-pbold '>
+          <Animated.Text
+            entering={FadeInLeft}
+            className='text-white text-center px-6 mb-1 mt-2 text-[16px] tracking-widest font-plight'
+          >
             The right app to make it easy to manage your expenses on the go.
-          </Text>
-          <Text className='text-white font-pbold text-[16px]'>
+          </Animated.Text>
+          <Text className='text-white font-psemibold mt-2 text-[16px]'>
             Personal Capital Expensify
           </Text>
         </View>
@@ -103,9 +108,26 @@ export default function LandingPage() {
           />
         </Animated.View>
       </View>
-
-      {/* top bar mobile status bar */}
-      <StatusBar style='light' backgroundColor='transparent' />
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  gradientContainer: {
+    position: 'absolute',
+    height: 200,
+    width: 200,
+    borderRadius: '50%',
+    overflow: 'hidden',
+    right: -40,
+    top: -30,
+  },
+  gradient: {
+    position: 'absolute',
+    height: 300,
+    width: 300,
+    borderRadius: '50%',
+    right: -40,
+    top: -30,
+  },
+});

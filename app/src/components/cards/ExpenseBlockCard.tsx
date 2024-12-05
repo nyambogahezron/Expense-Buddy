@@ -12,8 +12,6 @@ import PageModel from '../models/PageModel';
 import AddTransaction from '../Form/AddTransaction';
 import { useDataContext } from '@/context/DataProvider';
 import Animated from 'react-native-reanimated';
-import { FadeInRight } from 'react-native-reanimated';
-import { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 export default function ExpenseBlockCard() {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -36,18 +34,8 @@ export default function ExpenseBlockCard() {
 
     const amount = item.amount.split('.');
 
-    const enteringAnimation = useSharedValue(0);
-    const animatedStyle = useAnimatedStyle(() => {
-      return {
-        opacity: withTiming(enteringAnimation.value, { duration: 300 + (300 * index) / 2 }),
-        transform: [{ translateX: withTiming(enteringAnimation.value * 100, { duration: 300 + (300 * index) / 2 }) }],
-      };
-    });
-
-    enteringAnimation.value = 1;
-
     return (
-      <Animated.View style={[styles.expenseBlock, animatedStyle]}>
+      <Animated.View style={[styles.expenseBlock]}>
         <Text style={styles.expenseBlockTxt1}>
           {item.name.length > 10 ? item.name.slice(0, 10) + '...' : item.name}
         </Text>

@@ -1,6 +1,7 @@
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { Session } from '@supabase/supabase-js';
 import React from 'react';
+import { ViewProps, TextProps, TextStyle, ViewStyle } from 'react-native';
 
 export type TransactionProps = {
   id: string;
@@ -96,4 +97,32 @@ export type createContextProps = {
   incomeList: any;
 };
 
+export type TabBarProps = {
+  state: any;
+  descriptors: any;
+  navigation: any;
+};
 
+export type tabIcons = {
+  [key: string]: (props: any) => JSX.Element;
+};
+
+export type ThemedUI = ViewProps & {
+  lightColor?: string;
+  darkColor?: string;
+  className?: string;
+};
+
+export type TextUI = ThemedUI &
+  TextProps & {
+    type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
+  };
+
+export type ButtonProps = {
+  handleOpenPress: () => void;
+  title: string;
+  textStyles?: TextStyle;
+  customStyles?: ViewStyle | ViewStyle[];
+  touchOpacity?: number;
+  isLoading?: boolean;
+};

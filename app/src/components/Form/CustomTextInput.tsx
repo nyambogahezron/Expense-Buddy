@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, TextInput } from 'react-native';
-import { ThemedText, ThemedView } from '../Themed';
+import { View, TextInput, StyleSheet } from 'react-native';
+import ThemedText from '@/components/ui/Text';
 import { useTheme } from '@/context/ThemeProvider';
 import { CustomTextInputProps } from '@/types';
 
@@ -16,29 +16,42 @@ export default function CustomTextInput({
   keyboardType = 'default',
 }: CustomTextInputProps) {
   const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   return (
-    <View className={`mb-3 w-full ${containerStyle}`}>
-      <ThemedText darkColor='#f2f2f2' className='font-pbold ml-2 mb-1'>
-        {title}
-      </ThemedText>
-      <ThemedView
-        darkColor='#1c1c1e'
-        lightColor='#e5e7eb'
-        className={`p-4 rounded-lg flex-row justify-between items-center mb-4 ${inputContainerStyle}`}
-      >
+    <View style={[styles.container, containerStyle]}>
+      <ThemedText style={styles.title}>{title}</ThemedText>
+      <View style={[styles.inputContainer, inputContainerStyle]}>
         <TextInput
-          placeholderTextColor={theme === 'light' ? '#6b7280' : '#ccc'}
-          className={`text-sm font-bold flex-1 ${textInputStyle}  ${
-            theme === 'light' ? 'text-gray-800' : 'text-gray-200'
-          }`}
-          placeholder={placeholder}
+          style={[styles.textInput, textInputStyle]}
           onChangeText={onChangeText}
-          keyboardType={keyboardType}
+          placeholder={placeholder}
           value={value}
           multiline={multiline}
+          keyboardType={keyboardType}
         />
-      </ThemedView>
+      </View>
     </View>
   );
 }
+
+const createStyles = (theme: any) =>
+  StyleSheet.create({
+    container: {
+      marginBottom: 16,
+    },
+    title: {
+      marginBottom: 8,
+    },
+    inputContainer: {
+      borderWidth: 1,
+      borderColor: theme === 'light' ? '#E5E7EB' : '#3D3D3D',
+      borderRadius: 8,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+    },
+    textInput: {
+      fontSize: 16,
+      color: theme === 'light' ? '#1F2937' : '#E5E7EB',
+    },
+  });

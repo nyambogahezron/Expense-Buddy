@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Dimensions } from 'react-native';
+import { View, Text, ScrollView, Dimensions, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { TransactionProps } from '@/types';
@@ -7,11 +7,9 @@ import CategoryCard from '@/components/cards/CategoryCard';
 import CategoryActionCard from '@/components/cards/CategoryCard/CategoryActionCardModel';
 import LoadMoreBtn from '@/components/LoadMoreBtn';
 import { useTheme } from '@/context/ThemeProvider';
-import {
-  ThemedSafeAreaView,
-  ThemedText,
-  ThemedView,
-} from '@/components/Themed';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedView from '@/components/ui/View';
+import ThemedText from '@/components/ui/Text';
 import { useDataContext } from '@/context/DataProvider';
 import TransactionCard from '@/components/cards/TransactionCard';
 import { useGlobalContext } from '@/context/GlobalProvider';
@@ -40,7 +38,7 @@ export default function Statistics() {
   const handleClosePress = () => setModalVisible(false);
 
   return (
-    <ThemedSafeAreaView>
+    <ThemedSafeAreaView style={styles.safeArea}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
@@ -49,48 +47,38 @@ export default function Statistics() {
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        className='-mt-10'
+        style={styles.scrollView}
       >
-        <ThemedView className='px-3 mb-20'>
-          <View className='items-center w-full px-2'>
+        <ThemedView style={styles.mainContainer}>
+          <View style={styles.summaryContainer}>
             {/* Income and Expenses Summary */}
-            <View className='flex-row justify-between mb-4 mt-2'>
-              <View className='bg-purple-100 p-6 rounded-lg items-center w-1/2 mr-2'>
-                <Text className='text-purple-700 font-bold'>Total Income</Text>
-                <Text className='text-xl font-bold text-purple-700'>
+            <View style={styles.summaryRow}>
+              <View style={styles.incomeContainer}>
+                <Text style={styles.incomeText}>Total Income</Text>
+                <Text style={styles.incomeAmount}>
                   {UserCurrency}.{totalIncome}
                 </Text>
               </View>
-              <View className='bg-orange-100 p-6 rounded-lg items-center w-1/2 ml-2'>
-                <Text className='text-orange-700 font-bold'>
-                  Total Expenses
-                </Text>
-                <Text className='text-xl font-bold text-orange-700'>
+              <View style={styles.expenseContainer}>
+                <Text style={styles.expenseText}>Total Expenses</Text>
+                <Text style={styles.expenseAmount}>
                   {UserCurrency}.{totalExpense}
                 </Text>
               </View>
             </View>
           </View>
 
-          <View
-            className='mt-4 items-center p-2 '
-            style={{ width: width * 0.95 }}
-          >
+          <View style={styles.chartContainer}>
             {/* Bar Chart */}
             <SummaryChart />
           </View>
 
           <View>
             {/* Income and Expenses Tabs */}
-            <ThemedView className='flex-row justify-center mt-6 mb-2'>
+            <ThemedView style={styles.segmentedControlContainer}>
               <SegmentedControl
                 values={['Income', 'Expense']}
-                style={{
-                  width: width * 0.95,
-                  height: 40,
-                  borderRadius: 10,
-                  padding: 10,
-                }}
+                style={styles.segmentedControl}
                 backgroundColor='#f97316'
                 tintColor='#000'
                 selectedIndex={activeCategory === 'income' ? 0 : 1}
@@ -101,8 +89,8 @@ export default function Statistics() {
               />
             </ThemedView>
 
-            <ThemedView className='my-2 ml-2'>
-              <ThemedText className='text-sm  font-bold capitalize'>
+            <ThemedView style={styles.topFiveContainer}>
+              <ThemedText style={styles.topFiveText}>
                 Top Five {activeCategory}
               </ThemedText>
             </ThemedView>
@@ -125,19 +113,14 @@ export default function Statistics() {
             />
           </View>
 
-          <ThemedView className='my-3'>
+          <ThemedView style={styles.expenseBlockContainer}>
             <ExpenseBlockCard />
-            <View
-              className='flex items-center justify-center mb-4'
-              style={{ width: width * 0.9 }}
-            ></View>
+            <View style={styles.expenseBlockInnerContainer}></View>
           </ThemedView>
 
           {/* Expense Detail */}
-          <ThemedView className='my-3'>
-            <ThemedText className='ml-2 text-lg font-bold'>
-              Categories
-            </ThemedText>
+          <ThemedView style={styles.categoriesContainer}>
+            <ThemedText style={styles.categoriesText}>Categories</ThemedText>
           </ThemedView>
           {categoriesData.slice(0, 5).map((item: any) => {
             const { id, name, icon } = item;
@@ -160,7 +143,7 @@ export default function Statistics() {
 
           <LoadMoreBtn
             title='View All'
-            handleOnPress={() => router.push('/(categories)/')}
+            handleOnPress={() => router.push('/(tabs)')}
           />
         </ThemedView>
       </ScrollView>
@@ -174,5 +157,108 @@ export default function Statistics() {
     </ThemedSafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+  scrollView: {
+    marginTop: -10,
+  },
+  mainContainer: {
+    paddingHorizontal: 12,
+    marginBottom: 80,
+  },
+  summaryContainer: {
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 8,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+    marginTop: 8,
+  },
+  incomeContainer: {
+    backgroundColor: '#E9D5FF',
+    padding: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    width: '48%',
+    marginRight: 4,
+  },
+  incomeText: {
+    color: '#7C3AED',
+    fontWeight: 'bold',
+  },
+  incomeAmount: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#7C3AED',
+  },
+  expenseContainer: {
+    backgroundColor: '#FFEDD5',
+    padding: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    width: '48%',
+    marginLeft: 4,
+  },
+  expenseText: {
+    color: '#F97316',
+    fontWeight: 'bold',
+  },
+  expenseAmount: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#F97316',
+  },
+  chartContainer: {
+    marginTop: 16,
+    alignItems: 'center',
+    padding: 8,
+    width: width * 0.95,
+  },
+  segmentedControlContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 24,
+    marginBottom: 8,
+  },
+  segmentedControl: {
+    width: width * 0.95,
+    height: 40,
+    borderRadius: 10,
+    padding: 10,
+  },
+  topFiveContainer: {
+    marginVertical: 8,
+    marginLeft: 8,
+  },
+  topFiveText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    textTransform: 'capitalize',
+  },
+  expenseBlockContainer: {
+    marginVertical: 12,
+  },
+  expenseBlockInnerContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+    width: width * 0.9,
+  },
+  categoriesContainer: {
+    marginVertical: 12,
+  },
+  categoriesText: {
+    marginLeft: 8,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});
 
 // TODO work on categories crud

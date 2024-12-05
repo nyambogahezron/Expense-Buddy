@@ -1,4 +1,4 @@
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -7,12 +7,13 @@ import CategoryActionCard from '@/components/cards/CategoryCard/CategoryActionCa
 import { useTheme } from '@/context/ThemeProvider';
 import BackButton from '@/components/navigation/BackButton';
 import HeaderRightIconCard from '@/components/navigation/HeaderRightIconCard';
-import { ThemedSafeAreaView } from '@/components/Themed';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
 import { useState } from 'react';
 import { useDataContext } from '@/context/DataProvider';
 
 const Statistics = () => {
   const { theme } = useTheme();
+  const styles = createStyles(theme);
   const [modalVisible, setModalVisible] = useState(false);
   const [activeTransaction, setActiveTransaction] = useState();
   const { categoriesData } = useDataContext();
@@ -24,7 +25,7 @@ const Statistics = () => {
   const handleClosePress = () => setModalVisible(false);
 
   return (
-    <ThemedSafeAreaView className='flex-1'>
+    <ThemedSafeAreaView style={styles.container}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
@@ -34,16 +35,9 @@ const Statistics = () => {
           title: 'Categories',
           headerShown: true,
           headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
-          },
+          headerStyle: styles.headerStyle,
           headerLeft: () => <BackButton />,
-          headerTitleStyle: {
-            color: theme === 'light' ? '#333' : '#fff',
-
-            fontSize: 20,
-            fontWeight: 'bold',
-          },
+          headerTitleStyle: styles.headerTitleStyle,
           headerRight: () => (
             <HeaderRightIconCard
               handleOnPress={() => router.push('/(categories)/create')}
@@ -60,9 +54,9 @@ const Statistics = () => {
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        className='mb-8 -mt-8'
+        style={styles.scrollView}
       >
-        <View className='px-3 '>
+        <View style={styles.view}>
           {categoriesData.map((item: any) => {
             const { id, name, icon } = item;
             return (
@@ -94,5 +88,27 @@ const Statistics = () => {
     </ThemedSafeAreaView>
   );
 };
+
+const createStyles = (theme: any) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    scrollView: {
+      marginBottom: 8,
+      marginTop: -8,
+    },
+    view: {
+      paddingHorizontal: 12,
+    },
+    headerStyle: {
+      backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
+    },
+    headerTitleStyle: {
+      color: theme === 'light' ? '#333' : '#fff',
+      fontSize: 20,
+      fontWeight: 'bold',
+    },
+  });
 
 export default Statistics;

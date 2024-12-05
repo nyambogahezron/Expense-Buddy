@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { BarChart } from 'react-native-gifted-charts';
 import { fetchWeeklyData } from '@/queries/chatsQueries';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
-import { ThemedText } from '../Themed';
+import ThemedText from '@/components/ui/Text';
 import { useEffect, useState } from 'react';
 
 enum Period {

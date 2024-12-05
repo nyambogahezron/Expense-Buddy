@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, FlatList } from 'react-native';
+import { View, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -7,14 +7,12 @@ import { TransactionCategoryProps } from '@/types';
 import EmptyListCard from '@/components/EmptyListCard';
 import TransactionCard from '@/components/cards/TransactionCard';
 import { TransactionProps } from '@/types';
-import {
-  ThemedText,
-  ThemedView,
-  ThemedSafeAreaView,
-} from '@/components/Themed';
 import { useTheme } from '@/context/ThemeProvider';
 import BackButton from '@/components/navigation/BackButton';
 import { useDataContext } from '@/context/DataProvider';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedText from '@/components/ui/Text';
+import ThemedView from '@/components/ui/View';
 
 export default function CategoriesDetails() {
   const { theme } = useTheme();
@@ -36,7 +34,7 @@ export default function CategoriesDetails() {
   }, []);
 
   return (
-    <ThemedSafeAreaView className='flex-1 '>
+    <ThemedSafeAreaView style={styles.safeAreaView}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
@@ -57,7 +55,7 @@ export default function CategoriesDetails() {
           },
         }}
       />
-      <ThemedView className='-mt-8'>
+      <ThemedView style={styles.themedView}>
         {/* category transactions */}
 
         <FlatList
@@ -65,7 +63,7 @@ export default function CategoriesDetails() {
           showsVerticalScrollIndicator={false}
           data={categoriesDetails}
           renderItem={({ item }) => (
-            <View className='px-2'>
+            <View style={styles.transactionCardContainer}>
               <TransactionCard item={item} />
             </View>
           )}
@@ -73,22 +71,23 @@ export default function CategoriesDetails() {
           ListHeaderComponent={
             <View>
               {categoriesDetails.length > 0 && (
-                <ThemedView className='px-2 mt-2'>
+                <ThemedView style={styles.listHeader}>
                   <TouchableOpacity
-                    style={{
-                      backgroundColor:
-                        theme === 'light' ? '#e5e7eb' : '#1c1c1e',
-                    }}
+                    style={[
+                      styles.touchableOpacity,
+                      {
+                        backgroundColor:
+                          theme === 'light' ? '#e5e7eb' : '#1c1c1e',
+                      },
+                    ]}
                     activeOpacity={0.7}
-                    className={`flex-row items-center justify-between p-4 rounded-lg mb-4 
-                  }`}
                   >
-                    <View className='flex-row items-center'>
-                      <View className='bg-white p-3 rounded-full mr-4'>
+                    <View style={styles.headerContent}>
+                      <View style={styles.iconContainer}>
                         <Text>{icon ? icon : name.charAt(0)}</Text>
                       </View>
                       <View>
-                        <ThemedText className='font-bold'>
+                        <ThemedText style={styles.headerText}>
                           {`Transactions for ${
                             name.length > 30 ? name.slice(0, 30) + '...' : name
                           }`}
@@ -108,3 +107,40 @@ export default function CategoriesDetails() {
     </ThemedSafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+  },
+  themedView: {
+    marginTop: -8,
+  },
+  transactionCardContainer: {
+    paddingHorizontal: 2,
+  },
+  listHeader: {
+    paddingHorizontal: 2,
+    marginTop: 2,
+  },
+  touchableOpacity: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 4,
+    borderRadius: 8,
+    marginBottom: 4,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconContainer: {
+    backgroundColor: 'white',
+    padding: 3,
+    borderRadius: 50,
+    marginRight: 4,
+  },
+  headerText: {
+    fontWeight: 'bold',
+  },
+});

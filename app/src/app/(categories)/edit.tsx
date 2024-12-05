@@ -1,13 +1,14 @@
-import { ScrollView } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { Stack } from 'expo-router';
-import { CustomButton } from '@/components/CustomButton';
+import Button from '@/components/ui/Button';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import { ThemedView, ThemedSafeAreaView } from '@/components/Themed';
 import { useTheme } from '@/context/ThemeProvider';
 import BackButton from '@/components/navigation/BackButton';
 import CustomTextInput from '@/components/Form/CustomTextInput';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedView from '@/components/ui/View';
 
 export default function EditCategory() {
   const [id, setId] = useState('');
@@ -19,12 +20,12 @@ export default function EditCategory() {
     console.log('Submitted: ', title, icon);
   };
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={styles.flex1}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
         backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
       />
-      <ThemedSafeAreaView className='flex-1 w-full h-full justify-center'>
+      <ThemedSafeAreaView style={styles.flex1Full}>
         <Stack.Screen
           options={{
             title: 'Edit Categories',
@@ -41,8 +42,8 @@ export default function EditCategory() {
             },
           }}
         />
-        <ScrollView className='mt-[20%]'>
-          <ThemedView className='px-4 my-auto h-full'>
+        <ScrollView style={styles.marginTop20}>
+          <ThemedView style={styles.paddingX4}>
             {/* Title */}
 
             <CustomTextInput
@@ -59,11 +60,11 @@ export default function EditCategory() {
               placeholder='Choose Emoji For Icon'
             />
 
-            <CustomButton
+            <Button
               title='Edit'
               handleOpenPress={() => handleOnSubmit()}
-              customStyles='bg-orange-500 mt-5'
-              textStyles='text-white'
+              customStyles={styles.bgOrange500}
+              textStyles={styles.textWhite}
             />
           </ThemedView>
         </ScrollView>
@@ -71,3 +72,30 @@ export default function EditCategory() {
     </GestureHandlerRootView>
   );
 }
+
+const styles = StyleSheet.create({
+  flex1: {
+    flex: 1,
+  },
+  flex1Full: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+  },
+  marginTop20: {
+    marginTop: '20%',
+  },
+  paddingX4: {
+    paddingHorizontal: 16, 
+    marginVertical: 'auto',
+    height: '100%',
+  },
+  bgOrange500: {
+    backgroundColor: '#F97316', 
+    marginTop: 20,
+  },
+  textWhite: {
+    color: '#FFFFFF',
+  },
+});

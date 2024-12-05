@@ -7,8 +7,8 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { ThemedView } from '../Themed';
 import { useTheme } from '@/context/ThemeProvider';
+import ThemedView from '../ui/View';
 
 const { height, width } = Dimensions.get('window');
 

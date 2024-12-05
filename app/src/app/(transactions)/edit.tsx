@@ -5,15 +5,12 @@ import { TouchableOpacity } from 'react-native';
 import { TransactionProps } from '@/types';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
-import {
-  ThemedSafeAreaView,
-  ThemedText,
-  ThemedView,
-} from '@/components/Themed';
+import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedView from '@/components/ui/View';
 import BackButton from '@/components/navigation/BackButton';
 import CustomTextInput from '@/components/Form/CustomTextInput';
 import DatePicker from '@/components/Form/DatePicker';
-import CustomButton from '@/components/CustomButton';
+import ThemedText from '@/components/ui/Text';
 import BottomSheet from '@gorhom/bottom-sheet';
 import CategoryListBottomSheet from '@/components/cards/CategoryCard/CategoryListBottomSheet';
 import TransactionTypePicker from '@/components/Form/TransactionTypePicker';
@@ -21,6 +18,7 @@ import { supabase } from '@/utils/supabase';
 import { useDataContext } from '@/context/DataProvider';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { useToast } from 'react-native-toast-notifications';
+import CustomButton from '@/components/CustomButton';
 
 export default function EditTransaction() {
   // get item from local search params
@@ -84,7 +82,7 @@ export default function EditTransaction() {
         toast.show('Transaction updated successfully', {
           type: 'success',
         });
-        router.push('/(tabs)/');
+        router.push('/(tabs)/transactions');
         // Call fetchTransactions after successfully updating a transaction
         fetchTransactions();
       }
