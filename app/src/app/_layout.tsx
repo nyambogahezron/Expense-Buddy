@@ -8,16 +8,21 @@ import GlobalProvider from '@/context/GlobalProvider';
 import DataProvider from '@/context/DataProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ToastProviderContext from '@/context/ToastProvider';
-import { ActivityIndicator, View, Platform } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import * as Font from 'expo-font';
-import { Colors } from '@/constants/Colors';
+
 import {
   useColorScheme,
   getUserPreferredTheme,
 } from '@/utils/getPreferredTheme';
 import './global.css';
 
-SplashScreen.preventAutoHideAsync()
+SplashScreen.preventAutoHideAsync();
+
+// SplashScreen.setOptions({
+//   fade: true,
+//   duration: 1000,
+// });
 
 const RootLayoutContent = () => {
   const [appIsReady, setAppIsReady] = React.useState(false);
@@ -25,7 +30,6 @@ const RootLayoutContent = () => {
   React.useEffect(() => {
     async function prepare() {
       try {
-                
         await Font.loadAsync({
           'Poppins-Black': require('@assets/fonts/Poppins-Black.ttf'),
           'Poppins-Bold': require('@assets/fonts/Poppins-Bold.ttf'),
@@ -38,7 +42,7 @@ const RootLayoutContent = () => {
           'Poppins-Thin': require('@assets/fonts/Poppins-Thin.ttf'),
         });
 
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // await new Promise(resolve => setTimeout(resolve, 500));
       } catch (e) {
         console.warn(e);
       } finally {
@@ -51,7 +55,6 @@ const RootLayoutContent = () => {
 
   const onLayoutRootView = React.useCallback(async () => {
     if (appIsReady) {
-      await new Promise(resolve => setTimeout(resolve, 500));
       await SplashScreen.hideAsync();
     }
   }, [appIsReady]);
@@ -59,7 +62,7 @@ const RootLayoutContent = () => {
   if (!appIsReady) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size='large' />
       </View>
     );
   }

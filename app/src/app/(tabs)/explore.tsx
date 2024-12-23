@@ -11,7 +11,7 @@ import TransactionCard from '@/components/cards/TransactionCard';
 import ListHeader from '@/components/cards/TransactionCard/ListHeader';
 import { TransactionProps } from '@/types';
 import EmptyListCard from '@/components/EmptyListCard';
-import LoadMoreBtn from '@/components/LoadMoreBtn';
+import LoadMoreBtn from '@/components/ui/LoadMoreBtn';
 import { useTheme } from '@/context/ThemeProvider';
 import ThemedText from '@/components/ui/Text';
 import ThemedView from '@/components/ui/View';

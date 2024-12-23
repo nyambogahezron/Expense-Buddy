@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { TransactionProps } from '@/types';
 import CategoryCard from '@/components/cards/CategoryCard';
 import CategoryActionCard from '@/components/cards/CategoryCard/CategoryActionCardModel';
-import LoadMoreBtn from '@/components/LoadMoreBtn';
+import LoadMoreBtn from '@/components/ui/LoadMoreBtn';
 import { useTheme } from '@/context/ThemeProvider';
 import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
 import ThemedView from '@/components/ui/View';

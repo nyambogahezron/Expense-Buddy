@@ -6,7 +6,8 @@ import { useRouter } from 'expo-router';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeInDown, FadeInLeft } from 'react-native-reanimated';
-import CustomButton from '@/components/CustomButton';
+import Button from '@/components/ui/Button';
+import { Colors } from '@/constants/Colors';
 
 const { width, height } = Dimensions.get('window');
 
@@ -94,17 +95,28 @@ export default function LandingPage() {
           entering={FadeInDown}
           className='w-full absolute px-3 -ml-3 items-center justify-center bottom-10'
         >
-          <CustomButton
-            title='Login'
-            handleOpenPress={() => router.push('/(auth)/login')}
-            customStyles='bg-transparent border-2 border-white mt-1'
-            textStyles='text-white font-bold'
-          />
-          <CustomButton
+          <Button
             title='Register'
             handleOpenPress={() => router.push('/(auth)/register')}
-            customStyles='bg-blueClr mt-4'
-            textStyles='text-white font-bold'
+            customStyles={{
+              backgroundColor: Colors.blue,
+              borderColor: 'white',
+              borderWidth: 2,
+              marginTop: 4,
+            }}
+            textStyles={styles.buttonText}
+          />
+
+          <Button
+            title='Login'
+            handleOpenPress={() => router.push('/(auth)/login')}
+            customStyles={{
+              backgroundColor: 'transparent',
+              borderColor: 'white',
+              borderWidth: 2,
+              marginTop: 15,
+            }}
+            textStyles={styles.buttonText}
           />
         </Animated.View>
       </View>
@@ -129,5 +141,12 @@ const styles = StyleSheet.create({
     borderRadius: '50%',
     right: -40,
     top: -30,
+  },
+  buttonText: {
+    color: Colors.white,
+    fontSize: 18,
+    fontWeight: 'bold',
+    textTransform: 'capitalize',
+    fontFamily: 'Poppins-Regular',
   },
 });

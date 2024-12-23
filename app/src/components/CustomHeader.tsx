@@ -1,3 +1,5 @@
+// TODO : Fix theme
+
 import { Ionicons } from '@expo/vector-icons';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
@@ -17,9 +19,16 @@ const CustomHeader = ({ isForExplore }: { isForExplore?: boolean }) => {
   const styles = createStyles(theme);
 
   return (
-    <View style={{ paddingTop: top }}>
+    <View style={{ paddingTop: top + 5 }}>
       <View style={[styles.flex1, styles.headerContainer]}>
-        <View style={[styles.flexRow, styles.justifyEnd, styles.itemsCenter, styles.gapRow2]}>
+        <View
+          style={[
+            styles.flexRow,
+            styles.justifyEnd,
+            styles.itemsCenter,
+            styles.gapRow2,
+          ]}
+        >
           <View style={[styles.mlNegative3, styles.searchSection]}>
             <Ionicons
               style={styles.searchIcon}
@@ -39,11 +48,7 @@ const CustomHeader = ({ isForExplore }: { isForExplore?: boolean }) => {
             <View style={[styles.flexRow, styles.gap2, styles.ml1]}>
               <Link href={'/(tabs)/profile'}>
                 <View style={styles.circle}>
-                  {User && (
-                    <Text style={styles.userName}>
-                      {User.name[0]}
-                    </Text>
-                  )}
+                  {User && <Text style={styles.userName}>{User.name[0]}</Text>}
                 </View>
               </Link>
               <TouchableOpacity

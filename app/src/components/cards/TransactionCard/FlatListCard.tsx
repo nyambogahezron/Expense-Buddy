@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import React from 'react';
 import { FlatList } from 'react-native-gesture-handler';
-import LoadMoreBtn from '@/components/LoadMoreBtn';
+import LoadMoreBtn from '@/components/ui/LoadMoreBtn';
 import TransactionHeader from './ListHeader';
 import EmptyListCard from '@/components/EmptyListCard';
 import { router } from 'expo-router';

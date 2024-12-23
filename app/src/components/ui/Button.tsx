@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   buttonText: {
-    color: 'black',
+    color: Colors.black,
     fontSize: 18,
     fontWeight: 'bold',
     textTransform: 'capitalize',

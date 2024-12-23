@@ -7,7 +7,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useDataContext } from '@/context/DataProvider';
 import ThemedText from './ui/Text';
-import { BudgetProgressBar } from './BudgetProgressBar';
+import TransactionOverview from './Charts/TransactionOverview';
 
 export default function TopSpendingSection() {
   const { expenseList } = useDataContext();
@@ -15,7 +15,9 @@ export default function TopSpendingSection() {
 
   return (
     <View style={styles.container}>
-      <BudgetProgressBar spent={200} limit={300} category='expenses' />
+      <View style={{ marginBottom: 20 }}>
+        <TransactionOverview />
+      </View>
       <ThemedText style={styles.title}>Top Spending</ThemedText>
       <FlatList
         horizontal

@@ -9,10 +9,12 @@ import CustomHeader from '@/components/CustomHeader';
 import BackButton from '@/components/navigation/BackButton';
 import HeaderRightIconCard from '@/components/navigation/HeaderRightIconCard';
 import TabBar from '@/components/navigation/TabBar';
+import useColorScheme from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/Colors';
 
 export default function TabLayout() {
-  const { theme } = useTheme();
   const { session, loading } = useGlobalContext();
+
   useEffect(() => {
     if (!session && !loading) return router.replace('/');
   }, [session]);
@@ -29,9 +31,26 @@ export default function TabLayout() {
             headerTransparent: true,
             headerTitle: '',
             headerStyle: {
-              backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
+              backgroundColor: Colors[useColorScheme('header')].header,
             },
             header: () => <CustomHeader />,
+          }}
+        />
+        <Tabs.Screen
+          name='transactions'
+          options={{
+            title: 'Transactions',
+            headerShown: true,
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: Colors[useColorScheme('header')].header,
+            },
+            headerLeft: () => <BackButton />,
+            headerTitleStyle: {
+              color: Colors[useColorScheme('customIcon')].customIcon,
+              fontSize: 20,
+              fontWeight: 'bold',
+            },
           }}
         />
         <Tabs.Screen
@@ -43,28 +62,12 @@ export default function TabLayout() {
             headerTransparent: true,
             headerTitle: '',
             headerStyle: {
-              backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
+              backgroundColor: Colors[useColorScheme('header')].header,
             },
             header: () => <CustomHeader isForExplore={true} />,
           }}
         />
-        <Tabs.Screen
-          name='transactions'
-          options={{
-            title: 'Transactions',
-            headerShown: true,
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
-            },
-            headerLeft: () => <BackButton />,
-            headerTitleStyle: {
-              color: theme === 'light' ? '#333' : '#fff',
-              fontSize: 20,
-              fontWeight: 'bold',
-            },
-          }}
-        />
+
         <Tabs.Screen
           name='create'
           options={{
@@ -72,11 +75,11 @@ export default function TabLayout() {
             headerShown: true,
             headerTitleAlign: 'center',
             headerStyle: {
-              backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
+              backgroundColor: Colors[useColorScheme('header')].header,
             },
             headerLeft: () => <BackButton />,
             headerTitleStyle: {
-              color: theme === 'light' ? '#333' : '#fff',
+              color: Colors[useColorScheme('customIcon')].customIcon,
               fontSize: 20,
               fontWeight: 'bold',
             },
@@ -89,11 +92,11 @@ export default function TabLayout() {
             headerShown: true,
             headerTitleAlign: 'center',
             headerStyle: {
-              backgroundColor: theme === 'light' ? '#fff' : '#070B11',
+              backgroundColor: Colors[useColorScheme('header')].header,
             },
             headerLeft: () => <BackButton />,
             headerTitleStyle: {
-              color: theme === 'light' ? '#333' : '#fff',
+              color: Colors[useColorScheme('customIcon')].customIcon,
               fontSize: 20,
               fontWeight: 'bold',
             },
@@ -104,7 +107,7 @@ export default function TabLayout() {
                 <Ionicons
                   name='settings-outline'
                   size={22}
-                  color={theme === 'light' ? 'black' : '#fff'}
+                  color={Colors[useColorScheme('customIcon')].customIcon}
                 />
               </HeaderRightIconCard>
             ),
@@ -117,11 +120,11 @@ export default function TabLayout() {
             headerShown: true,
             headerTitleAlign: 'center',
             headerStyle: {
-              backgroundColor: theme === 'light' ? '#fff' : '#070B11',
+              backgroundColor: Colors[useColorScheme('header')].header,
             },
             headerLeft: () => <BackButton />,
             headerTitleStyle: {
-              color: theme === 'light' ? '#333' : '#fff',
+              color: Colors[useColorScheme('customIcon')].customIcon,
               fontSize: 20,
               fontWeight: 'bold',
             },

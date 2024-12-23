@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import ThemedView from '@/components/ui/View';
 import ThemedText from '@/components/ui/Text';
 import { useTheme } from '@/context/ThemeProvider';
+import useColorScheme from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/Colors';
 type LoadMoreBtnProps = {
   handleOnPress: () => void;
   title: string;
@@ -14,14 +16,16 @@ export default function LoadMoreBtn({
   title,
 }: LoadMoreBtnProps) {
   const { theme } = useTheme();
+  const colorScheme = useColorScheme();
   return (
     <TouchableOpacity activeOpacity={0.7} onPress={handleOnPress}>
       <ThemedView
-        darkColor='#1c1c1e'
-        lightColor='#f3f4f6'
         style={[
           styles.themedView,
-          { borderColor: theme === 'light' ? '#ccc' : '#1c1c1e' },
+          {
+            borderColor: Colors[colorScheme].border,
+            backgroundColor: Colors[colorScheme].bgLight,
+          },
         ]}
       >
         <View style={styles.innerView}>
@@ -29,7 +33,7 @@ export default function LoadMoreBtn({
           <Ionicons
             name='chevron-forward'
             size={20}
-            color={theme === 'light' ? '#333' : '#fff'}
+            color={Colors[colorScheme].customIcon}
           />
         </View>
       </ThemedView>
@@ -61,7 +65,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#4B5563',
+    color: Colors.textGray,
     marginLeft: 16,
   },
 });

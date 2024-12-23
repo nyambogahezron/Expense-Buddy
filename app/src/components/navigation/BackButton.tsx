@@ -3,28 +3,25 @@ import React from 'react';
 import { router } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '@/context/ThemeProvider';
+import useColorScheme from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/Colors';
 
 type BackButtonProps = { containerStyles?: string };
 
 export default function BackButton({ containerStyles }: BackButtonProps) {
   const { theme } = useTheme();
+  const colorScheme = useColorScheme();
   return (
     <TouchableOpacity
       onPress={() => router.back()}
-      className={`bg-opacity-50 rounded-lg ml-2 py-2 ${
-        theme === 'light' ? 'bg-white' : 'bg-[#070B11]'
-      } ${containerStyles}`}
+      style={{ backgroundColor: Colors[colorScheme].background }}
+      className={`bg-opacity-70 rounded-lg ml-2 py-1  ${containerStyles}`}
     >
       <View
-        className={`mr-2 p-2 rounded-lg  ${
-          theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'
-        }`}
+        style={{ backgroundColor: Colors[colorScheme].bgLight }}
+        className={`mr-2 p-2 rounded-lg `}
       >
-        <Feather
-          name='arrow-left'
-          size={22}
-          color={theme === 'light' ? 'black' : '#fff'}
-        />
+        <Feather name='arrow-left' size={22} color={Colors[colorScheme].text} />
       </View>
     </TouchableOpacity>
   );

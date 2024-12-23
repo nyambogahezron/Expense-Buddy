@@ -1,39 +1,68 @@
-const tintColorLight = '#FF6737';
-const tintColorDark = '#FF6737';
+const tintColorLight = '#FFA500';
+const tintColorDark = tintColorLight
+const white = '#ffffff';
+const whiteLight = '#f2f2f2';
+const whiteDim = '#f3f4f6';
+const whiteDim2 = '#ECEDEE';
+const blue = '#007AFF';
+const orange = '#FFA500';
+const orangeRed = '#FF4500';
+const tomato = '#FF6347';
+const red = '#F44336';
+const hotPink = '#FF69B4';
+const deepPink = '#FF1493';
+const blueViolet = '#3030cc';
+const darkOrange = '#FF4500';
+const black = '#000000';
+const blackLight = '#070B11';
+const textGray = '#4B5563';
+const gray = '#333333';
+const grayLight = '#9BA1A6';
 
 export const Colors = {
+  white,
+  blue,
+  orange,
+  orangeRed,
+  tomato,
+  red,
+  hotPink,
+  deepPink,
+  blueViolet,
+  darkOrange,
+  black,
+  textGray,
+  grayLight,
+  blackLight,
+
   light: {
     text: '#11181C',
-    textPrimary: '#ECEDEE',
-    background: '#f3f4f6',
+    textPrimary: whiteDim2,
+    background: whiteDim,
     tint: tintColorLight,
-    icon: '#333',
+    icon: gray,
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
-    headerBackground: '#f2f2f2',
+    headerBackground: whiteLight,
+    header: whiteLight,
+    customIcon: gray,
+    border: '#ccc',
+    bgLight: whiteDim,
   },
   dark: {
-    text: '#ECEDEE',
-    textPrimary: '#000',
-    background: '#070B11',
+    text: whiteDim2,
+    textPrimary: black,
+    background: blackLight,
     tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
+    icon: grayLight,
+    tabIconDefault: grayLight,
     tabIconSelected: tintColorDark,
-    headerBackground: '#070B11',
+    headerBackground: blackLight,
+    header: blackLight,
+    customIcon: white,
+    border: gray,
+    bgLight: '#1c1c1e',
   },
-
-  tintColorLight,
-  white: '#fff',
-  blue: '#007AFF',
-  orange: '#FFA500',
-  orangeRed: '#FF4500',
-  tomato: '#FF6347',
-  red: '#FF0000',
-  hotPink: '#FF69B4',
-  deepPink: '#FF1493',
-  blueViolet: '#3030cc',
-  darkOrange: '#FF4500',
 };
 
 export const IconColors = [

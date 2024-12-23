@@ -58,8 +58,7 @@
             "image": "./assets/images/splash.png",
             "backgroundColor": "#000000"
           },
-          "resizeMode": "contain",
-          "imageWidth": 200
+          "resizeMode": "contain"
         }
       ]
     ],
