@@ -7,6 +7,9 @@ import { useDataContext } from '@/context/DataProvider';
 import EmptyListCard from '@/components/EmptyListCard';
 import TransactionCard from '@/components/cards/TransactionCard';
 import Fab from '@/components/ui/Fab';
+import { router } from 'expo-router';
+import { Colors } from '@/constants/Colors';
+import useColorScheme from '@/hooks/useColorScheme';
 
 export default function Transactions() {
   const { transactionsData } = useDataContext();
@@ -16,7 +19,9 @@ export default function Transactions() {
     <ThemedSafeAreaView style={styles.safeArea}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
-        backgroundColor={theme === 'light' ? '#f2f2f2' : 'rgba(7, 11, 17,0.1)'}
+        backgroundColor={
+          Colors[useColorScheme('headerBackground')].headerBackground
+        }
       />
       <View style={styles.container}>
         <FlatList
@@ -25,10 +30,12 @@ export default function Transactions() {
           data={transactionsData?.slice(0, 50) || []}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <TransactionCard item={item} />}
-          ListEmptyComponent={<EmptyListCard />}
+          ListEmptyComponent={
+            <EmptyListCard title='No transactions available' />
+          }
         />
       </View>
-      <Fab />
+      <Fab onPress={() => router.push('/(tabs)/create')} />
     </ThemedSafeAreaView>
   );
 }
@@ -41,5 +48,7 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: Platform.select({ android: -35, default: 0 }),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

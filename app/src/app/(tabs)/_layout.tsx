@@ -1,7 +1,6 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native';
-import { useTheme } from '@/context/ThemeProvider';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
@@ -64,7 +63,6 @@ export default function TabLayout() {
             headerStyle: {
               backgroundColor: Colors[useColorScheme('header')].header,
             },
-            header: () => <CustomHeader isForExplore={true} />,
           }}
         />
 
