@@ -1,0 +1,78 @@
+.aboutPage {
+  font-family: 'Arial', sans-serif;
+  background-color: #f0ffe7;
+  color: #333;
+  padding: 20px;
+}
+
+.aboutHeader {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.tagline {
+  color: #90c641;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.aboutHeader h1 {
+  font-size: 2.5rem;
+  color: #000;
+}
+
+.aboutHeader p {
+  max-width: 600px;
+  margin: 10px auto;
+  line-height: 1.6;
+  color: #666;
+}
+
+.statsSection {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.stat {
+  text-align: center;
+}
+
+.circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 1.2rem;
+}
+
+.blueCircle {
+  background-color: #635bff;
+  color: #fff;
+}
+
+.greenCircle {
+  background-color: #90c641;
+  color: #fff;
+}
+
+.whiteCircle {
+  background-color: #fff;
+  border: 2px solid #90c641;
+  color: #333;
+}
+
+.appPreview {
+  display: flex;
+  justify-content: center;
+}
+
+.phone {
+  width: 150px;
+  margin: 0 10px;
+}
