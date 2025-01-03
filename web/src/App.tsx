@@ -6,8 +6,9 @@ import { Testimonials } from './components/sections/Testimonials';
 import { Footer } from './components/layout/Footer';
 import WhyUs from './components/sections/WhyUs';
 import AboutUs from './components/sections/AboutUs';
+import InterfaceBanner from './components/sections/InterfaceBanner';
 
-function App() {
+export default function App() {
   return (
     <div style={{ minHeight: '100vh' }}>
       <Header />
@@ -17,6 +18,7 @@ function App() {
         <HowItWorks />
         <WhyUs />
         <AboutUs />
+        <InterfaceBanner />
         <Testimonials />
       </main>
       <Footer />
@@ -24,4 +26,4 @@ function App() {
   );
 }
 
-export default App;
+
