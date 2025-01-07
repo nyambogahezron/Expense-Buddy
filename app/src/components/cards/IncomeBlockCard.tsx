@@ -21,9 +21,9 @@ export default function IncomeBlockCard() {
       >
         <ThemedView style={styles.wrapper}>
           <View style={styles.body}>
-            <Text>
+            <ThemedText type='subtitle'>
               {item.icon ? item.icon : item.name.charAt(0).toUpperCase()}
-            </Text>
+            </ThemedText>
           </View>
         </ThemedView>
         <ThemedText>{item.name}</ThemedText>
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 15,
     marginBottom: 15,
-    borderWidth: 2,
+    borderWidth: 0.4,
     width: 150,
     gap: 10,
   },
@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   body: {
-    borderWidth: 1,
     borderRadius: 50,
     padding: 5,
     alignSelf: 'flex-start',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, FlatList, Platform } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -11,7 +11,6 @@ import TransactionOverview from './Charts/TransactionOverview';
 
 export default function TopSpendingSection() {
   const { expenseList } = useDataContext();
-  console.log(expenseList);
 
   return (
     <View style={styles.container}>

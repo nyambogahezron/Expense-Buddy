@@ -27,14 +27,11 @@ export default function HomeScreen() {
       ]
     : [];
 
-  console.warn(data);
   return (
     <ThemedSafeAreaView style={styles.safeArea}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
-        backgroundColor={
-          Colors[useColorScheme('headerBackground')].headerBackground
-        }
+        backgroundColor={Colors[useColorScheme('background')].background}
       />
       <View style={styles.contentContainer}>
         <Animated.FlatList

@@ -68,22 +68,21 @@ const AboutPage = () => {
             </div>
           </div>
 
-          <Star className='text-white w-10 h-24 absolute top-1/2 left-1/2' />
+          <Star className='text-white w-10 h-24 absolute top-1/3 left-1/2' />
 
-          <Star className='text-blue-700 opacity-10 w-10 h-24 absolute top-0 left-1/2' />
+          <Star className='text-blue-400 opacity-10 w-10 h-24 absolute top-0 left-1/2' />
           <Star className='text-blue-700 w-4 h-4 absolute -top-0 right-2' />
-          <Star className='text-green-700 w-4 h-4 absolute top-1/2 left-1' />
+          <Star className='text-green-400 w-4 h-4 absolute top-1/2 left-25' />
 
-          <Star className='text-green-700 w-8 h-8 absolute  left-10' />
+          <Star className='text-green-400 w-8 h-8 absolute  left-40' />
         </div>
 
         {/* App Preview Section */}
         <div className={styles.appPreview}>
           <div className={styles.phones}>
             <img src={phoneImg} alt='Phone 1' className={styles.phone} />
-
           </div>
-            {/* <div className='absolute w-80 h-80 bg-green-500 rounded-full top-1/2'></div> */}
+          {/* <div className='absolute w-80 h-80 bg-green-500 rounded-full top-1/2'></div> */}
         </div>
       </section>
     </div>

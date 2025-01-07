@@ -96,16 +96,17 @@ export default function Statistics() {
             </ThemedView>
 
             {/* Expense Detail */}
-            {transactionsData
-              .filter(
-                (transaction: TransactionProps) =>
-                  transaction.type === activeCategory
-              )
-              .sort((a: any, b: any) => Number(b.amount) - Number(a.amount))
-              .slice(0, 5)
-              .map((item: any) => {
-                return <TransactionCard item={item} />;
-              })}
+            {transactionsData &&
+              transactionsData
+                .filter(
+                  (transaction: TransactionProps) =>
+                    transaction.type === activeCategory
+                )
+                .sort((a: any, b: any) => Number(b.amount) - Number(a.amount))
+                .slice(0, 5)
+                .map((item: any) => {
+                  return <TransactionCard item={item} />;
+                })}
 
             <LoadMoreBtn
               title='View All'
@@ -122,24 +123,25 @@ export default function Statistics() {
           <ThemedView style={styles.categoriesContainer}>
             <ThemedText style={styles.categoriesText}>Categories</ThemedText>
           </ThemedView>
-          {categoriesData.slice(0, 5).map((item: any) => {
-            const { id, name, icon } = item;
-            return (
-              <CategoryCard
-                key={id}
-                handleOnPress={() =>
-                  router.push({
-                    pathname: '/(categories)/details',
-                    params: { item: JSON.stringify(item) },
-                  })
-                }
-                handleOpenPress={() => handleOpenPress({ item })}
-                id={id}
-                name={name}
-                icon={icon}
-              />
-            );
-          })}
+          {categoriesData &&
+            categoriesData.slice(0, 5).map((item: any) => {
+              const { id, name, icon } = item;
+              return (
+                <CategoryCard
+                  key={id}
+                  handleOnPress={() =>
+                    router.push({
+                      pathname: '/(categories)/details',
+                      params: { item: JSON.stringify(item) },
+                    })
+                  }
+                  handleOpenPress={() => handleOpenPress({ item })}
+                  id={id}
+                  name={name}
+                  icon={icon}
+                />
+              );
+            })}
 
           <LoadMoreBtn
             title='View All'
