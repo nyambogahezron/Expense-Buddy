@@ -1,5 +1,3 @@
-// TODO : Fix theme
-
 import { Ionicons } from '@expo/vector-icons';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
@@ -9,6 +7,8 @@ import { useGlobalContext } from '@/context/GlobalProvider';
 import { useTheme } from '@/context/ThemeProvider';
 import Feather from '@expo/vector-icons/Feather';
 import { useRef } from 'react';
+import useColorScheme from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/Colors';
 
 const CustomHeader = ({ isForExplore }: { isForExplore?: boolean }) => {
   const { top } = useSafeAreaInsets();
@@ -20,32 +20,27 @@ const CustomHeader = ({ isForExplore }: { isForExplore?: boolean }) => {
 
   return (
     <View style={{ paddingTop: top + 5 }}>
-      <View style={[styles.flex1, styles.headerContainer]}>
-        <View
-          style={[
-            styles.flexRow,
-            styles.justifyEnd,
-            styles.itemsCenter,
-            styles.gapRow2,
-          ]}
-        >
-          <View style={[styles.mlNegative3, styles.searchSection]}>
+      <View style={styles.headerContainer}>
+        <View style={styles.wrapper}>
+          <View style={styles.searchSection}>
             <Ionicons
               style={styles.searchIcon}
               name='search'
               size={20}
-              color={theme === 'light' ? '#141518' : '#f2f2f2'}
+              color={Colors[useColorScheme('customIcon2')].customIcon2}
             />
             <TextInput
               ref={searchInputRef}
               style={styles.input}
               placeholder='Search...'
-              placeholderTextColor={theme === 'light' ? '#141518' : '#f2f2f2'}
+              placeholderTextColor={
+                Colors[useColorScheme('customIcon2')].customIcon2
+              }
               onFocus={() => router.push('/modals/search')}
             />
           </View>
           {!isForExplore && (
-            <View style={[styles.flexRow, styles.gap2, styles.ml1]}>
+            <View style={styles.wrapper2}>
               <Link href={'/(tabs)/profile'}>
                 <View style={styles.circle}>
                   {User && <Text style={styles.userName}>{User.name[0]}</Text>}
@@ -59,7 +54,7 @@ const CustomHeader = ({ isForExplore }: { isForExplore?: boolean }) => {
                   <Feather
                     name={theme === 'light' ? 'sun' : 'moon'}
                     size={20}
-                    color={theme === 'light' ? '#141518' : '#f2f2f2'}
+                    color={Colors[useColorScheme('customIcon2')].customIcon2}
                   />
                 </View>
               </TouchableOpacity>
@@ -71,7 +66,7 @@ const CustomHeader = ({ isForExplore }: { isForExplore?: boolean }) => {
                 <Ionicons
                   name={'filter'}
                   size={20}
-                  color={theme === 'light' ? '#141518' : '#f2f2f2'}
+                  color={Colors[useColorScheme('customIcon2')].customIcon2}
                 />
               </View>
             </Link>
@@ -84,34 +79,23 @@ const CustomHeader = ({ isForExplore }: { isForExplore?: boolean }) => {
 
 const createStyles = (theme: any) =>
   StyleSheet.create({
-    flex1: {
-      flex: 1,
-    },
     headerContainer: {
+      flex: 1,
       height: 60,
       gap: 10,
       paddingHorizontal: 20,
       backgroundColor: 'transparent',
     },
-    flexRow: {
+    wrapper: {
+      display: 'flex',
       flexDirection: 'row',
-    },
-    justifyEnd: {
-      justifyContent: 'flex-end',
-    },
-    itemsCenter: {
+      justifyContent: 'space-between',
       alignItems: 'center',
     },
-    gapRow2: {
+    wrapper2: {
+      display: 'flex',
+      flexDirection: 'row',
       gap: 2,
-    },
-    mlNegative3: {
-      marginLeft: -3,
-    },
-    gap2: {
-      gap: 2,
-    },
-    ml1: {
       marginLeft: 1,
     },
     searchSection: {
@@ -119,8 +103,9 @@ const createStyles = (theme: any) =>
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: theme === 'light' ? '#D8DCE2' : '#1c1c1e',
+      backgroundColor: Colors[useColorScheme('bg2')].bg2,
       borderRadius: 25,
+      marginLeft: -3,
     },
     searchIcon: {
       padding: 12,
@@ -131,21 +116,21 @@ const createStyles = (theme: any) =>
       paddingRight: 10,
       paddingBottom: 10,
       paddingLeft: 0,
-      backgroundColor: theme === 'light' ? '#D8DCE2' : '#1c1c1e',
-      color: theme === 'light' ? '#141518' : '#f2f2f2',
+      backgroundColor: Colors[useColorScheme('bg2')].bg2,
+      color: Colors[useColorScheme('customIcon2')].customIcon2,
       borderRadius: 30,
       fontWeight: 'semibold',
     },
     circle: {
       width: 40,
       height: 40,
-      borderRadius: 50,
-      backgroundColor: theme === 'light' ? '#D8DCE2' : '#1c1c1e',
+      borderRadius: '50%',
+      backgroundColor: Colors[useColorScheme('bg2')].bg2,
       justifyContent: 'center',
       alignItems: 'center',
     },
     userName: {
-      color: theme === 'light' ? '#141518' : '#f2f2f2',
+      color: Colors[useColorScheme('customIcon2')].customIcon2,
       fontSize: 20,
       fontWeight: 'bold',
     },

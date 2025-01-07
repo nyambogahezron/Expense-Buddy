@@ -48,6 +48,8 @@ export const Colors = {
     customIcon: gray,
     border: '#ccc',
     bgLight: whiteDim,
+    customIcon2: '#141518',
+    bg2 : '#D8DCE2'
   },
   dark: {
     text: whiteDim2,
@@ -62,6 +64,9 @@ export const Colors = {
     customIcon: white,
     border: gray,
     bgLight: '#1c1c1e',
+    customIcon2 : '#f2f2f2',
+    bg2 : '#1c1c1e'
+
   },
 };
 
