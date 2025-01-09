@@ -35,23 +35,7 @@ export default function TabLayout() {
             header: () => <CustomHeader />,
           }}
         />
-        <Tabs.Screen
-          name='transactions'
-          options={{
-            title: 'Transactions',
-            headerShown: true,
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor: Colors[useColorScheme('header')].header,
-            },
-            headerLeft: () => <BackButton />,
-            headerTitleStyle: {
-              color: Colors[useColorScheme('customIcon')].customIcon,
-              fontSize: 20,
-              fontWeight: 'bold',
-            },
-          }}
-        />
+        <Tabs.Screen name='transactions' />
         <Tabs.Screen
           name='explore'
           options={{
