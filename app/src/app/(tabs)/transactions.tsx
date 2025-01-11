@@ -21,7 +21,7 @@ import { Colors } from '@/constants/Colors';
 import useColorScheme from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import BackButton from '@/components/navigation/BackButton';
-import ThemedText from '@/components/ui/Text';
+import FilterComponent from '@/components/ui/FilterContainer';
 
 const { width, height } = Dimensions.get('window');
 
@@ -102,20 +102,8 @@ export default function Transactions() {
           </TouchableOpacity>
 
           <Text style={styles.modalText}>Filter Options</Text>
-          <View style={styles.filterOptions}>
-            <View style={styles.filterOption}>
-              <ThemedText>Sort</ThemedText>
-              <View>
-                <TouchableOpacity>
-                  <Text>Ascending</Text>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Text>Descending</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
 
+          <FilterComponent />
           {/* actions btn */}
 
           <View style={styles.actionsBtn}>
@@ -147,7 +135,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     justifyContent: 'center',
-    height: height * 0.4,
+    height: height * 0.6,
     width: width,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -156,7 +144,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 22,
     backgroundColor: 'white',
-    padding: 35,
+    padding: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
