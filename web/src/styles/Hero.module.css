@@ -1,9 +1,10 @@
 .hero {
   background-color: var(--color-primary);
   color: white;
-  height: 100vh;
+  height: 90vh;
   width: 100vw;
   max-width: 100%;
+  padding-top: 60px;
 }
 
 .container {

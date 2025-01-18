@@ -4,12 +4,13 @@
   justify-content: space-between;
   padding: 1.8rem 2rem;
   background-color: #070b11;
+  height: 10vh;
 }
 
 .logo {
   font-size: 1.2rem;
   font-weight: bold;
-  color: var(--color-primary-light);
+  color: var(--clr-orange);
 }
 
 .nav {

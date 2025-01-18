@@ -116,6 +116,7 @@
 .phone {
   position: relative;
   width: 650px;
+  height: 700px;
   margin: 0 10px;
   opacity: 70;
 }

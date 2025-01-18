@@ -14,14 +14,14 @@ export default function App() {
       <Header />
       <main>
         <Hero />
-        <Features />
+        {/* <Features />
         <HowItWorks />
         <WhyUs />
         <AboutUs />
         <InterfaceBanner />
-        <Testimonials />
+        <Testimonials /> */}
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

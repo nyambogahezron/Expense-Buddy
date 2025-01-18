@@ -1,7 +1,7 @@
-import HeroImage from '../../images/device.png';
 import styles from '../../styles/Hero.module.css';
 import IOSImg from '../../images/ios.png';
 import AndroidImg from '../../images/android.png';
+import MobileMockup from '../MobileMockup';
 
 export function Hero() {
   return (
@@ -45,7 +45,7 @@ export function Hero() {
         </div>
 
         <div className={styles.heroImage}>
-          <img src={HeroImage} alt='App Screenshot' className={styles.image} />
+          <MobileMockup />
         </div>
       </div>
     </section>
