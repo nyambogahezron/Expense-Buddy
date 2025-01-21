@@ -12,16 +12,16 @@ export default function App() {
   return (
     <div style={{ minHeight: '100vh' }}>
       <Header />
-      <main>
+      <main className='w-screen overflow-x-hidden'>
         <Hero />
-        {/* <Features />
+        <Features />
         <HowItWorks />
         <WhyUs />
         <AboutUs />
         <InterfaceBanner />
-        <Testimonials /> */}
+        <Testimonials />
       </main>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }
