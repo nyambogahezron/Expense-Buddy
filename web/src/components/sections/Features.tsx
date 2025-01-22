@@ -1,5 +1,4 @@
 import { SendHorizontal, RefreshCw, DollarSign, Wallet } from 'lucide-react';
-import styles from '../../styles/Features.module.css';
 
 const features = [
   {
@@ -26,21 +25,21 @@ const features = [
 
 export function Features() {
   return (
-    <section className={styles.features}>
-      <div className={`${styles.grid} `}>
+    <section id='features' className='bg-gray-100 w-full max-w-full'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 h-full items-center justify-center'>
         {features.map((feature, index) => (
           <div
             key={index}
-            className={styles.feature}
+            className='flex flex-col items-start gap-2.5 bg-white p-14 transition-shadow duration-300 h-full'
             style={{
               background: ['#ffffff', '#c3ff9d', '#ffffff', '#605cf1'][
                 index % 4
               ],
             }}
           >
-            <div className={styles.icon}>{feature.icon}</div>
-            <h3 className={styles.title}>{feature.title}</h3>
-            <p className={styles.description}>{feature.description}</p>
+            <div className='text-primary mb-4'>{feature.icon}</div>
+            <h3 className='text-xl font-semibold mb-2'>{feature.title}</h3>
+            <p className='text-gray-700'>{feature.description}</p>
           </div>
         ))}
       </div>

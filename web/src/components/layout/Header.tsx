@@ -7,13 +7,31 @@ export function Header() {
   const links = [
     {
       id: 1,
-      name: 'Home',
-      path: '#',
+      name: 'Features',
+      path: '#features',
     },
     {
       id: 2,
-      name: 'Features',
-      path: '#features',
+      name: 'About Us',
+      path: '#about',
+    },
+
+    {
+      id: 3,
+      name: 'How it Works',
+      path: '#how-it-works',
+    },
+
+    {
+      id: 4,
+      name: 'Testimonials',
+      path: '#testimonials',
+    },
+
+    {
+      id: 5,
+      name: 'Contact Us',
+      path: '#contact',
     },
   ];
 

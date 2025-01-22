@@ -7,12 +7,13 @@ import { Footer } from './components/layout/Footer';
 import WhyUs from './components/sections/WhyUs';
 import AboutUs from './components/sections/AboutUs';
 import InterfaceBanner from './components/sections/InterfaceBanner';
+import ContactUs from './components/sections/ContactUs';
 
 export default function App() {
   return (
     <div style={{ minHeight: '100vh' }}>
       <Header />
-      <main className='w-screen overflow-x-hidden'>
+      <main className=''>
         <Hero />
         <Features />
         <HowItWorks />
@@ -20,6 +21,7 @@ export default function App() {
         <AboutUs />
         <InterfaceBanner />
         <Testimonials />
+        <ContactUs />
       </main>
       <Footer />
     </div>

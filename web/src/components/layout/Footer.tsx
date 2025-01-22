@@ -1,39 +1,72 @@
-import styles from '../../styles/Footer.module.css';
-
 export function Footer() {
+  const links = {
+    quickLinks: [
+      { href: '#features', label: 'Features' },
+      { href: '#about', label: 'About Us' },
+      { href: '#how-it-works', label: 'How it Works' },
+    ],
+    legal: [
+      { href: '#', label: 'Privacy Policy' },
+      { href: '#', label: 'Terms of Service' },
+    ],
+  };
+
   return (
-    <footer className={styles.footer}>
-      <div className={`${styles.grid} container`}>
+    <footer className='bg-[#070b11] text-white py-20 px-8'>
+      <div className='grid gap-12 container md:grid-cols-4'>
         <div>
-          <h3 className={styles.logo}>Expense Buddy</h3>
-          <p className={styles.description}>
+          <h3 className='text-2xl font-bold mb-6'>Expense Buddy</h3>
+          <p className='opacity-90'>
             Making financial management simple and accessible for everyone.
           </p>
         </div>
         <div>
-          <h4 className={styles.title}>Quick Links</h4>
-          <ul className={styles.list}> 
-            <li><a href="#features">Features</a></li>
-            <li><a href="#about">About Us</a></li>
-            <li><a href="#how-it-works">How it Works</a></li>
+          <h4 className='font-semibold mb-4'>Quick Links</h4>
+          <ul className='list-none'>
+            {links.quickLinks.map((link) => (
+              <li className='mb-2' key={link.href}>
+                <a
+                  href={link.href}
+                  className='text-white/90 hover:text-white transition-colors'
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
         <div>
-          <h4 className={styles.title}>Legal</h4>
-          <ul className={styles.list}>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
+          <h4 className='font-semibold mb-4'>Legal</h4>
+          <ul className='list-none'>
+            {links.legal.map((link) => (
+              <li className='mb-2' key={link.href}>
+                <a
+                  href={link.href}
+                  className='text-white/90 hover:text-white transition-colors'
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
         <div>
-          <h4 className={styles.title}>Download</h4>
-          <div className={styles.downloadButtons}>
-            <button className={styles.storeButton}>
-              <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="App Store" />
+          <h4 className='font-semibold mb-4'>Download</h4>
+          <div className='flex flex-col gap-4'>
+            <button className='bg-black text-white py-3 px-6 rounded-full flex items-center gap-2'>
+              <img
+                src='https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg'
+                alt='App Store'
+                className='w-5 h-5'
+              />
               App Store
             </button>
-            <button className={styles.storeButton}>
-              <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" alt="Play Store" />
+            <button className='bg-black text-white py-3 px-6 rounded-full flex items-center gap-2'>
+              <img
+                src='https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg'
+                alt='Play Store'
+                className='w-5 h-5'
+              />
               Play Store
             </button>
           </div>
