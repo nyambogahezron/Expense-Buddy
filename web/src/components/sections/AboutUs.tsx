@@ -13,7 +13,7 @@ export default function AboutPage() {
             About <span className='text-orange-500'>Expense Buddy</span>{' '}
           </h1>
         </div>
-        <div className='flex flex-col items-start text-gray-600'>
+        <div className='flex flex-col items-start text-gray-700'>
           <p className='max-w-xl my-2 leading-relaxed text-start'>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dui id
             lobortis pretium blandit. Mauris interdum enim ullamcorper

@@ -24,7 +24,10 @@ export default function ContactUs() {
   ];
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-gray-50 to-gray-100'>
+    <div
+      id='contact'
+      className='min-h-screen bg-gradient-to-br from-gray-50 to-gray-100'
+    >
       <div className='max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8'>
         <motion.div
           initial='initial'
@@ -32,7 +35,7 @@ export default function ContactUs() {
           variants={fadeIn}
           className='text-center mb-16'
         >
-          <h1 className='text-2xl md:text-4xl font-bold text-orange-500 sm:text-5xl'>
+          <h1 className='text-2xl md:text-4xl font-bold text-orange-500 '>
             Contact Us
           </h1>
           <p className='mt-4 text-xl text-gray-600'>
@@ -46,7 +49,7 @@ export default function ContactUs() {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className='bg-white rounded-2xl shadow-xl p-8'
+            className='rounded-2xl shadow-xl p-8'
           >
             <form className='space-y-6'>
               <div>
@@ -108,7 +111,7 @@ export default function ContactUs() {
             className='space-y-8'
           >
             {/* Address Card */}
-            <div className='bg-white rounded-2xl shadow-xl p-8'>
+            <div className='rounded-2xl shadow-xl p-8'>
               <h2 className='text-2xl font-bold text-gray-900 mb-6'>
                 Get in Touch
               </h2>

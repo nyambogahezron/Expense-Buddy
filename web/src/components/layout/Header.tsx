@@ -47,7 +47,7 @@ export function Header() {
   }, []);
 
   return (
-    <nav className='bg-white border-gray-200 dark:bg-[#070b11] h-auto overflow-hidden w-screen'>
+    <nav className='bg-white border-gray-200 dark:bg-[#070b11] h-auto'>
       <div className='flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4'>
         <a href='#' className='flex items-center'>
           <span className='self-center text-2xl sm:text-lg font-semibold whitespace-nowrap text-orange-500 hidden sm:block'>
