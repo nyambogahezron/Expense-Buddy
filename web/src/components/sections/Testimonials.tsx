@@ -1,132 +1,130 @@
-import { Star } from 'lucide-react';
-import { useState } from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import './Testimonials.css';
+import { motion } from 'framer-motion';
+import { Star, Quote } from 'lucide-react';
 
-const testimonials = [
-  {
-    name: 'Rhonda Rhodes',
-    role: 'User Interface Designer',
-    quote:
-      'Comprehensive reports, data visualizations, and insights to optimize your ecommerce store and help you reach your goals.',
-    avatar:
-      'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=200&q=80',
-  },
-  {
-    name: 'John Doe',
-    role: 'Software Engineer',
-    quote:
-      'This tool has significantly improved my productivity and workflow. Highly recommended!',
-    avatar:
-      'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=200&q=80',
-  },
-  {
-    name: 'Jane Smith',
-    role: 'Product Manager',
-    quote: 'A game-changer for our team. The insights we get are invaluable.',
-    avatar:
-      'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=200&q=80',
-  },
-  {
-    name: 'Alice Johnson',
-    role: 'Marketing Specialist',
-    quote:
-      'The best investment we made this year. Our campaigns have never been more effective.',
-    avatar:
-      'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80',
-  },
-  {
-    name: 'Bob Brown',
-    role: 'Data Analyst',
-    quote:
-      'The analytics and reporting features are top-notch. It has made my job so much easier.',
-    avatar:
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
-  },
-];
+export default function Testimonials() {
+  const testimonials = [
+    {
+      name: 'Sarah Johnson',
+      role: 'CEO at TechCorp',
+      image:
+        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80',
+      content:
+        'Working with this team has been an absolute game-changer for our business. Their attention to detail and innovative solutions have helped us grow exponentially.',
+      rating: 5,
+    },
+    {
+      name: 'Michael Chen',
+      role: 'Marketing Director',
+      image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80',
+      content:
+        "The level of professionalism and expertise is unmatched. They don't just deliver results; they exceed expectations every single time.",
+      rating: 5,
+    },
+    {
+      name: 'Emily Rodriguez',
+      role: 'Startup Founder',
+      image:
+        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80',
+      content:
+        'From concept to execution, they guided us through every step. Their insights and dedication made our project a huge success.',
+      rating: 5,
+    },
+    {
+      name: 'David Kim',
+      role: 'Product Manager',
+      image:
+        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80',
+      content:
+        'Outstanding service and remarkable results. They transformed our vision into reality with precision and creativity.',
+      rating: 5,
+    },
+  ];
 
-export function Testimonials() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 2);
-    }
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
   };
 
-  const handleNext = () => {
-    if (currentIndex < testimonials.length - 2) {
-      setCurrentIndex(currentIndex + 2);
-    }
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+      },
+    },
   };
 
   return (
-    <section id='testimonials' className='py-20 px-8 bg-gray-100'>
-      <div className='container mx-auto'>
-        {/* header  */}
-        <h2 className='text-2xl md:text-4xl font-bold text-center mb-16'>
-          Kind words from
-          <br />
-          <span className='text-orange-500'> our lovely customers</span>
-        </h2>
+    <div className='min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-16 px-4 sm:px-6 lg:px-8'>
+      <div className='max-w-7xl mx-auto'>
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className='text-center mb-16'
+        >
+          <h1 className='text-2xl md:text-4xl font-bold text-orange-500 mb-4'>
+            What Our Clients Say
+          </h1>
+          <p className='text-sm md:tex-lg text-gray-600 max-w-2xl mx-auto'>
+            Don't just take our word for it. Here's what our valued clients have
+            to say about their experiences working with us.
+          </p>
+        </motion.div>
 
-        {/* testimonials */}
-        <TransitionGroup className='grid grid-cols-1 md:grid-cols-2 gap-8 w-full'>
-          {testimonials
-            .slice(currentIndex, currentIndex + 2)
-            .map((testimonial, index) => (
-              <CSSTransition key={index} timeout={500} classNames='testimonial'>
-                <div className='bg-white p-8 rounded-lg shadow-md border'>
-                  <div className='flex items-center mb-4'>
-                    <img
-                      src={testimonial.avatar}
-                      alt='Customer'
-                      className='w-16 h-16 rounded-full mr-4 '
-                    />
-                    <div>
-                      <h4 className='text-xl font-semibold'>
-                        {testimonial.name}
-                      </h4>
-                      <p className='text-gray-600'>{testimonial.role}</p>
+        <motion.div
+          variants={containerVariants}
+          initial='hidden'
+          animate='visible'
+          className='grid grid-cols-1 md:grid-cols-2 gap-8'
+        >
+          {testimonials.map((testimonial) => (
+            <motion.div
+              key={testimonial.name}
+              variants={itemVariants}
+              className='bg-white rounded-2xl shadow-xl p-8 relative'
+            >
+              <Quote className='absolute text-blue-100 w-14 h-14 -top-2 -left-2 transform -rotate-12' />
+
+              <div className='relative'>
+                <div className='flex items-center mb-6'>
+                  <img
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    className='w-16 h-16 rounded-full object-cover mr-4 border-t-4 border-l-4 border-orange-500'
+                  />
+                  <div>
+                    <h3 className='text-lg font-semibold text-gray-900'>
+                      {testimonial.name}
+                    </h3>
+                    <p className='text-gray-600'>{testimonial.role}</p>
+                    <div className='flex mt-1'>
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className='w-4 h-4 text-yellow-400 fill-current'
+                        />
+                      ))}
                     </div>
                   </div>
-                  <p className='text-gray-700 mb-4'>{testimonial.quote}</p>
-
-                  {/* stars */}
-                  <div className='flex'>
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className='w-5 h-5 text-yellow-500 ' />
-                    ))}
-                  </div>
                 </div>
-              </CSSTransition>
-            ))}
-        </TransitionGroup>
 
-        {/* action btns */}
-        <div className='flex justify-center mt-8'>
-          <button
-            onClick={handlePrev}
-            disabled={currentIndex === 0}
-            className={`px-4 py-2 mx-2 bg-blue-500 text-white rounded ${
-              currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            Previous
-          </button>
-          <button
-            onClick={handleNext}
-            disabled={currentIndex >= testimonials.length - 2}
-            className={`px-4 py-2 mx-2 bg-blue-500 text-white rounded ${
-              currentIndex >= testimonials.length - 2
-                ? 'opacity-50 cursor-not-allowed'
-                : ''
-            }`}
-          >
-            Next
-          </button>
-        </div>
+                <blockquote className='text-gray-700 italic relative'>
+                  "{testimonial.content}"
+                </blockquote>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
-    </section>
+    </div>
   );
 }

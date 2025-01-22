@@ -4,6 +4,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  input,
+  textarea {
+    @apply outline-none;
+  }
+}
+
+@layer components {
+  .contact-input {
+    @apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500;
+  }
+}
+
 :root {
   --color-primary: #070b11;
   --color-primary-light: #6366f1;
