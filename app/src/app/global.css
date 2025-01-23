@@ -1,3 +1,74 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer base {
+  input,
+  textarea {
+    @apply outline-none;
+  }
+}
+
+@layer components {
+  .contact-input {
+    @apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500;
+  }
+}
+
+:root {
+  --color-primary: #070b11;
+  --color-primary-light: #6366f1;
+  --color-text: #1f2937;
+  --clr-gray: #cdc8f6;
+  --color-text-light: #f2f2f2;
+  --color-background: #ffffff;
+  --color-background-alt: #f9fafb;
+  --clr-orange: #ffa500;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+img {
+  max-width: 100%;
+  height: 800px;
+  width: 450px;
+}
+
+.btn {
+  padding: 1.2rem 5.5rem;
+  background-color: orange;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.btn-primary {
+  background-color: #ffffff;
+  color: #070b11;
+}
