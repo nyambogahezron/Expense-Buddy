@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import React from 'react';
 
-import LandingPage from './LandingPage';
+import LandingPage from './landing-page';
 
 export default function App() {
   return <LandingPage />;
