@@ -6,7 +6,7 @@ import CustomTextInput from '@/components/Form/CustomTextInput';
 import AuthFooter from '@/components/Form/AuthFooter';
 import { useTheme } from '@/context/ThemeProvider';
 import AuthHeader from '@/components/Form/AuthHeader';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import Button from '@/components/ui/Button';
 
 const { width, height } = Dimensions.get('window');

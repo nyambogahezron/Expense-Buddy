@@ -5,26 +5,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 import TransactionOverview from '../Charts/TransactionOverview';
-import PageModel from '../models/PageModel';
-import AddTransaction from '../Form/AddTransaction';
 import { useDataContext } from '@/context/DataProvider';
 import Animated from 'react-native-reanimated';
+import { router } from 'expo-router';
+import { Colors } from '@/constants/Colors';
 
 export default function ExpenseBlockCard() {
-  const [isModalVisible, setModalVisible] = useState(false);
   const { expenseList } = useDataContext();
-
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
 
   const renderItem = ({ item, index }: { item: any; index: number }) => {
     if (index == 0) {
       return (
-        <TouchableOpacity onPress={() => toggleModal()}>
+        <TouchableOpacity onPress={() => router.push('/(tabs)/create')}>
           <View style={styles.addItemBtn}>
             <Feather name='plus' size={22} color={'#ccc'} />
           </View>
@@ -64,13 +58,6 @@ export default function ExpenseBlockCard() {
             horizontal
             showsHorizontalScrollIndicator={false}
           />
-          <PageModel
-            isModalVisible={isModalVisible}
-            toggleModal={toggleModal}
-            title='Add Transaction'
-          >
-            <AddTransaction />
-          </PageModel>
         </>
       )}
     </View>
@@ -96,14 +83,14 @@ const styles = StyleSheet.create({
     gap: 8,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    backgroundColor: '#333',
+    backgroundColor: Colors.gray,
   },
   expenseBlockTxt1: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 14,
   },
   expenseBlockTxt2: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 16,
     fontWeight: '600',
   },

@@ -34,6 +34,8 @@ export const Colors = {
   textGray,
   grayLight,
   blackLight,
+  gray,
+  whiteDim,
 
   light: {
     text: '#11181C',
@@ -48,8 +50,10 @@ export const Colors = {
     customIcon: gray,
     border: '#ccc',
     bgLight: whiteDim,
+    bgLight2: '#e5e7eb',
     customIcon2: '#141518',
-    bg2 : '#D8DCE2'
+    bg2 : '#D8DCE2',
+    darkGray : '#fff'
   },
   dark: {
     text: whiteDim2,
@@ -64,9 +68,10 @@ export const Colors = {
     customIcon: white,
     border: gray,
     bgLight: '#1c1c1e',
+    bgLight2: '#1c1c1e',
     customIcon2 : '#f2f2f2',
-    bg2 : '#1c1c1e'
-
+    bg2 : '#1c1c1e',
+    darkGray : '#333',
   },
 };
 

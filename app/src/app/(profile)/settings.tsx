@@ -10,7 +10,7 @@ import { StatusBar } from 'expo-status-bar';
 import ThemedView from '@/components/ui/View';
 import BackButton from '@/components/navigation/BackButton';
 import CurrencyContainer from '@/components/CurrencyContainer';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 
 export default function Settings() {
   const { theme, toggleTheme } = useTheme();

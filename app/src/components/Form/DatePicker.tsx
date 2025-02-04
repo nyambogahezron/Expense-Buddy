@@ -1,10 +1,12 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import ThemedView from '@/components/ui/View';
 import ThemedText from '@/components/ui/Text';
+import { Colors } from '@/constants/Colors';
+import useColorScheme from '@/hooks/useColorScheme';
 
 type DatePickerProps = {
   setShowDatePicker: (value: React.SetStateAction<boolean>) => void;
@@ -39,7 +41,13 @@ export default function DatePicker({
       <ThemedView
         darkColor='#1c1c1e'
         lightColor='#e5e7eb'
-        style={styles.datePickerContainer}
+        style={[
+          styles.datePickerContainer,
+          {
+            borderWidth: 1,
+            borderColor: Colors[useColorScheme('border')].border,
+          },
+        ]}
       >
         <ThemedText style={styles.dateText}>{date.toDateString()}</ThemedText>
         <TouchableOpacity
@@ -73,7 +81,7 @@ const styles = StyleSheet.create({
   datePickerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 48,
+    height: 50,
     alignItems: 'center',
     padding: 16,
     borderRadius: 8,
@@ -85,13 +93,15 @@ const styles = StyleSheet.create({
   },
   todayButton: {
     position: 'absolute',
-    backgroundColor: '#3b82f6',
+    backgroundColor: Colors.orange,
     padding: 12,
     height: 48,
     borderRadius: 8,
     right: 0,
     alignItems: 'center',
     justifyContent: 'center',
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
   },
   todayButtonText: {
     fontSize: 14,

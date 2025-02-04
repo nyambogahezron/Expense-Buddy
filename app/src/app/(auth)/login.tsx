@@ -9,7 +9,7 @@ import {
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import CustomTextInput from '@/components/Form/CustomTextInput';
 import CustomPasswordInput from '@/components/Form/CustomPasswordInput';
 import AuthFooter from '@/components/Form/AuthFooter';
@@ -17,7 +17,6 @@ import AuthHeader from '@/components/Form/AuthHeader';
 import Button from '@/components/ui/Button';
 import { supabase } from '@/utils/supabase';
 import { useToast } from 'react-native-toast-notifications';
-
 
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);

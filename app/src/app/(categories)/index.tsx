@@ -7,9 +7,11 @@ import CategoryActionCard from '@/components/cards/CategoryCard/CategoryActionCa
 import { useTheme } from '@/context/ThemeProvider';
 import BackButton from '@/components/navigation/BackButton';
 import HeaderRightIconCard from '@/components/navigation/HeaderRightIconCard';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import { useState } from 'react';
 import { useDataContext } from '@/context/DataProvider';
+import { Colors } from '@/constants/Colors';
+import useColorScheme from '@/hooks/useColorScheme';
 
 const Statistics = () => {
   const { theme } = useTheme();
@@ -28,7 +30,7 @@ const Statistics = () => {
     <ThemedSafeAreaView style={styles.container}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
-        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+        backgroundColor={Colors[useColorScheme('bg2')].bg2}
       />
       <Stack.Screen
         options={{
@@ -45,7 +47,7 @@ const Statistics = () => {
               <FontAwesome5
                 name='plus'
                 size={18}
-                color={theme === 'light' ? 'black' : '#fff'}
+                color={theme === 'light' ? 'black' : Colors.white}
               />
             </HeaderRightIconCard>
           ),
@@ -102,10 +104,10 @@ const createStyles = (theme: any) =>
       paddingHorizontal: 12,
     },
     headerStyle: {
-      backgroundColor: theme === 'light' ? '#ffffff' : '#070B11',
+      backgroundColor: theme === 'light' ? Colors.white : Colors.blackLight,
     },
     headerTitleStyle: {
-      color: theme === 'light' ? '#333' : '#fff',
+      color: theme === 'light' ? Colors.gray : Colors.white,
       fontSize: 20,
       fontWeight: 'bold',
     },

@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native';
 import { TransactionProps } from '@/types';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import ThemedView from '@/components/ui/View';
 import BackButton from '@/components/navigation/BackButton';
 import CustomTextInput from '@/components/Form/CustomTextInput';

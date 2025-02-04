@@ -4,7 +4,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import CustomTextInput from '@/components/Form/CustomTextInput';
 import { useTheme } from '@/context/ThemeProvider';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import AuthHeader from '@/components/Form/AuthHeader';
 import Button from '@/components/ui/Button';
 

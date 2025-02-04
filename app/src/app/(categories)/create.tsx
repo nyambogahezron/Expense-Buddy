@@ -4,11 +4,13 @@ import { Stack } from 'expo-router';
 import Button from '@/components/ui/Button';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import ThemedView from '@/components/ui/View';
 import { useTheme } from '@/context/ThemeProvider';
 import BackButton from '@/components/navigation/BackButton';
 import CustomTextInput from '@/components/Form/CustomTextInput';
+import { Colors } from '@/constants/Colors';
+import useColorScheme from '@/hooks/useColorScheme';
 
 export default function CreateCategory() {
   const [title, setTitle] = useState('');
@@ -22,7 +24,7 @@ export default function CreateCategory() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
-        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+        backgroundColor={Colors[useColorScheme('bg2')].bg2}
       />
       <ThemedSafeAreaView style={styles.safeAreaView}>
         <Stack.Screen

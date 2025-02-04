@@ -54,9 +54,9 @@ export type CustomTextInputProps = {
   title: string;
   onChangeText: React.Dispatch<React.SetStateAction<any>>;
   placeholder?: string;
-  textInputStyle?: string;
-  containerStyle?: string;
-  inputContainerStyle?: string;
+  textInputStyle?: TextStyle;
+  containerStyle?: ViewStyle;
+  inputContainerStyle?: ViewStyle;
   keyboardType?: 'email-address' | 'default' | 'numeric';
   value?: string;
   multiline?: boolean;

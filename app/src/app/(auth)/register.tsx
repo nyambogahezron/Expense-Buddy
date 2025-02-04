@@ -3,7 +3,7 @@ import { Alert, ScrollView, StyleSheet } from 'react-native';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import CustomTextInput from '@/components/Form/CustomTextInput';
 import CustomPasswordInput from '@/components/Form/CustomPasswordInput';
 import AuthFooter from '@/components/Form/AuthFooter';

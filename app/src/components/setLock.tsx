@@ -1,7 +1,7 @@
 import { View, ScrollView, Alert, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { router } from 'expo-router';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import CustomPasswordInput from '@/components/Form/CustomPasswordInput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from '@/components/ui/Loading';

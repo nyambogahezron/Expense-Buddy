@@ -8,7 +8,7 @@ import { TransactionProps } from '@/types';
 import { StatusBar } from 'expo-status-bar';
 import { Dimensions } from 'react-native';
 import { useTheme } from '@/context/ThemeProvider';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import ThemedView from '@/components/ui/View';
 import ThemedText from '@/components/ui/Text';
 import isEmoji from '@/utils/isEmoji';

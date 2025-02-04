@@ -4,7 +4,7 @@ import { useTheme } from '@/context/ThemeProvider';
 import { Colors } from '@/constants/Colors';
 import useColorScheme from '@/hooks/useColorScheme';
 
-export default function statusBar() {
+export default function CustomStatusBar() {
   const { theme } = useTheme();
 
   return (

@@ -13,7 +13,7 @@ import { Stack } from 'expo-router';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import { useTheme } from '@/context/ThemeProvider';
 import Button from '@/components/ui/Button';
 import CustomTextInput from '@/components/Form/CustomTextInput';

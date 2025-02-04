@@ -18,9 +18,11 @@ import BackButton from '@/components/navigation/BackButton';
 import HeaderRightIconCard from '@/components/navigation/HeaderRightIconCard';
 import { supabase } from '@/utils/supabase';
 import { useGlobalContext } from '@/context/GlobalProvider';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import ThemedView from '@/components/ui/View';
 import ThemedText from '@/components/ui/Text';
+import { Colors } from '@/constants/Colors';
+import useColorScheme from '@/hooks/useColorScheme';
 
 const width = Dimensions.get('window').width;
 
@@ -40,7 +42,7 @@ const Profile = () => {
     <ThemedSafeAreaView style={styles.safeArea}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
-        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+        backgroundColor={Colors[useColorScheme('background')].background}
       />
       <Stack.Screen
         options={{
@@ -85,12 +87,8 @@ const Profile = () => {
               style={styles.profileImage}
             />
           </ThemedView>
-          <ThemedText style={styles.userName}>
-            {User?.name}
-          </ThemedText>
-          <ThemedText style={styles.userEmail}>
-            {User?.email}
-          </ThemedText>
+          <ThemedText style={styles.userName}>{User?.name}</ThemedText>
+          <ThemedText style={styles.userEmail}>{User?.email}</ThemedText>
         </View>
 
         {/* Account Settings Options */}
@@ -119,9 +117,7 @@ const Profile = () => {
                     size={22}
                     color='#6B7280'
                   />
-                  <Text style={styles.externalLinkText}>
-                    Privacy Policy
-                  </Text>
+                  <Text style={styles.externalLinkText}>Privacy Policy</Text>
                 </View>
                 <View style={styles.chevronIcon}>
                   <Ionicons name='chevron-forward' size={22} color='#6B7280' />
@@ -134,7 +130,9 @@ const Profile = () => {
             activeOpacity={0.7}
             style={[
               styles.logoutButton,
-              theme === 'light' ? styles.logoutButtonLight : styles.logoutButtonDark,
+              theme === 'light'
+                ? styles.logoutButtonLight
+                : styles.logoutButtonDark,
             ]}
             onPress={signOut}
           >

@@ -7,7 +7,7 @@ import CategoryCard from '@/components/cards/CategoryCard';
 import CategoryActionCard from '@/components/cards/CategoryCard/CategoryActionCardModel';
 import LoadMoreBtn from '@/components/ui/LoadMoreBtn';
 import { useTheme } from '@/context/ThemeProvider';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import ThemedView from '@/components/ui/View';
 import ThemedText from '@/components/ui/Text';
 import { useDataContext } from '@/context/DataProvider';
@@ -16,6 +16,8 @@ import { useGlobalContext } from '@/context/GlobalProvider';
 import SummaryChart from '@/components/Charts/SummaryOverview';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import ExpenseBlockCard from '@/components/cards/ExpenseBlockCard';
+import { Colors } from '@/constants/Colors';
+import useColorScheme from '@/hooks/useColorScheme';
 
 const width = Dimensions.get('window').width;
 
@@ -41,7 +43,7 @@ export default function Statistics() {
     <ThemedSafeAreaView style={styles.safeArea}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
-        backgroundColor={theme === 'light' ? '#ffffff' : '#070B11'}
+        backgroundColor={Colors[useColorScheme('background')].background}
       />
 
       <ScrollView
@@ -110,7 +112,7 @@ export default function Statistics() {
 
             <LoadMoreBtn
               title='View All'
-              handleOnPress={() => router.push('/(tabs)/explore')}
+              handleOnPress={() => router.push('/(categories)')}
             />
           </View>
 
@@ -262,5 +264,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-// TODO work on categories crud

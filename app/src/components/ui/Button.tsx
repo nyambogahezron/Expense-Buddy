@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 9999,
     width: width * 0.9,
+    backgroundColor: Colors.orange,
   },
 
   buttonContent: {
@@ -54,8 +55,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   buttonText: {
-    color: Colors.black,
-    fontSize: 18,
+    color: Colors.white,
+    fontSize: 15,
     fontWeight: 'bold',
     textTransform: 'capitalize',
   },

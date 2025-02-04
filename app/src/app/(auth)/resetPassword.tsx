@@ -3,7 +3,7 @@ import { ScrollView, Dimensions, StyleSheet } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import AuthHeader from '@/components/Form/AuthHeader';
 import Button from '@/components/ui/Button';
 import CustomPasswordInput from '@/components/Form/CustomPasswordInput';

@@ -30,12 +30,29 @@ export default function TabLayout() {
             headerTransparent: true,
             headerTitle: '',
             headerStyle: {
-              backgroundColor: Colors[useColorScheme('header')].header,
+              backgroundColor: Colors[useColorScheme('background')].background,
             },
             header: () => <CustomHeader />,
           }}
         />
-        <Tabs.Screen name='transactions' />
+        <Tabs.Screen
+          name='transactions'
+          options={{
+            title: 'Transactions',
+            headerShown: true,
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: Colors[useColorScheme('background')].background,
+            },
+            headerLeft: () => <BackButton />,
+
+            headerTitleStyle: {
+              color: Colors[useColorScheme('customIcon')].customIcon,
+              fontSize: 20,
+              fontWeight: 'bold',
+            },
+          }}
+        />
 
         <Tabs.Screen
           name='create'
@@ -44,7 +61,7 @@ export default function TabLayout() {
             headerShown: true,
             headerTitleAlign: 'center',
             headerStyle: {
-              backgroundColor: Colors[useColorScheme('header')].header,
+              backgroundColor: Colors[useColorScheme('background')].background,
             },
             headerLeft: () => <BackButton />,
             headerTitleStyle: {

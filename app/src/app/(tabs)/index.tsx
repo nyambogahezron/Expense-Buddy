@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import { useTheme } from '@/context/ThemeProvider';
 import { useDataContext } from '@/context/DataProvider';
 import IncomeBlockCard from '@/components/cards/IncomeBlockCard';

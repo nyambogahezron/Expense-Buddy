@@ -2,7 +2,7 @@ import { View, ScrollView, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import { useTheme } from '@/context/ThemeProvider';
 import Button from '@/components/ui/Button';
 import BackButton from '@/components/navigation/BackButton';

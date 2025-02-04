@@ -11,7 +11,7 @@ import ThemedText from '@/components/ui/Text';
 import isEmoji from '@/utils/isEmoji';
 import { useDataContext } from '@/context/DataProvider';
 import { useToast } from 'react-native-toast-notifications';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import BackButton from '@/components/navigation/BackButton';
 import { Colors } from '@/constants/Colors';
 import useColorScheme from '@/hooks/useColorScheme';

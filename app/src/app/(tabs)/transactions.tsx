@@ -10,7 +10,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import { useTheme } from '@/context/ThemeProvider';
 import { useDataContext } from '@/context/DataProvider';
 import EmptyListCard from '@/components/EmptyListCard';
@@ -115,13 +115,6 @@ export default function Transactions() {
 
       <Stack.Screen
         options={{
-          title: 'Transactions',
-          headerShown: true,
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor: Colors[useColorScheme('header')].header,
-          },
-          headerLeft: () => <BackButton />,
           headerRight: () => {
             return (
               <TouchableOpacity

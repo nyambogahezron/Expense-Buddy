@@ -10,7 +10,7 @@ import { TransactionProps } from '@/types';
 import { useTheme } from '@/context/ThemeProvider';
 import BackButton from '@/components/navigation/BackButton';
 import { useDataContext } from '@/context/DataProvider';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import ThemedText from '@/components/ui/Text';
 import ThemedView from '@/components/ui/View';
 

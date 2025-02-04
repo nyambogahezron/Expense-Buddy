@@ -7,7 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
 import BackButton from '@/components/navigation/BackButton';
 import CustomTextInput from '@/components/Form/CustomTextInput';
-import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
+import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import ThemedView from '@/components/ui/View';
 
 export default function EditCategory() {
@@ -87,12 +87,12 @@ const styles = StyleSheet.create({
     marginTop: '20%',
   },
   paddingX4: {
-    paddingHorizontal: 16, 
+    paddingHorizontal: 16,
     marginVertical: 'auto',
     height: '100%',
   },
   bgOrange500: {
-    backgroundColor: '#F97316', 
+    backgroundColor: '#F97316',
     marginTop: 20,
   },
   textWhite: {
