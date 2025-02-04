@@ -8,16 +8,12 @@ import ThemedText from '@/components/ui/Text';
 import AppleStyleSwipeableRow from '@/components/cards/TransactionCard/SwipeableRow';
 import { useDataContext } from '@/context/DataProvider';
 import { useToast } from 'react-native-toast-notifications';
-import { useState } from 'react';
-import TransactionDetails from '@/app/modals/TransactionDetailts';
 
 type TransactionCardProps = {
   item: TransactionProps;
 };
 
 const TransactionCard = ({ item }: TransactionCardProps) => {
-  const [activeItem, setActiveItem] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
   const { deleteTransaction } = useDataContext();
   const toast = useToast();
 
@@ -41,7 +37,12 @@ const TransactionCard = ({ item }: TransactionCardProps) => {
       >
         <TouchableOpacity
           activeOpacity={0.6}
-          onPress={() => setModalVisible(true)}
+          onPress={() =>
+            router.push({
+              pathname: '/(transactions)/details',
+              params: { transaction: JSON.stringify(item) },
+            })
+          }
           className='flex-row justify-between items-center px-1 py-3 mb-2'
         >
           <ThemedView className='flex-row items-center'>
@@ -80,11 +81,6 @@ const TransactionCard = ({ item }: TransactionCardProps) => {
           </View>
         </TouchableOpacity>
       </AppleStyleSwipeableRow>
-      <TransactionDetails
-        item={item}
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-      />
     </View>
   );
 };
