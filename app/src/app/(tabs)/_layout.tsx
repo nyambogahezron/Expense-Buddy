@@ -36,19 +36,6 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen name='transactions' />
-        <Tabs.Screen
-          name='explore'
-          options={{
-            title: 'Explore',
-            headerShown: true,
-            headerShadowVisible: false,
-            headerTransparent: true,
-            headerTitle: '',
-            headerStyle: {
-              backgroundColor: Colors[useColorScheme('header')].header,
-            },
-          }}
-        />
 
         <Tabs.Screen
           name='create'
@@ -93,23 +80,6 @@ export default function TabLayout() {
                 />
               </HeaderRightIconCard>
             ),
-          }}
-        />
-        <Tabs.Screen
-          name='categories'
-          options={{
-            title: 'Categories',
-            headerShown: true,
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor: Colors[useColorScheme('header')].header,
-            },
-            headerLeft: () => <BackButton />,
-            headerTitleStyle: {
-              color: Colors[useColorScheme('customIcon')].customIcon,
-              fontSize: 20,
-              fontWeight: 'bold',
-            },
           }}
         />
 
