@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   Platform,
   StyleSheet,
   View,
   Modal,
-  Text,
   TouchableOpacity,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import ThemedSafeAreaView from '@/components/ui/SafeAreaView';
@@ -19,9 +19,11 @@ import Fab from '@/components/ui/Fab';
 import { router, Stack } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import useColorScheme from '@/hooks/useColorScheme';
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import BackButton from '@/components/navigation/BackButton';
-import FilterComponent from '@/components/ui/FilterContainer';
+import ThemedText from '@/components/ui/Text';
+import ThemedView from '@/components/ui/View';
+import { TransactionProps } from '@/types';
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,6 +31,13 @@ export default function Transactions() {
   const { transactionsData } = useDataContext();
   const { theme } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
+  const [isFiltered, setIsFiltered] = useState(false);
+  const [distinctCategories, setDistinctCategories] = useState<string[]>([]);
+  const [filterOptions, setFilterOptions] = useState({
+    transactionsType: 'all',
+    category: 'all',
+  });
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
 
   const openFilterModal = () => {
     setModalVisible(true);
@@ -37,6 +46,65 @@ export default function Transactions() {
   const closeFilterModal = () => {
     setModalVisible(false);
   };
+
+  type transactionType = 'all' | 'income' | 'expense';
+
+  const handleToggleTranType = (type: transactionType) => {
+    setFilterOptions({ ...filterOptions, transactionsType: type });
+  };
+
+  const handleToggleCategory = (category: string) => {
+    setFilterOptions({ ...filterOptions, category });
+  };
+
+  const filterTransactions = () => {
+    let filteredData = transactionsData;
+
+    if (filterOptions.transactionsType !== 'all') {
+      filteredData = filteredData.filter(
+        (item: TransactionProps) => item.type === filterOptions.transactionsType
+      );
+
+      if (filterOptions.category !== 'all') {
+        filteredData = filteredData.filter(
+          (item: TransactionProps) =>
+            item.category.name === filterOptions.category
+        );
+      }
+
+      setFilteredTransactions(filteredData);
+    }
+
+    setFilteredTransactions(filteredData);
+  };
+
+  useEffect(() => {
+    setFilteredTransactions(transactionsData);
+
+    const getDistinctCategories = () => {
+      //get distinct categories from transactions
+      const categories = transactionsData.map(
+        (item: TransactionProps) => item.category.name || 'unknown'
+      );
+      const data: string[] = [...new Set(categories)] as string[];
+      setDistinctCategories(['all', ...data]);
+    };
+
+    getDistinctCategories();
+  }, []);
+
+  useEffect(() => {
+    filterTransactions();
+
+    if (
+      filterOptions.transactionsType !== 'all' ||
+      filterOptions.category !== 'all'
+    ) {
+      setIsFiltered(true);
+    } else {
+      setIsFiltered(false);
+    }
+  }, [filterOptions]);
 
   return (
     <ThemedSafeAreaView style={styles.safeArea}>
@@ -57,10 +125,26 @@ export default function Transactions() {
           headerRight: () => {
             return (
               <TouchableOpacity
-                onPress={openFilterModal}
+                onPress={
+                  isFiltered
+                    ? () =>
+                        setFilterOptions({
+                          transactionsType: 'all',
+                          category: 'all',
+                        })
+                    : openFilterModal
+                }
                 style={{ marginRight: 15 }}
               >
-                <Ionicons name='filter' size={24} color='black' />
+                {isFiltered ? (
+                  <AntDesign name='close' size={24} color={'orange'} />
+                ) : (
+                  <Ionicons
+                    name='filter'
+                    size={24}
+                    color={Colors[useColorScheme('customIcon')].customIcon}
+                  />
+                )}
               </TouchableOpacity>
             );
           },
@@ -76,8 +160,8 @@ export default function Transactions() {
         <FlatList
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          data={transactionsData?.slice(0, 50) || []}
-          keyExtractor={(item) => item.id.toString()}
+          data={filteredTransactions?.slice(0, 50) || []}
+          keyExtractor={(item: TransactionProps) => item.id.toString()}
           renderItem={({ item }) => <TransactionCard item={item} />}
           ListEmptyComponent={
             <EmptyListCard title='No transactions available' />
@@ -93,29 +177,80 @@ export default function Transactions() {
         visible={modalVisible}
         onRequestClose={closeFilterModal}
       >
-        <View style={styles.modalView}>
+        <ThemedView style={styles.modalView}>
           <TouchableOpacity
             onPress={closeFilterModal}
-            style={{ position: 'absolute', top: 10, right: 10 }}
+            className='flex flex-col gap-5 p-2 w-full h-full'
           >
-            <Ionicons name='close' size={28} color='black' />
+            <TouchableOpacity
+              style={{ position: 'absolute', top: 10, right: 10 }}
+            >
+              <Ionicons name='close' size={28} color='black' />
+            </TouchableOpacity>
+
+            <ThemedText style={styles.modalText}>Filter Options</ThemedText>
+            <ScrollView className='flex-1'>
+              {/* transaction type filter */}
+              <ThemedText className='mt-4 mb-2'>Transaction Type</ThemedText>
+              <View className='flex flex-row flex-wrap gap-2'>
+                {['all', 'income', 'expense'].map((type) => (
+                  <TouchableOpacity
+                    key={type}
+                    onPress={() =>
+                      handleToggleTranType(type as transactionType)
+                    }
+                    className={`flex items-center justify-center rounded-lg h-10 border-2 border-gray-300 px-8
+                    ${
+                      filterOptions.transactionsType === type
+                        ? 'bg-gray-300 border-orange-500'
+                        : 'bg-white'
+                    }`}
+                  >
+                    <ThemedText
+                      type='link'
+                      className={`capitalize ${
+                        filterOptions.transactionsType === type
+                          ? 'text-red-500'
+                          : 'text-gray-500'
+                      }`}
+                    >
+                      {type}
+                    </ThemedText>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* category type filter */}
+              <ThemedText className='mt-4 mb-2'>Category</ThemedText>
+              <View className='flex flex-row flex-wrap gap-2'>
+                {distinctCategories &&
+                  distinctCategories.map((item, index: number) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => handleToggleCategory(item)}
+                      className={`flex items-center justify-center rounded-lg h-10 border-2 border-gray-300 px-8
+                    ${
+                      filterOptions.category === item
+                        ? 'bg-gray-300 border-orange-500'
+                        : 'bg-white'
+                    }`}
+                    >
+                      <ThemedText
+                        type='link'
+                        className={`capitalize ${
+                          filterOptions.category === item
+                            ? 'text-red-500'
+                            : 'text-gray-500'
+                        }`}
+                      >
+                        {item}
+                      </ThemedText>
+                    </TouchableOpacity>
+                  ))}
+              </View>
+            </ScrollView>
           </TouchableOpacity>
-
-          <Text style={styles.modalText}>Filter Options</Text>
-
-          <FilterComponent />
-          {/* actions btn */}
-
-          <View style={styles.actionsBtn}>
-            <TouchableOpacity>
-              <Text style={styles.closeButton}>Clear All</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity>
-              <Text style={styles.closeButton}>Apply</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        </ThemedView>
       </Modal>
     </ThemedSafeAreaView>
   );
@@ -143,7 +278,6 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     alignItems: 'center',
     marginTop: 22,
-    backgroundColor: 'white',
     padding: 10,
     shadowColor: '#000',
     shadowOffset: {
@@ -164,22 +298,5 @@ const styles = StyleSheet.create({
   closeButton: {
     marginTop: 15,
     color: 'blue',
-  },
-  actionsBtn: {
-    position: 'absolute',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    paddingHorizontal: 20,
-    bottom: 10,
-  },
-  filterOptions: {
-    width: '100%',
-  },
-  filterOption: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 10,
   },
 });

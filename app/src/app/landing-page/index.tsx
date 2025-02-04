@@ -12,7 +12,7 @@ import { ScrollView, View } from 'react-native';
 
 export default function LandingPage() {
   return (
-    <ScrollView>
+    <ScrollView horizontal={false}>
       <Header />
       <View>
         <Hero />
