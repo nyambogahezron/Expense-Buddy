@@ -16,9 +16,8 @@ export default function HeaderRightIconCard({
     <TouchableOpacity
       activeOpacity={0.5}
       onPress={handleOnPress}
-      className={`bg-opacity-50 rounded-lg p-1 py-2 ${
-        theme === 'light' ? 'bg-white' : 'bg-[#070B11]'
-      }`}
+      className={`bg-opacity-50 rounded-lg p-1 py-2
+      `}
     >
       <View
         className={`mr-2 p-2 rounded-lg  ${

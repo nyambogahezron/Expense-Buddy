@@ -60,7 +60,7 @@ export default function IncomeBlockCard() {
                 <View>
                   <LoadMoreBtn
                     title='View More'
-                    handleOnPress={() => router.push('/(tabs)/explore')}
+                    handleOnPress={() => router.push('/(tabs)/reports')}
                   />
                 </View>
               }
