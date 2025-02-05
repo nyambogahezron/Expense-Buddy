@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Dimensions, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Dimensions,
+  StyleSheet,
+  Platform,
+} from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { TransactionProps } from '@/types';
@@ -51,25 +58,12 @@ export default function Statistics() {
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
       >
-        <ThemedView style={styles.mainContainer}>
-          <View style={styles.summaryContainer}>
-            {/* Income and Expenses Summary */}
-            <View style={styles.summaryRow}>
-              <View style={styles.incomeContainer}>
-                <Text style={styles.incomeText}>Total Income</Text>
-                <Text style={styles.incomeAmount}>
-                  {UserCurrency}.{totalIncome}
-                </Text>
-              </View>
-              <View style={styles.expenseContainer}>
-                <Text style={styles.expenseText}>Total Expenses</Text>
-                <Text style={styles.expenseAmount}>
-                  {UserCurrency}.{totalExpense}
-                </Text>
-              </View>
-            </View>
+        <ThemedView style={styles.expenseBlockContainer}>
+          <View style={styles.expenseBlockInnerContainer}>
+            <ExpenseBlockCard />
           </View>
-
+        </ThemedView>
+        <ThemedView style={styles.mainContainer}>
           <View style={styles.chartContainer}>
             {/* Bar Chart */}
             <SummaryChart />
@@ -112,14 +106,9 @@ export default function Statistics() {
 
             <LoadMoreBtn
               title='View All'
-              handleOnPress={() => router.push('/(categories)')}
+              handleOnPress={() => router.push('/(tabs)/transactions')}
             />
           </View>
-
-          <ThemedView style={styles.expenseBlockContainer}>
-            <ExpenseBlockCard />
-            <View style={styles.expenseBlockInnerContainer}></View>
-          </ThemedView>
 
           {/* Expense Detail */}
           <ThemedView style={styles.categoriesContainer}>
@@ -167,57 +156,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollView: {
-    marginTop: -10,
+    marginTop: Platform.OS === 'android' ? -35 : 0,
   },
   mainContainer: {
     paddingHorizontal: 12,
     marginBottom: 80,
   },
-  summaryContainer: {
-    alignItems: 'center',
-    width: '100%',
-    paddingHorizontal: 8,
-  },
-  summaryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-    marginTop: 8,
-  },
-  incomeContainer: {
-    backgroundColor: '#E9D5FF',
-    padding: 24,
-    borderRadius: 12,
-    alignItems: 'center',
-    width: '48%',
-    marginRight: 4,
-  },
-  incomeText: {
-    color: '#7C3AED',
-    fontWeight: 'bold',
-  },
-  incomeAmount: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#7C3AED',
-  },
-  expenseContainer: {
-    backgroundColor: '#FFEDD5',
-    padding: 24,
-    borderRadius: 12,
-    alignItems: 'center',
-    width: '48%',
-    marginLeft: 4,
-  },
-  expenseText: {
-    color: '#F97316',
-    fontWeight: 'bold',
-  },
-  expenseAmount: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#F97316',
-  },
+
   chartContainer: {
     marginTop: 16,
     alignItems: 'center',
@@ -246,7 +191,9 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   expenseBlockContainer: {
-    marginVertical: 12,
+    width: width,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   expenseBlockInnerContainer: {
     flex: 1,

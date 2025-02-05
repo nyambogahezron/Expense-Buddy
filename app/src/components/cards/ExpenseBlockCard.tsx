@@ -83,7 +83,10 @@ const styles = StyleSheet.create({
     gap: 8,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    backgroundColor: Colors.gray,
+    backgroundColor: Colors.orange,
+    borderRadius: 10,
+    boxShadow: '0 0  10px rgba(0, 0, 0, 0.3)',
+    marginVertical: 10,
   },
   expenseBlockTxt1: {
     color: Colors.white,
