@@ -8,7 +8,7 @@ import GlobalProvider from '@/context/GlobalProvider';
 import DataProvider from '@/context/DataProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ToastProviderContext from '@/context/ToastProvider';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Platform, View } from 'react-native';
 import * as Font from 'expo-font';
 
 import {
@@ -19,10 +19,10 @@ import './global.css';
 
 SplashScreen.preventAutoHideAsync();
 
-// SplashScreen.setOptions({
-//   fade: true,
-//   duration: 1000,
-// });
+SplashScreen.setOptions({
+  fade: true,
+  duration: 1000,
+});
 
 const RootLayoutContent = () => {
   const [appIsReady, setAppIsReady] = React.useState(false);
@@ -41,8 +41,6 @@ const RootLayoutContent = () => {
           'Poppins-SemiBold': require('@assets/fonts/Poppins-SemiBold.ttf'),
           'Poppins-Thin': require('@assets/fonts/Poppins-Thin.ttf'),
         });
-
-        // await new Promise(resolve => setTimeout(resolve, 500));
       } catch (e) {
         console.warn(e);
       } finally {
@@ -59,13 +57,13 @@ const RootLayoutContent = () => {
     }
   }, [appIsReady]);
 
-  if (!appIsReady) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator size='large' />
-      </View>
-    );
-  }
+  // if (!appIsReady && Platform.OS === 'web') {
+  //   return (
+  //     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+  //       <ActivityIndicator size='large' />
+  //     </View>
+  //   );
+  // }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>

@@ -1,19 +1,17 @@
-import { View, ScrollView, StyleSheet } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { View, ScrollView, StyleSheet, Platform } from 'react-native';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import CategoryCard from '@/components/cards/CategoryCard';
 import CategoryActionCard from '@/components/cards/CategoryCard/CategoryActionCardModel';
 import { useTheme } from '@/context/ThemeProvider';
-import BackButton from '@/components/navigation/BackButton';
-import HeaderRightIconCard from '@/components/navigation/HeaderRightIconCard';
 import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import { useState } from 'react';
 import { useDataContext } from '@/context/DataProvider';
 import { Colors } from '@/constants/Colors';
 import useColorScheme from '@/hooks/useColorScheme';
+import Fab from '@/components/ui/Fab';
 
-const Statistics = () => {
+export default function Categories() {
   const { theme } = useTheme();
   const styles = createStyles(theme);
   const [modalVisible, setModalVisible] = useState(false);
@@ -30,33 +28,17 @@ const Statistics = () => {
     <ThemedSafeAreaView style={styles.container}>
       <StatusBar
         style={theme === 'light' ? 'dark' : 'light'}
-        backgroundColor={Colors[useColorScheme('bg2')].bg2}
-      />
-      <Stack.Screen
-        options={{
-          title: 'Categories',
-          headerShown: true,
-          headerTitleAlign: 'center',
-          headerStyle: styles.headerStyle,
-          headerLeft: () => <BackButton />,
-          headerTitleStyle: styles.headerTitleStyle,
-          headerRight: () => (
-            <HeaderRightIconCard
-              handleOnPress={() => router.push('/(categories)/create')}
-            >
-              <FontAwesome5
-                name='plus'
-                size={18}
-                color={theme === 'light' ? 'black' : Colors.white}
-              />
-            </HeaderRightIconCard>
-          ),
-        }}
+        backgroundColor={Colors[useColorScheme('background')].background}
       />
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        style={styles.scrollView}
+        style={[
+          styles.scrollView,
+          {
+            marginTop: Platform.select({ android: -28 }),
+          },
+        ]}
       >
         <View style={styles.view}>
           {categoriesData.map((item: any) => {
@@ -87,9 +69,11 @@ const Statistics = () => {
         item={activeTransaction}
         modalVisible={modalVisible}
       />
+
+      <Fab onPress={() => {}} />
     </ThemedSafeAreaView>
   );
-};
+}
 
 const createStyles = (theme: any) =>
   StyleSheet.create({
@@ -97,20 +81,9 @@ const createStyles = (theme: any) =>
       flex: 1,
     },
     scrollView: {
-      marginBottom: 8,
-      marginTop: -8,
+      marginBottom: 10,
     },
     view: {
       paddingHorizontal: 12,
     },
-    headerStyle: {
-      backgroundColor: theme === 'light' ? Colors.white : Colors.blackLight,
-    },
-    headerTitleStyle: {
-      color: theme === 'light' ? Colors.gray : Colors.white,
-      fontSize: 20,
-      fontWeight: 'bold',
-    },
   });
-
-export default Statistics;

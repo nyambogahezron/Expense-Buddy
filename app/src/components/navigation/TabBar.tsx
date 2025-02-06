@@ -11,11 +11,9 @@ export default function TabBar({
 }: TabBarProps) {
   const icons: tabIcons = {
     index: (props) => <AntDesign name='home' {...props} />,
-    explore: (props) => <Feather name='compass' {...props} />,
     transactions: (props) => <AntDesign name='swap' {...props} />,
-    create: (props) => <AntDesign name='pluscircleo' {...props} />,
-    reports: (props) => <Feather name='bar-chart-2' {...props} />,
     categories: (props) => <MaterialIcons name='category' {...props} />,
+    reports: (props) => <Feather name='bar-chart-2' {...props} />,
     profile: (props) => <Feather name='user' {...props} />,
   };
 

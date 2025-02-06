@@ -100,8 +100,6 @@ export default function LandingPage() {
             handleOpenPress={() => router.push('/(auth)/register')}
             customStyles={{
               backgroundColor: Colors.blue,
-              borderColor: 'white',
-              borderWidth: 2,
               marginTop: 4,
             }}
             textStyles={styles.buttonText}
@@ -113,7 +111,7 @@ export default function LandingPage() {
             customStyles={{
               backgroundColor: 'transparent',
               borderColor: 'white',
-              borderWidth: 2,
+              borderWidth: 1,
               marginTop: 15,
             }}
             textStyles={styles.buttonText}

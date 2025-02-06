@@ -53,15 +53,14 @@ export default function TabLayout() {
             },
           }}
         />
-
         <Tabs.Screen
-          name='create'
+          name='categories'
           options={{
-            title: 'Add Transaction',
+            title: 'Categories',
             headerShown: true,
             headerTitleAlign: 'center',
             headerStyle: {
-              backgroundColor: Colors[useColorScheme('background')].background,
+              backgroundColor: Colors[useColorScheme('header')].header,
             },
             headerLeft: () => <BackButton />,
             headerTitleStyle: {
