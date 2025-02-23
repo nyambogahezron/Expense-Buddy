@@ -12,100 +12,102 @@ import useColorScheme from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 
 export default function TabLayout() {
-  const { session, loading } = useGlobalContext();
+	const { session, loading } = useGlobalContext();
 
-  useEffect(() => {
-    if (!session && !loading) return router.replace('/');
-  }, [session]);
+	useEffect(() => {
+		if (!session && !loading) return router.replace('/');
+	}, [session]);
 
-  return (
-    <View style={{ flex: 1 }}>
-      <Tabs tabBar={(props) => <TabBar {...props} />}>
-        <Tabs.Screen
-          name='index'
-          options={{
-            title: 'Home',
-            headerShown: true,
-            headerShadowVisible: false,
-            headerTransparent: true,
-            headerTitle: '',
-            headerStyle: {
-              backgroundColor: Colors[useColorScheme('background')].background,
-            },
-            header: () => <CustomHeader />,
-          }}
-        />
-        <Tabs.Screen
-          name='transactions'
-          options={{
-            title: 'Transactions',
-            headerShown: true,
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor: Colors[useColorScheme('background')].background,
-            },
-            headerLeft: () => <BackButton />,
+	return (
+		<View style={{ flex: 1 }}>
+			<Tabs tabBar={(props) => <TabBar {...props} />}>
+				<Tabs.Screen
+					name='index'
+					options={{
+						title: 'Home',
+						headerShown: true,
+						headerShadowVisible: false,
+						headerTransparent: true,
+						headerTitle: '',
+						headerStyle: {
+							backgroundColor: Colors[useColorScheme('background')].background,
+						},
+						header: () => <CustomHeader />,
+					}}
+				/>
+				<Tabs.Screen
+					name='transactions'
+					options={{
+						title: 'Transactions',
+						headerShown: true,
+						headerTitleAlign: 'center',
+						headerStyle: {
+							backgroundColor: Colors[useColorScheme('background')].background,
+						},
+						headerLeft: () => <BackButton />,
 
-            headerTitleStyle: {
-              color: Colors[useColorScheme('customIcon')].customIcon,
-              fontSize: 20,
-              fontWeight: 'bold',
-            },
-          }}
-        />
-        <Tabs.Screen
-          name='categories'
-          options={{
-            title: 'Categories',
-            headerShown: true,
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor: Colors[useColorScheme('header')].header,
-            },
-            headerLeft: () => <BackButton />,
-            headerTitleStyle: {
-              color: Colors[useColorScheme('customIcon')].customIcon,
-              fontSize: 20,
-              fontWeight: 'bold',
-            },
-          }}
-        />
-        <Tabs.Screen
-          name='reports'
-          options={{
-            title: 'Reports',
-            headerShown: true,
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor: Colors[useColorScheme('header')].header,
-            },
-            headerLeft: () => <BackButton />,
-            headerTitleStyle: {
-              color: Colors[useColorScheme('customIcon')].customIcon,
-              fontSize: 20,
-              fontWeight: 'bold',
-            },
-            headerRight: () => (
-              <HeaderRightIconCard
-                handleOnPress={() => router.push('/(profile)/settings')}
-              >
-                <Ionicons
-                  name='settings-outline'
-                  size={22}
-                  color={Colors[useColorScheme('customIcon')].customIcon}
-                />
-              </HeaderRightIconCard>
-            ),
-          }}
-        />
+						headerTitleStyle: {
+							color: Colors[useColorScheme('customIcon')].customIcon,
+							fontSize: 20,
+							fontWeight: 'bold',
+						},
+					}}
+				/>
 
-        <Tabs.Screen
-          name='profile'
-          options={{
-            title: 'Profile',
-          }}
-        />
-      </Tabs>
-    </View>
-  );
+				<Tabs.Screen
+					name='reports'
+					options={{
+						title: 'Reports',
+						headerShown: true,
+						headerTitleAlign: 'center',
+						headerStyle: {
+							backgroundColor: Colors[useColorScheme('header')].header,
+						},
+						headerLeft: () => <BackButton />,
+						headerTitleStyle: {
+							color: Colors[useColorScheme('customIcon')].customIcon,
+							fontSize: 20,
+							fontWeight: 'bold',
+						},
+						headerRight: () => (
+							<HeaderRightIconCard
+								handleOnPress={() => router.push('/(profile)/settings')}
+							>
+								<Ionicons
+									name='settings-outline'
+									size={22}
+									color={Colors[useColorScheme('customIcon')].customIcon}
+								/>
+							</HeaderRightIconCard>
+						),
+					}}
+				/>
+
+				<Tabs.Screen
+					name='categories'
+					options={{
+						title: 'Categories',
+						headerShown: true,
+						headerTitleAlign: 'center',
+						headerStyle: {
+							backgroundColor: Colors[useColorScheme('header')].header,
+						},
+						headerLeft: () => <BackButton />,
+						headerTitleStyle: {
+							color: Colors[useColorScheme('customIcon')].customIcon,
+							fontSize: 20,
+							fontWeight: 'bold',
+						},
+					}}
+				/>
+
+				<Tabs.Screen
+					name='profile'
+					options={{
+						title: 'Profile',
+					}}
+				/>
+			</Tabs>
+		</View>
+	);
 }

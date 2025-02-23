@@ -1,10 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { ScrollView } from 'react-native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import {
+	FlatList,
+	Text,
+	View,
+	Dimensions,
+	TouchableOpacity,
+} from 'react-native';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { TransactionProps } from '@/types';
-import { Dimensions } from 'react-native';
 import { useTheme } from '@/context/ThemeProvider';
 import ThemedView from '@/components/ui/View';
 import ThemedText from '@/components/ui/Text';
@@ -15,183 +18,144 @@ import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import BackButton from '@/components/navigation/BackButton';
 import { Colors } from '@/constants/Colors';
 import useColorScheme from '@/hooks/useColorScheme';
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from 'react-native-popup-menu';
 
 const { width } = Dimensions.get('window');
 
 export default function TransactionDetails() {
-  const { deleteTransaction } = useDataContext();
+	const { deleteTransaction } = useDataContext();
+	const { theme } = useTheme();
+	const toast = useToast();
+	const navigation = useNavigation();
+	const colorScheme = useColorScheme();
 
-  const { theme } = useTheme();
-  const toast = useToast();
+	/**
+	 * @desc get item from local search params
+	 */
+	const { transaction } = useLocalSearchParams();
+	const item: TransactionProps =
+		typeof transaction === 'string' ? JSON.parse(transaction) : null;
 
-  /**
-   * @desc get item from local search params
-   */
-  const { transaction } = useLocalSearchParams();
-  const item: TransactionProps =
-    typeof transaction === 'string' ? JSON.parse(transaction) : null;
+	const transactionDetails = [
+		{ label: 'Amount', value: item.amount },
+		{ label: 'Date', value: item.date },
+		{ label: 'Transaction Fee', value: item.transactionFee },
+		{ label: 'Description', value: item.description },
+		{ label: 'Transaction Type', value: item.type },
+		{ label: 'Transaction Category', value: item.category.name },
+	];
 
-  const transactionDetails = [
-    { label: 'Amount', value: item.amount },
-    { label: 'Date', value: item.date },
-    { label: 'Transaction Fee', value: item.transactionFee },
-    { label: 'Description', value: item.description },
-    { label: 'Transaction Type', value: item.type },
-    { label: 'Transaction Category', value: item.category.name },
-  ];
+	const handleOnDelete = (id: string) => {
+		deleteTransaction(id);
+		router.push('/(tabs)');
+		toast.show('Transaction deleted successfully', {
+			type: 'success',
+		});
+	};
 
-  const handleOnDelete = (id: string) => {
-    deleteTransaction(id);
-    router.push('/(tabs)');
-    toast.show('Transaction deleted successfully', {
-      type: 'success',
-    });
-  };
+	const handleOnEdit = (item: TransactionProps) => {
+		router.push({
+			pathname: '/(transactions)/edit',
+			params: { transaction: JSON.stringify(item) },
+		});
+	};
 
-  const handleOnEdit = (item: TransactionProps) => {
-    router.push({
-      pathname: '/(transactions)/edit',
-      params: { transaction: JSON.stringify(item) },
-    });
-  };
+	React.useLayoutEffect(() => {
+		navigation.setOptions({
+			title:
+				transactionDetails.length > 30
+					? item.title.slice(0, 30) + ' Transaction Details...'
+					: item.title + ' Transaction Details',
+			headerShown: true,
+			headerTitleAlign: 'left',
+			headerStyle: {
+				backgroundColor: Colors[colorScheme].header,
+			},
+			headerTitleStyle: {
+				color: Colors[colorScheme].customIcon,
+				fontSize: 20,
+				fontWeight: 'bold',
+			},
+			headerLeft: () => <BackButton containerStyles='mr-3' />,
+		});
+	}, [navigation, theme, colorScheme, item]);
 
-  return (
-    <ThemedSafeAreaView>
-      <Stack.Screen
-        options={{
-          title: 'Transaction Details',
-          headerShown: true,
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor: Colors[useColorScheme('header')].header,
-          },
-          headerTitleStyle: {
-            color: Colors[useColorScheme('customIcon')].customIcon,
-            fontSize: 20,
-            fontWeight: 'bold',
-          },
-          headerLeft: () => <BackButton />,
-          headerRight: () => (
-            <Menu>
-              <MenuTrigger>
-                <FontAwesome
-                  name='ellipsis-v'
-                  size={20}
-                  color={theme === 'light' ? '#000' : '#fff'}
-                />
-              </MenuTrigger>
-              <MenuOptions>
-                <MenuOption onSelect={() => handleOnEdit(item)}>
-                  <Text>Edit</Text>
-                </MenuOption>
-                <MenuOption onSelect={() => handleOnDelete(item.id)}>
-                  <Text>Delete</Text>
-                </MenuOption>
-              </MenuOptions>
-            </Menu>
-          ),
-        }}
-      />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <View>
-          <View
-            className='relative items-center justify-center p-1 pb-3 rounded-[18px] mt-10'
-            style={{
-              borderColor: theme === 'light' ? '#f2f2f2' : '#1c1c1e',
-            }}
-          >
-            {/* Title  */}
-            <ThemedView
-              darkColor='#1c1c1e'
-              lightColor='#f2f2f2'
-              className='absolute top-0 flex flex-col items-center rounded-full p-1 -mt-10 mb-8  '
-            >
-              <View
-                className='flex items-center justify-center h-14 w-14 rounded-full p-2'
-                style={{
-                  backgroundColor: item.iconColor ? item.iconColor : '#3030cc',
-                }}
-              >
-                <Text className='text-lg font-bold text-white'>
-                  {item.category.icon && isEmoji(item.category.icon)
-                    ? item.category.icon
-                    : item.title.charAt(0)}
-                </Text>
-              </View>
-            </ThemedView>
-            <View className='mt-14'>
-              {/* Transaction Details */}
-              {transactionDetails.map(
-                (detail, index) =>
-                  detail && (
-                    <View
-                      key={index}
-                      className='mb-2 relative px-2'
-                      style={{ width: width * 0.92 }}
-                    >
-                      <ThemedView
-                        darkColor='#1c1c1e'
-                        lightColor='transparent'
-                        className='p-2 rounded-lg '
-                      >
-                        <ThemedText className='ml-2 font-pbold text-[15px]'>
-                          {detail.label}
-                        </ThemedText>
+	return (
+		<ThemedSafeAreaView className='relative flex-1'>
+			<FlatList
+				data={transactionDetails}
+				keyExtractor={(item, index) => index.toString()}
+				showsVerticalScrollIndicator={false}
+				showsHorizontalScrollIndicator={false}
+				contentContainerStyle={{
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
+				renderItem={({ item }) => (
+					<View className='mb-2 relative px-2' style={{ width: width * 0.92 }}>
+						<ThemedView lightColor='transparent' className='p-2 rounded-lg '>
+							<ThemedText className='ml-2 font-pbold text-[15px]'>
+								{item.label}
+							</ThemedText>
 
-                        <ThemedText
-                          darkColor='#ccc'
-                          className='text-[14px] capitalize font-pregular ml-2'
-                        >
-                          {detail.value}
-                        </ThemedText>
-                      </ThemedView>
-                    </View>
-                  )
-              )}
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-    </ThemedSafeAreaView>
-  );
+							<ThemedText
+								darkColor='#ccc'
+								className='text-[14px] capitalize font-pregular ml-2'
+							>
+								{item.value}
+							</ThemedText>
+						</ThemedView>
+					</View>
+				)}
+				ListHeaderComponent={() => (
+					<View
+						className='relative items-center justify-center p-1 pb-3 rounded-[18px] mt-10 mb-14'
+						style={{
+							borderColor: theme === 'light' ? '#f2f2f2' : '#1c1c1e',
+						}}
+					>
+						{/* Title  */}
+						<ThemedView
+							darkColor='#1c1c1e'
+							lightColor='#f2f2f2'
+							className='absolute top-0 flex flex-col items-center rounded-full p-1 -mt-10 mb-8  '
+						>
+							<View
+								className='flex items-center justify-center h-20 w-20 rounded-full p-2'
+								style={{
+									backgroundColor: item.iconColor ? item.iconColor : '#3030cc',
+								}}
+							>
+								<Text className='text-5xl font-bold text-red-500'>
+									{item.category.icon && isEmoji(item.category.icon)
+										? item.category.icon
+										: item.title.charAt(0)}
+								</Text>
+							</View>
+						</ThemedView>
+					</View>
+				)}
+			/>
+			{/* action icons */}
+			<ThemedView className='absolute bottom-0 gap-2 py-5 flex flex-row justify-between items-center px-4 w-full'>
+				<TouchableOpacity
+					onPress={() => handleOnEdit(item)}
+					className='flex justify-between items-center px-4 py-3 w-1/2 p-2 bg-gray-50 rounded-md'
+				>
+					<ThemedText
+						style={{ fontSize: 16 }}
+						darkColor='#333'
+						className='text-[16px] font-pbold'
+					>
+						Edit
+					</ThemedText>
+				</TouchableOpacity>
+				<TouchableOpacity
+					onPress={() => handleOnDelete(item.id)}
+					className='flex justify-between items-center px-4 py-3 w-1/2 p-2 rounded-md bg-red-400'
+				>
+					<Text className='text-white text-md font-pbold'>Delete</Text>
+				</TouchableOpacity>
+			</ThemedView>
+		</ThemedSafeAreaView>
+	);
 }
-
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    backgroundColor: 'gray',
-    height: '100%',
-  },
-  modalView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    height: '90%',
-    backgroundColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-});

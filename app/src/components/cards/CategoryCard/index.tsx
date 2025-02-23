@@ -1,61 +1,64 @@
-import { Dispatch } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import Entypo from '@expo/vector-icons/Entypo';
-import { useTheme } from '@/context/ThemeProvider';
 import ThemedText from '@/components/ui/Text';
+import SwipeableRow from '../../ui/SwipeableRow';
+import { useDataContext } from '@/context/DataProvider';
+import { useToast } from 'react-native-toast-notifications';
+import { router } from 'expo-router';
 
 type CategoryCardProps = {
-  handleOnPress: () => void;
-  id: number;
-  name: string;
-  icon?: string;
-  setIsPressed?: Dispatch<React.SetStateAction<boolean>>;
-  handleOpenPress?: () => void;
-  isPress?: boolean;
-  PressedItem?: number;
+	handleOnPress: () => void;
+	id: number;
+	name: string;
+	icon?: string;
 };
 
 export default function CategoryCard({
-  handleOnPress,
-  id,
-  name,
-  icon,
-  handleOpenPress,
+	handleOnPress,
+	id,
+	name,
+	icon,
 }: CategoryCardProps) {
-  const { theme } = useTheme();
-  return (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      key={id}
-      style={{
-        backgroundColor: theme === 'light' ? '#e5e7eb' : '#1c1c1e',
-      }}
-      className={`flex-row items-center justify-between p-4 rounded-lg mb-1 
-                }`}
-    >
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={handleOnPress}
-        className='flex-row items-center  w-[90%] '
-      >
-        <View className='bg-white p-3 rounded-full mr-4'>
-          <Text>{icon ? icon : name.charAt(0)}</Text>
-        </View>
-        <View>
-          <ThemedText className='font-bold'>{name}</ThemedText>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity
-        className=' px-3'
-        activeOpacity={0.7}
-        onPress={handleOpenPress}
-      >
-        <Entypo
-          name='dots-three-vertical'
-          size={15}
-          color={theme === 'light' ? 'black' : '#fff'}
-        />
-      </TouchableOpacity>
-    </TouchableOpacity>
-  );
+	const { deleteCategory } = useDataContext();
+	const toast = useToast();
+
+	async function onDelete() {
+		await deleteCategory(id.toString());
+		toast.show('Category deleted successfully', {
+			type: 'success',
+		});
+	}
+
+	function onEdit() {
+		router.push({
+			pathname: '/(categories)/edit',
+			params: { item: JSON.stringify({ id, name, icon }) },
+		});
+	}
+
+	return (
+		<SwipeableRow onDelete={onDelete} onEdit={() => onEdit()}>
+			<TouchableOpacity
+				activeOpacity={0.7}
+				key={id}
+				className='flex-row items-center justify-between py-3  '
+			>
+				<TouchableOpacity
+					activeOpacity={0.7}
+					onPress={handleOnPress}
+					className='flex-row items-center w-full'
+				>
+					<View className='p-4 rounded-full mr-3'>
+						<Text className='text-2xl text-white'>
+							{icon ? icon : name.charAt(0)}
+						</Text>
+					</View>
+					<View>
+						<ThemedText className='font-bold'>
+							{name.length > 15 ? name.substring(0, 15) + '...' : name}
+						</ThemedText>
+					</View>
+				</TouchableOpacity>
+			</TouchableOpacity>
+		</SwipeableRow>
+	);
 }
