@@ -2,7 +2,6 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import ThemedText from '@/components/ui/Text';
 import SwipeableRow from '../../ui/SwipeableRow';
 import { useDataContext } from '@/context/DataProvider';
-import { useToast } from 'react-native-toast-notifications';
 import { router } from 'expo-router';
 
 type CategoryCardProps = {
@@ -19,13 +18,9 @@ export default function CategoryCard({
 	icon,
 }: CategoryCardProps) {
 	const { deleteCategory } = useDataContext();
-	const toast = useToast();
 
 	async function onDelete() {
 		await deleteCategory(id.toString());
-		toast.show('Category deleted successfully', {
-			type: 'success',
-		});
 	}
 
 	function onEdit() {

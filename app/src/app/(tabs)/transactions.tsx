@@ -245,7 +245,6 @@ export default function Transactions() {
 const styles = StyleSheet.create({
 	safeArea: {
 		flex: 1,
-		// paddingHorizontal: 8,
 		paddingBottom: 20,
 	},
 	container: {

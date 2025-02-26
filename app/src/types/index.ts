@@ -84,13 +84,9 @@ export type createContextProps = {
   updateTransaction: (transaction: any) => Promise<void>;
   categoriesData: any;
   fetchCategories: () => Promise<void>;
-  addCategory: (category: any) => Promise<void>;
-  updateCategory: (category: any) => Promise<void>;
+  addCategory: (category: any) => Promise<any>;
+  updateCategory: (category: any) => Promise<any>;
   deleteCategory: (id: string) => Promise<void>;
-  uploadImage: (image: any) => Promise<any>;
-  deleteImage: (imagePath: string) => Promise<void>;
-  uploadFile: (file: any) => Promise<any>;
-  deleteFile: (filePath: string) => Promise<void>;
   totalExpense: number;
   totalIncome: number;
   expenseList: any;
@@ -125,4 +121,5 @@ export type ButtonProps = {
   customStyles?: ViewStyle | ViewStyle[];
   touchOpacity?: number;
   isLoading?: boolean;
+  disabled?: boolean;
 };

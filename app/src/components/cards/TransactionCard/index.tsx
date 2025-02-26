@@ -42,7 +42,7 @@ export default function TransactionCard({ item }: TransactionCardProps) {
 						params: { transaction: JSON.stringify(item) },
 					})
 				}
-				className='w-full flex-row justify-between items-center px-1 py-3 mb-2'
+				className='w-full flex-row justify-between items-center pl-1 py-3 mb-2  -mr-4'
 			>
 				<ThemedView className='flex-row items-center'>
 					<View

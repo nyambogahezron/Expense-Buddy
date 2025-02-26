@@ -20,7 +20,6 @@ export default function Categories() {
 				style={theme === 'light' ? 'dark' : 'light'}
 				backgroundColor={Colors[useColorScheme('background')].background}
 			/>
-
 			<FlatList
 				showsHorizontalScrollIndicator={false}
 				showsVerticalScrollIndicator={false}
@@ -38,14 +37,15 @@ export default function Categories() {
 						icon={item.icon}
 					/>
 				)}
-				keyExtractor={(item) => item.id.toString()}
+				keyExtractor={(item) =>
+					item.id ? item.id.toString() : Math.random().toString()
+				}
+				contentContainerStyle={{ paddingBottom: 70 }}
 				style={{
-					marginTop: Platform.select({ android: -28 }),
+					marginTop: Platform.select({ android: -40 }),
 					paddingHorizontal: 2,
-					marginBottom: 4,
 				}}
 			/>
-
 			<Fab
 				onPress={() => {
 					router.push('/(categories)/create');

@@ -28,6 +28,9 @@ export default function CategoriesDetails() {
 
 	const navigation = useNavigation();
 	const colorScheme = useColorScheme();
+	const pageTitle = `${name} Category Transactions`;
+	const viewTitle =
+		pageTitle.length > 30 ? pageTitle.slice(0, 30) + '...' : pageTitle;
 
 	useEffect(() => {
 		const data = transactionsData.filter(
@@ -38,20 +41,17 @@ export default function CategoriesDetails() {
 
 	React.useLayoutEffect(() => {
 		navigation.setOptions({
-			title:
-				name.length > 30
-					? name.slice(0, 30) + ' Transactions...'
-					: name + ' Transactions',
+			title: viewTitle,
 			headerShown: true,
 			headerTitleAlign: 'left',
 			headerStyle: {
 				backgroundColor: Colors[colorScheme].background,
 			},
-			headerLeft: () => <BackButton containerStyles='mr-4' />,
+			headerLeft: () => <BackButton containerStyles='mr-4 -ml-4 p-1' />,
 			headerTitleStyle: {
 				color: Colors[colorScheme].customIcon,
-				fontSize: 20,
-				fontWeight: 'bold',
+				fontSize: 17,
+				fontWeight: 400,
 			},
 		});
 	}, [navigation, name, colorScheme]);
