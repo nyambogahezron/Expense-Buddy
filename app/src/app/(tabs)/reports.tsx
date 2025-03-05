@@ -18,7 +18,7 @@ import { useDataContext } from '@/context/DataProvider';
 import TransactionCard from '@/components/cards/TransactionCard';
 import SummaryChart from '@/components/Charts/SummaryOverview';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
-import ExpenseBlockCard from '@/components/cards/ExpenseBlockCard';
+import ExpenseBlockCard from '@/components/ExpenseBlockCard';
 import { Colors } from '@/constants/Colors';
 import useColorScheme from '@/hooks/useColorScheme';
 

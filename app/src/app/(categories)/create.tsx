@@ -8,7 +8,7 @@ import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import ThemedView from '@/components/ui/View';
 import { useTheme } from '@/context/ThemeProvider';
 import BackButton from '@/components/navigation/BackButton';
-import CustomTextInput from '@/components/Form/CustomTextInput';
+import CustomTextInput from '@/components/ui/CustomTextInput';
 import { Colors } from '@/constants/Colors';
 import useColorScheme from '@/hooks/useColorScheme';
 import { useDataContext } from '@/context/DataProvider';

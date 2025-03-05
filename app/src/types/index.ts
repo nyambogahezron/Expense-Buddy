@@ -60,13 +60,12 @@ export type CustomTextInputProps = {
   keyboardType?: 'email-address' | 'default' | 'numeric';
   value?: string;
   multiline?: boolean;
-};
-
-export type CustomPasswordTextInputProps = CustomTextInputProps & {
-  handleOnPress?: () => void;
+  inputType?: 'normal' | 'password';
   passwordVisible?: boolean;
+  handleOnPress?: () => void;
   isForConfirmation?: boolean;
 };
+
 
 export type CategoryPickerProps = {
   selectedCategory?: string;

@@ -6,7 +6,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
 import BackButton from '@/components/navigation/BackButton';
-import CustomTextInput from '@/components/Form/CustomTextInput';
+import CustomTextInput from '@/components/ui/CustomTextInput';
 import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import ThemedView from '@/components/ui/View';
 import useColorScheme from '@/hooks/useColorScheme';

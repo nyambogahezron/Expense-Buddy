@@ -4,9 +4,8 @@ import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
 import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
-import CustomTextInput from '@/components/Form/CustomTextInput';
-import CustomPasswordInput from '@/components/Form/CustomPasswordInput';
-import AuthFooter from '@/components/Form/AuthFooter';
+import CustomTextInput from '@/components/ui/CustomTextInput';
+import AuthFooter from '@/components/AuthFooter';
 import Button from '@/components/ui/Button';
 import { supabase } from '@/utils/supabase';
 import { useToast } from 'react-native-toast-notifications';
@@ -94,14 +93,16 @@ export default function Login() {
 					keyboardType='email-address'
 				/>
 
-				<CustomPasswordInput
+				<CustomTextInput
+					inputType='password'
 					title='Password'
 					onChangeText={(text) => setPassword(text)}
 					placeholder='Enter Password'
 					passwordVisible={passwordVisible}
 					handleOnPress={() => setPasswordVisible(!passwordVisible)}
 				/>
-				<CustomPasswordInput
+				<CustomTextInput
+					inputType='password'
 					title='Confirm Password'
 					onChangeText={(text) => setConfirmPassword(text)}
 					passwordVisible={passwordVisible}
@@ -131,11 +132,12 @@ export default function Login() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingHorizontal: 12,
+		paddingHorizontal: 10,
 		width: '100%',
 		justifyContent: 'center',
 	},
 	registerButton: {
+		marginTop: 10,
 		backgroundColor: '#1D4ED8',
 	},
 	registerButtonText: {

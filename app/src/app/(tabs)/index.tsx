@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import { useTheme } from '@/context/ThemeProvider';
 import { useDataContext } from '@/context/DataProvider';
-import IncomeBlockCard from '@/components/cards/IncomeBlockCard';
+import IncomeBlockCard from '@/components/IncomeBlockCard';
 import Animated from 'react-native-reanimated';
 import { Colors } from '@/constants/Colors';
 import TopSpendingSection from '@/components/TopSpendingSection';

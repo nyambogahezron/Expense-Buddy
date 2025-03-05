@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Alert } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
@@ -8,19 +8,19 @@ import { useTheme } from '@/context/ThemeProvider';
 import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import ThemedView from '@/components/ui/View';
 import BackButton from '@/components/navigation/BackButton';
-import CustomTextInput from '@/components/Form/CustomTextInput';
-import DatePicker from '@/components/Form/DatePicker';
+import CustomTextInput from '@/components/ui/CustomTextInput';
+import DatePicker from '@/components/ui/DatePicker';
 import ThemedText from '@/components/ui/Text';
 import BottomSheet from '@gorhom/bottom-sheet';
 import CategoryListBottomSheet from '@/components/cards/CategoryCard/CategoryListBottomSheet';
-import TransactionTypePicker from '@/components/Form/TransactionTypePicker';
+import TransactionTypePicker from '@/components/TransactionTypePicker';
 import { supabase } from '@/utils/supabase';
 import { useDataContext } from '@/context/DataProvider';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { useToast } from 'react-native-toast-notifications';
-import CustomButton from '@/components/CustomButton';
 import { Colors } from '@/constants/Colors';
 import useColorScheme from '@/hooks/useColorScheme';
+import Button from '@/components/ui/Button';
 
 export default function EditTransaction() {
 	// get item from local search params
@@ -178,12 +178,12 @@ export default function EditTransaction() {
 
 				{/* Save btn  */}
 
-				<CustomButton
+				<Button
 					isLoading={isLoading}
 					title='Save'
 					handleOpenPress={handleSave}
-					customStyles=' bg-orange-600'
-					textStyles='text-white'
+					customStyles={{ backgroundColor: Colors.orange }}
+					textStyles={{ color: Colors.white }}
 				/>
 			</ScrollView>
 			<CategoryListBottomSheet

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, Dimensions, StyleSheet } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import CustomTextInput from '@/components/Form/CustomTextInput';
+import CustomTextInput from '@/components/ui/CustomTextInput';
 import { useTheme } from '@/context/ThemeProvider';
 import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import Button from '@/components/ui/Button';

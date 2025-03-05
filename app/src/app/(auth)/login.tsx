@@ -10,9 +10,8 @@ import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
 import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
-import CustomTextInput from '@/components/Form/CustomTextInput';
-import CustomPasswordInput from '@/components/Form/CustomPasswordInput';
-import AuthFooter from '@/components/Form/AuthFooter';
+import CustomTextInput from '@/components/ui/CustomTextInput';
+import AuthFooter from '@/components/AuthFooter';
 import Button from '@/components/ui/Button';
 import { supabase } from '@/utils/supabase';
 import { useToast } from 'react-native-toast-notifications';
@@ -71,7 +70,8 @@ export default function Login() {
 					keyboardType='email-address'
 				/>
 
-				<CustomPasswordInput
+				<CustomTextInput
+					inputType='password'
 					title='Password'
 					onChangeText={(text) => setPassword(text)}
 					placeholder='Enter Password'

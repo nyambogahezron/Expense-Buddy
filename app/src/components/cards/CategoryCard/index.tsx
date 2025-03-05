@@ -3,6 +3,7 @@ import ThemedText from '@/components/ui/Text';
 import SwipeableRow from '../../ui/SwipeableRow';
 import { useDataContext } from '@/context/DataProvider';
 import { router } from 'expo-router';
+import isEmoji from '@/utils/isEmoji';
 
 type CategoryCardProps = {
 	handleOnPress: () => void;
@@ -35,16 +36,16 @@ export default function CategoryCard({
 			<TouchableOpacity
 				activeOpacity={0.7}
 				key={id}
-				className='flex-row items-center justify-between py-3  '
+				className='flex-row items-center justify-between py-3'
 			>
 				<TouchableOpacity
 					activeOpacity={0.7}
 					onPress={handleOnPress}
 					className='flex-row items-center w-full'
 				>
-					<View className='p-4 rounded-full mr-3'>
-						<Text className='text-2xl text-white'>
-							{icon ? icon : name.charAt(0)}
+					<View className='p-4 mr-3 h-14 w-14 rounded-full ml-2 bg-orangeClr items-center justify-center'>
+						<Text className='text-xl text-white font-pbold'>
+							{isEmoji(icon) ? icon : name.charAt(0)}
 						</Text>
 					</View>
 					<View>

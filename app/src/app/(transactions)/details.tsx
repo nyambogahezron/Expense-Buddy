@@ -139,12 +139,11 @@ export default function TransactionDetails() {
 			<ThemedView className='absolute bottom-0 gap-2 py-5 flex flex-row justify-between items-center px-4 w-full'>
 				<TouchableOpacity
 					onPress={() => handleOnEdit(item)}
-					className='flex justify-between items-center px-4 py-3 w-1/2 p-2 bg-gray-50 rounded-md'
+					className='flex justify-between items-center px-4 py-3 w-1/2 p-2 bg-orange rounded-md'
 				>
 					<ThemedText
 						style={{ fontSize: 16 }}
-						darkColor='#333'
-						className='text-[16px] font-pbold'
+						className='text-[16px] font-pbold bg-orange'
 					>
 						Edit
 					</ThemedText>

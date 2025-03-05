@@ -345,6 +345,21 @@ export default function DataProvider({
 		}
 	}
 
+	//update user data
+
+	async function updateUser(userData: any) {
+		try {
+			setIsLoading(true);
+			const { error, data } = await supabase.from('users').update(userData);
+
+			if (!error) {
+				Alert.alert('Update Data', 'Data was updated Successful');
+			}
+		} catch (error) {
+			console.log('error updating user', error);
+		}
+	}
+
 	React.useEffect(() => {
 		if (User) {
 			fetchTransactions();

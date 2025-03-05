@@ -11,11 +11,23 @@ import ThemedView from '@/components/ui/View';
 import BackButton from '@/components/navigation/BackButton';
 import CurrencyContainer from '@/components/CurrencyContainer';
 import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
+import { supabase } from '@/utils/supabase';
+import { Toaster } from '@/lib/Toaster';
 
 export default function Settings() {
 	const { theme, toggleTheme } = useTheme();
 	const bottomSheetRef = useRef<BottomSheet>(null);
 	const handleOpenPress = () => bottomSheetRef.current?.expand();
+
+	// Sign out user
+	async function signOut() {
+		const { error } = await supabase.auth.signOut();
+		if (error) console.log('Error logging out:', error.message);
+
+		Toaster('Logged out successfully');
+
+		router.replace('/');
+	}
 
 	return (
 		<ThemedSafeAreaView className='flex-1 '>
@@ -76,25 +88,6 @@ export default function Settings() {
 						className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
 							theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'
 						}`}
-						onPress={() => router.push('/(profile)/settings')}
-					>
-						<MaterialIcons name='password' size={22} color='#6B7280' />
-						<Text
-							className={`ml-4 ${
-								theme === 'light' ? 'text-gray-800' : 'text-gray-200'
-							}`}
-						>
-							Change Password
-						</Text>
-						<View className='absolute flex right-2'>
-							<Ionicons name='chevron-forward' size={22} color='#6B7280' />
-						</View>
-					</TouchableOpacity>
-					<TouchableOpacity
-						activeOpacity={0.7}
-						className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
-							theme === 'light' ? 'bg-gray-200' : 'bg-[#1c1c1e]'
-						}`}
 						onPress={() => handleOpenPress()} // open currency bottom sheet
 					>
 						<MaterialIcons name='currency-exchange' size={22} color='#6B7280' />
@@ -131,7 +124,7 @@ export default function Settings() {
 							className={`flex-row items-center rounded-lg px-4 py-3 mb-4 ${
 								theme === 'light' ? 'bg-white' : 'bg-[#1c1c1e]'
 							}`}
-							onPress={() => router.push('/(tabs)')}
+							onPress={() => signOut()}
 						>
 							<Ionicons name='log-out-outline' size={22} color='#EF4444' />
 							<Text className='ml-4 text-red-600 font-bold'>Logout</Text>

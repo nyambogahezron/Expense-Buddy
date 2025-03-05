@@ -5,9 +5,9 @@ import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeProvider';
 import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
 import Button from '@/components/ui/Button';
-import CustomPasswordInput from '@/components/Form/CustomPasswordInput';
 import ThemedView from '@/components/ui/View';
 import ThemedText from '@/components/ui/Text';
+import CustomTextInput from '@/components/ui/CustomTextInput';
 
 export default function ResetPassword() {
 	const [password, setPassword] = useState<string>('');
@@ -43,14 +43,16 @@ export default function ResetPassword() {
 				</ThemedView>
 
 				{/* Email Input */}
-				<CustomPasswordInput
+				<CustomTextInput
+					inputType='password'
 					title='Password'
 					onChangeText={(text) => setPassword(text)}
 					placeholder='Enter Password'
 					passwordVisible={passwordVisible}
 					handleOnPress={() => setPasswordVisible(!passwordVisible)}
 				/>
-				<CustomPasswordInput
+				<CustomTextInput
+					inputType='password'
 					title='Confirm Password'
 					onChangeText={(text) => setConfirmPassword(text)}
 					placeholder='Confirm Password'
