@@ -4,6 +4,12 @@ from rest_framework import status
 from .models import User
 from django.db.models import Q
 from .serializers import UserSerializer
+from django.utils import timezone
+from .utils import send_verification_email, send_password_reset_email
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.conf import settings
 
 
 class RegisterUserView(APIView):
@@ -30,20 +36,56 @@ class RegisterUserView(APIView):
         user = serialized_user.save()
         user.username = user.username.lower()
         user.save()
-        # Send verification email logic here
-        # send_verification_email(user)
+
+        # Send verification email
+        try:
+            send_verification_email(user)
+        except Exception as e:
+            # Log the error but don't prevent registration
+            print(f"Error sending verification email: {str(e)}")
 
         user_data = UserSerializer(user).data
 
         return Response(
-            {"message": "User registered successfully!", "data": user_data}, status=201
+            {
+                "message": "User registered successfully! Please check your email to verify your account.",
+                "data": user_data,
+            },
+            status=201,
         )
 
 
 class SendPasswordResetEmailView(APIView):
     def post(self, request):
-        # Logic for sending password reset email
-        return Response({"message": "Password reset email sent!"}, status=200)
+        email = request.data.get("email")
+        if not email:
+            return Response(
+                {"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = User.objects.filter(email=email).first()
+        if not user:
+            # Don't reveal if user exists for security
+            return Response(
+                {
+                    "message": "If an account with this email exists, a password reset link has been sent."
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        try:
+            send_password_reset_email(user)
+        except Exception as e:
+            # Log the error
+            print(f"Error sending password reset email: {str(e)}")
+            return Response(
+                {"error": "Failed to send password reset email"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        return Response(
+            {"message": "Password reset email sent!"}, status=status.HTTP_200_OK
+        )
 
 
 class ResetPasswordView(APIView):
@@ -54,8 +96,30 @@ class ResetPasswordView(APIView):
 
 class SendVerficationTokenView(APIView):
     def post(self, request):
-        # Logic for sending verification token
-        return Response({"message": "Verification token sent!"}, status=200)
+        email = request.data.get("email")
+        if not email:
+            return Response(
+                {"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = User.objects.filter(email=email).first()
+        if not user:
+            return Response(
+                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        try:
+            send_verification_email(user)
+        except Exception as e:
+            print(f"Error sending verification email: {str(e)}")
+            return Response(
+                {"error": "Failed to send verification email"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        return Response(
+            {"message": "Verification email sent!"}, status=status.HTTP_200_OK
+        )
 
 
 class VerifyEmailView(APIView):
@@ -66,11 +130,135 @@ class VerifyEmailView(APIView):
 
 class LoginUserView(APIView):
     def post(self, request):
-        # Logic for user login
-        return Response({"message": "User logged in successfully!"}, status=200)
+        # Get credentials from request
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        if not username or not password:
+            return Response(
+                {"error": "Username and password are required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Check if user exists
+        try:
+            # Allow login with username or email
+            user = User.objects.get(
+                Q(username__iexact=username) | Q(email__iexact=username)
+            )
+        except User.DoesNotExist:
+            return Response(
+                {"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        # Check account status
+        if user.account_status != "active":
+            return Response(
+                {
+                    "error": f"Your account is {user.account_status}. Please contact support."
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # Check login attempts
+        if user.loginAttempts >= 5:  # Limit to 5 attempts
+            return Response(
+                {
+                    "error": "Too many failed login attempts. Please reset your password."
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # Authenticate user
+        auth_user = authenticate(username=user.username, password=password)
+        if not auth_user:
+            # Increment login attempts
+            user.loginAttempts += 1
+            user.save()
+            return Response(
+                {
+                    "error": f"Invalid credentials. {5 - user.loginAttempts} attempts remaining."
+                },
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        # Check email verification
+        if not user.is_email_verified:
+            return Response(
+                {
+                    "error": "Please verify your email before logging in",
+                    "needsVerification": True,
+                    "email": user.email,
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # Reset login attempts on successful login
+        user.loginAttempts = 0
+        user.save()
+
+        # Generate JWT tokens
+        refresh = RefreshToken.for_user(user)
+
+        response = Response(
+            {
+                "message": "Login successful",
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+                "user": {
+                    "id": user.id,
+                    "username": user.username,
+                    "email": user.email,
+                    "name": user.name,
+                    "avatar": user.avatar.url if user.avatar else None,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )
+
+        # Set JWT cookie according to settings
+        response.set_cookie(
+            key=settings.SIMPLE_JWT["AUTH_COOKIE"],
+            value=str(refresh.access_token),
+            expires=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
+            secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
+            httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
+            samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
+        )
+
+        return response
 
 
 class LogoutUserView(APIView):
     def delete(self, request):
-        # Logic for user logout
-        return Response({"message": "User logged out successfully!"}, status=200)
+        response = Response({"message": "User logged out successfully!"}, status=200)
+        response.delete_cookie(settings.SIMPLE_JWT["AUTH_COOKIE"])
+        return response
+
+
+class EmailSendTest(APIView):
+    def post(self, request):
+        email = request.data.get("email")
+        if not email:
+            return Response(
+                {"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = User.objects.filter(email=email).first()
+        if not user:
+            return Response(
+                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        try:
+            send_verification_email(user)
+        except Exception as e:
+            print(f"Error sending verification email: {str(e)}")
+            return Response(
+                {"error": "Failed to send verification email"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        return Response(
+            {"message": "Verification email sent!"}, status=status.HTTP_200_OK
+        )

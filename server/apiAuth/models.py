@@ -8,6 +8,20 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     avatar = models.ImageField(upload_to="avatars/", null=True, blank=True)
     password = models.CharField(max_length=128)
+    verification_token = models.CharField(max_length=100, null=True, blank=True)
+    is_email_verified = models.BooleanField(default=False)
+    reset_password_token = models.CharField(max_length=100, null=True, blank=True)
+    reset_password_token_created_at = models.DateTimeField(null=True, blank=True)
+    account_status = models.CharField(
+        max_length=20,
+        choices=[
+            ("active", "Active"),
+            ("inactive", "Inactive"),
+            ("inactive", "Suspended"),
+        ],
+        default="active",
+    )
+    loginAttempts = models.IntegerField(default=0)
 
     USERNAME_FIELD = "username"
 
