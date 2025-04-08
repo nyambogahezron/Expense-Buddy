@@ -14,6 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
             "password": {"write_only": True},
             "email": {"required": True},
             "username": {"required": True},
+            "avatar": {"required": False},
         }
 
     def validate(self, attrs):
@@ -34,7 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
             name=validated_data["name"],
             username=validated_data["username"],
             email=validated_data["email"],
-            avatar=validated_data["avatar"],
+            avatar=validated_data.get("avatar", None),
         )
         user.set_password(validated_data["password"])
         user.save()
