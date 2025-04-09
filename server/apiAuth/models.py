@@ -12,6 +12,7 @@ class User(AbstractUser):
     is_email_verified = models.BooleanField(default=False)
     reset_password_token = models.CharField(max_length=100, null=True, blank=True)
     reset_password_token_created_at = models.DateTimeField(null=True, blank=True)
+    verification_token_created_at = models.DateTimeField(null=True, blank=True)
     account_status = models.CharField(
         max_length=20,
         choices=[

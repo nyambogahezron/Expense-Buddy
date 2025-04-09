@@ -7,8 +7,8 @@ from .serializers import UserSerializer
 from django.utils import timezone
 from .utils import send_verification_email, send_password_reset_email
 from django.contrib.auth import authenticate
-from rest_framework.authtoken.models import Token
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, UntypedToken
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from django.conf import settings
 
 
@@ -90,7 +90,42 @@ class SendPasswordResetEmailView(APIView):
 
 class ResetPasswordView(APIView):
     def post(self, request):
-        # Logic for resetting password
+        email = request.data.get("email")
+        token = request.data.get("token")
+        new_password = request.data.get("password")
+        if not email or not token or not new_password:
+            return Response(
+                {"error": "All fields are required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        user = User.objects.filter(email=email).first()
+        if not user:
+            return Response(
+                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+        if user.reset_password_token != token:
+            return Response(
+                {"error": "Invalid password reset token"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if user.reset_password_token_created_at:
+            token_expiry_time = (
+                user.reset_password_token_created_at + timezone.timedelta(hours=24)
+            )
+            if timezone.now() > token_expiry_time:
+                return Response(
+                    {"error": "Password reset token has expired"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        user.set_password(new_password)
+        user.reset_password_token = None
+        user.reset_password_token_created_at = None
+        user.account_status = "active"
+        user.is_email_verified = True
+        user.verification_token = None
+        user.verification_token_created_at = None
+        user.loginAttempts = 0
+        user.save()
+
         return Response({"message": "Password reset successfully!"}, status=200)
 
 
@@ -124,17 +159,74 @@ class SendVerficationTokenView(APIView):
 
 class VerifyEmailView(APIView):
     def post(self, request):
-        # Logic for verifying email
+        email = request.data.get("email")
+        token = request.data.get("token")
+
+        if not email or not token:
+            return Response(
+                {"error": "All fields are required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = User.objects.filter(email=email).first()
+        if not user:
+            return Response(
+                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        if user.is_email_verified:
+            return Response(
+                {"error": "Email is already verified"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Verify the email
+        if user.verification_token != token:
+            return Response(
+                {"error": "Invalid verification token"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Check if the token is expired
+        if user.verification_token_created_at:
+            token_expiry_time = user.verification_token_created_at + timezone.timedelta(
+                hours=24
+            )
+            if timezone.now() > token_expiry_time:
+                return Response(
+                    {"error": "Verification token has expired"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        user.is_email_verified = True
+        user.verification_token = None
+        user.verification_token_created_at = None
+        user.save()
+
         return Response({"message": "Email verified successfully!"}, status=200)
 
 
 class LoginUserView(APIView):
     def post(self, request):
+
+        # Check if the request is authenticated
+        if request.user.is_authenticated:
+            return Response(
+                {"message": "User is already logged in"}, status=status.HTTP_200_OK
+            )
+
         # Get credentials from request
         username = request.data.get("username")
+        email = request.data.get("email")
         password = request.data.get("password")
 
-        if not username or not password:
+        email_username = username if username else email
+        if not email_username:
+            return Response(
+                {"error": "Username or email is required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not password:
             return Response(
                 {"error": "Username and password are required"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -144,7 +236,7 @@ class LoginUserView(APIView):
         try:
             # Allow login with username or email
             user = User.objects.get(
-                Q(username__iexact=username) | Q(email__iexact=username)
+                Q(username__iexact=email_username) | Q(email__iexact=email_username)
             )
         except User.DoesNotExist:
             return Response(
@@ -155,13 +247,26 @@ class LoginUserView(APIView):
         if user.account_status != "active":
             return Response(
                 {
-                    "error": f"Your account is {user.account_status}. Please contact support."
+                    "error": f"Your account is {user.account_status}. Please restore your account to log in."
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # Check if user email is verified
+        if not user.is_email_verified:
+            return Response(
+                {
+                    "error": "Please verify your email before logging in",
+                    "needsVerification": True,
+                    "email": user.email,
                 },
                 status=status.HTTP_403_FORBIDDEN,
             )
 
         # Check login attempts
         if user.loginAttempts >= 5:  # Limit to 5 attempts
+            user.account_status = "inactive"
+            user.save()
             return Response(
                 {
                     "error": "Too many failed login attempts. Please reset your password."
@@ -180,17 +285,6 @@ class LoginUserView(APIView):
                     "error": f"Invalid credentials. {5 - user.loginAttempts} attempts remaining."
                 },
                 status=status.HTTP_401_UNAUTHORIZED,
-            )
-
-        # Check email verification
-        if not user.is_email_verified:
-            return Response(
-                {
-                    "error": "Please verify your email before logging in",
-                    "needsVerification": True,
-                    "email": user.email,
-                },
-                status=status.HTTP_403_FORBIDDEN,
             )
 
         # Reset login attempts on successful login
@@ -262,3 +356,32 @@ class EmailSendTest(APIView):
         return Response(
             {"message": "Verification email sent!"}, status=status.HTTP_200_OK
         )
+
+
+class ShowCurrentUser(APIView):
+    def get(self, request):
+        token = request.COOKIES.get("access_token")
+        if not token:
+            return Response(
+                {"error": "Unauthorized access, no token"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        try:
+            # Verify the token and get the payload
+            payload = UntypedToken(token)
+            user_id = payload.get("user_id")
+            if not user_id:
+                return Response(
+                    {"error": "Unauthorized access,invalid token"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+
+            # Get the user from the database
+            user = User.objects.get(id=user_id)
+            return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+
+        except (InvalidToken, TokenError) as e:
+            return Response(
+                {"error": "Invalid Token"}, status=status.HTTP_401_UNAUTHORIZED
+            )

@@ -8,6 +8,7 @@ from .views import (
     SendVerficationTokenView,
     VerifyEmailView,
     EmailSendTest,
+    ShowCurrentUser,
 )
 
 urlpatterns = [
@@ -27,4 +28,5 @@ urlpatterns = [
     ),
     path("verify-email/", VerifyEmailView.as_view(), name="verify_email"),
     path("test-email/", EmailSendTest.as_view(), name="test_email"),
+    path("me/", ShowCurrentUser.as_view(), name="show_current_user"),
 ]

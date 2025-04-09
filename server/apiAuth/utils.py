@@ -1,3 +1,4 @@
+from encodings.punycode import T
 from django.core.mail import send_mail
 from django.conf import settings
 import secrets
@@ -24,6 +25,7 @@ def send_verification_email(user):
     token = generate_token(length=6, numeric_only=True)
     # Save token to user model
     user.verification_token = token
+    user.verification_token_created_at = timezone.now()
     user.save()
 
     subject = "Verify your ExpenseBuddy account"
@@ -49,7 +51,7 @@ The ExpenseBuddy Team"""
 def send_password_reset_email(user):
     """Send password reset email to user"""
     # For password resets, keep using secure tokens
-    token = generate_token(length=20)
+    token = generate_token(length=6, numeric_only=True)
     # Save token to user model with timestamp
     user.reset_password_token = token
     user.reset_password_token_created_at = timezone.now()
@@ -58,8 +60,14 @@ def send_password_reset_email(user):
     subject = "Reset your ExpenseBuddy password"
     message = f"""Hi {user.username},
     
-You requested a password reset. Please click on the link below to reset your password:
+We received a request to reset your password. Please use the following link to reset it:
 http://yourfrontend.com/reset-password/{token}
+
+or 
+
+Use the following code to reset your password:
+{token}
+
 
 This link will expire in 1 hour.
 
