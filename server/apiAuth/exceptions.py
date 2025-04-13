@@ -1,12 +1,23 @@
 from rest_framework.views import exception_handler
 from rest_framework.response import Response
 from rest_framework import status
+from django.http import Http404
 
 
 def custom_exception_handler(exc, context):
     """
     Custom exception handler to format all errors as JSON responses.
     """
+    # Handle 404 errors explicitly
+    if isinstance(exc, Http404):
+        return Response(
+            {
+                "error": True,
+                "message": "The requested resource was not found. Please check the URL and try again.",
+            },
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
     # Call DRF's default exception handler first
     response = exception_handler(exc, context)
 

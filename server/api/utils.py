@@ -1,0 +1,123 @@
+def DefaultCategories():
+    return [
+        {
+            "id": 1,
+            "name": "Groceries",
+            "description": "Food and household items",
+            "icon": "🛒",
+        },
+        {
+            "id": 2,
+            "name": "Utilities",
+            "description": "Electricity, water, gas bills",
+            "icon": "💡",
+        },
+        {
+            "id": 3,
+            "name": "Entertainment",
+            "description": "Movies, games, and leisure activities",
+            "icon": "🎮",
+        },
+        {
+            "id": 4,
+            "name": "Transportation",
+            "description": "Fuel, public transport, and travel expenses",
+            "icon": "🚗",
+        },
+        {
+            "id": 5,
+            "name": "Healthcare",
+            "description": "Medical expenses and health insurance",
+            "icon": "🏥",
+        },
+        {
+            "id": 6,
+            "name": "Education",
+            "description": "Tuition fees, books, and supplies",
+            "icon": "📚",
+        },
+        {
+            "id": 7,
+            "name": "Housing",
+            "description": "Rent, mortgage, and home maintenance",
+            "icon": "🏠",
+        },
+        {
+            "id": 8,
+            "name": "Clothing",
+            "description": "Apparel and accessories",
+            "icon": "👗",
+        },
+        {
+            "id": 9,
+            "name": "Food & Dining",
+            "description": "Dining out and takeout meals",
+            "icon": "🍴",
+        },
+        {
+            "id": 10,
+            "name": "Savings",
+            "description": "Money set aside for future use",
+            "icon": "💰",
+        },
+        {
+            "id": 11,
+            "name": "Investments",
+            "description": "Stocks, bonds, and other investment vehicles",
+            "icon": "📈",
+        },
+        {
+            "id": 12,
+            "name": "Insurance",
+            "description": "Life, auto, and property insurance",
+            "icon": "🛡️",
+        },
+        {
+            "id": 13,
+            "name": "Charity",
+            "description": "Donations and charitable contributions",
+            "icon": "🤝",
+        },
+        {
+            "id": 14,
+            "name": "Travel",
+            "description": "Expenses related to travel and vacations",
+            "icon": "✈️",
+        },
+        {
+            "id": 15,
+            "name": "Gifts",
+            "description": "Presents and gifts for others",
+            "icon": "🎁",
+        },
+        {
+            "id": 16,
+            "name": "Subscriptions",
+            "description": "Monthly or yearly subscriptions",
+            "icon": "📦",
+        },
+        {
+            "id": 17,
+            "name": "Pets",
+            "description": "Expenses related to pets",
+            "icon": "🐾",
+        },
+        {
+            "id": 18,
+            "name": "Home Improvement",
+            "description": "Renovations and repairs",
+            "icon": "🔨",
+        },
+        {
+            "id": 19,
+            "name": "Personal Care",
+            "description": "Beauty and grooming expenses",
+            "icon": "💄",
+        },
+        {
+            "id": 20,
+            "name": "Technology",
+            "description": "Gadgets and tech-related expenses",
+            "icon": "💻",
+        },
+    ]

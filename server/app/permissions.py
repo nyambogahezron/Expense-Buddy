@@ -1,4 +1,3 @@
-from tokenize import TokenError
 from rest_framework.permissions import BasePermission
 from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
@@ -6,11 +5,7 @@ from apiAuth.models import User
 
 
 class AuthenticateUser(BasePermission):
-    """
-    Decorator to check if the user is authenticated.
-    """
-
-    def is_authenticated(self, request):
+    def has_permission(self, request, view):
         try:
             token = request.COOKIES.get("access_token")
 
@@ -22,23 +17,23 @@ class AuthenticateUser(BasePermission):
 
             if not user_id:
                 return False
+
             user = User.objects.get(id=user_id)
             if not user:
                 return False
-            return user
 
-        except Exception(InvalidToken, TokenError, User.DoesNotExist):
+            request.user = user  # Attach the user to the request
+            return True
+
+        except (InvalidToken, TokenError, User.DoesNotExist):
             return False
 
 
 class IsOwnTransaction(BasePermission):
-    def can_access_transaction(self, request, obj):
+    def has_object_permission(self, request, view, obj):
+        user = request.user
 
-        if request.method in ["GET", "POST", "PUT", "DELETE"]:
-            return True
-
-        user = AuthenticateUser().is_authenticated(request)
-        if not user:
+        if not user or not user.is_authenticated:
             return False
 
-        return obj.user == user.get("id")
+        return obj.user == user

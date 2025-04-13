@@ -1,10 +1,9 @@
 from rest_framework.views import exception_handler
+from rest_framework.response import Response
+from rest_framework import status
 
 
 def custom_exception_handler(exc, context):
-    """
-    Custom exception handler to format all errors as JSON responses.
-    """
     # Call DRF's default exception handler first
     response = exception_handler(exc, context)
 
@@ -18,12 +17,12 @@ def custom_exception_handler(exc, context):
                 else response.data
             ),
         }
+        return response
 
     # Handle non-DRF exceptions (fallback)
     else:
-        response = {
+        data = {
             "error": True,
             "message": "An unexpected error occurred. Please try again later.",
         }
-
-    return response
+        return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
