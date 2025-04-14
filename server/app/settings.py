@@ -59,6 +59,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Add the API request logging middleware
+    "app.middleware.APIRequestLogMiddleware",
 ]
 
 ROOT_URLCONF = "app.urls"
