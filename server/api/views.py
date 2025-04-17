@@ -35,17 +35,18 @@ class CategoryViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        # Get categories that this user has access to through UserCategory
         user_categories = UserCategory.objects.filter(user=user).values_list(
             "category_id", flat=True
         )
-        # Also include categories created by this user
         return self.queryset.filter(Q(id__in=user_categories) | Q(user=user)).distinct()
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["request"] = self.request
+        return context
+
     def perform_create(self, serializer):
-        # Create the category and associate it with the user
-        category = serializer.save(user=self.request.user)
-        # Also create a UserCategory entry
+        category = serializer.save()
         UserCategory.objects.create(user=self.request.user, category=category)
 
     @action(detail=True, methods=["post"])
@@ -96,7 +97,8 @@ class CategoryViewSet(ModelViewSet):
 
         except Exception as e:
             return Response(
-                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
 

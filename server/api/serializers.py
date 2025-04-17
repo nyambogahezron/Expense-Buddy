@@ -17,6 +17,12 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ["user"]
 
+    def create(self, validated_data):
+        user = self.context["request"].user
+        validated_data["user"] = user
+        # Create the category instance
+        return super().create(validated_data)
+
 
 class UserCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,10 +31,18 @@ class UserCategorySerializer(serializers.ModelSerializer):
 
 
 class TransactionSerializer(serializers.ModelSerializer):
+    category_detail = CategorySerializer(source="category", read_only=True)
+
     class Meta:
         model = Transaction
         fields = "__all__"
         read_only_fields = ["user"]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        if "category_detail" in representation:
+            representation["category_data"] = representation.pop("category_detail")
+        return representation
 
 
 class ReportPreferenceSerializer(serializers.ModelSerializer):
