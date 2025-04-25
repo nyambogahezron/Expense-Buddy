@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from app.permissions import AuthenticateUser
-from .models import Notification
-from .serializers import NotificationSerializer
+from ..models import Notification
+from ..serializers import NotificationSerializer
 from django.db.models import Q
 from django.core.paginator import Paginator
 

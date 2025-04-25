@@ -3,9 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from datetime import datetime
 from app.permissions import AuthenticateUser
-from .models import ReportPreference
-from .serializers import ReportPreferenceSerializer
-from .reports import send_single_report
+from ..models import ReportPreference
+from ..serializers import ReportPreferenceSerializer
+from ..reports import send_single_report
 
 
 class ReportPreferenceView(APIView):

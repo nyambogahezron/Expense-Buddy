@@ -7,7 +7,7 @@ from api.views import (
     UserCategoryViewSet,
     BudgetViewSet,
 )
-from api.analyticsViews import (
+from api.views_collection.analytics import (
     TransactionAnalyticsView,
     MonthlySummaryView,
     CategoryDistributionView,
@@ -15,7 +15,7 @@ from api.analyticsViews import (
     BudgetAnalysisView,
     TransactionInsightsView,
 )
-from api.adminViews import (
+from api.views_collection.admin import (
     AdminDashboardView,
     AdminUserListView,
     AdminUserDetailView,
@@ -25,8 +25,11 @@ from api.adminViews import (
     AdminSettingsView,
     AdminExportDataView,
 )
-from api.notificationViews import NotificationView, NotificationCountView
-from api.reportViews import ReportPreferenceView, GenerateReportView
+from api.views_collection.notification import (
+    NotificationView,
+    NotificationCountView,
+)
+from api.views_collection.report import ReportPreferenceView, GenerateReportView
 from django.http import JsonResponse
 
 

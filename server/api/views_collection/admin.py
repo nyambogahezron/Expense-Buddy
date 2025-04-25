@@ -14,9 +14,9 @@ import csv
 from io import StringIO
 
 from app.permissions import AuthenticateUser
-from .models import Transaction, Category, RequestLog, AdminSettings, AdminBulkEmail
+from ..models import Transaction, Category, RequestLog, AdminSettings, AdminBulkEmail
 from apiAuth.models import User
-from .serializers import (
+from ..serializers import (
     UserAdminSerializer,
     RequestLogSerializer,
     AdminSettingsSerializer,

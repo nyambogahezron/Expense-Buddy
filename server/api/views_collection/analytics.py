@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
 from app.permissions import AuthenticateUser
-from .models import Transaction, Category, Budget
+from ..models import Transaction, Category, Budget
 from django.db.models import Sum, Count, Avg, F, Q
 from django.db.models.functions import (
     TruncMonth,
@@ -380,7 +380,7 @@ class BudgetAnalysisView(APIView):
 
                 # Check if we need to create a notification for this budget
                 # Look for existing notifications for this budget in the current period
-                from .models import Notification
+                from ..models import Notification
 
                 existing_notification = Notification.objects.filter(
                     user=user,

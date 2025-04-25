@@ -1,8 +1,6 @@
-import os
 import io
-from datetime import datetime, timedelta
+from datetime import datetime
 from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
 from django.conf import settings
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
@@ -14,7 +12,7 @@ from reportlab.platypus import (
     TableStyle,
     Image,
 )
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
 import matplotlib.pyplot as plt
 import matplotlib
@@ -22,15 +20,8 @@ import matplotlib
 matplotlib.use("Agg")  # Use non-interactive backend
 import numpy as np
 from io import BytesIO
-import base64
 from django.db.models import Sum
 from .models import Transaction, Category, ReportPreference
-from .analyticsViews import (
-    MonthlySummaryView,
-    CategoryDistributionView,
-    SpendingTrendsView,
-    TransactionInsightsView,
-)
 
 
 def generate_monthly_summary_chart(user, start_date, end_date):
