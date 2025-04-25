@@ -1,7 +1,8 @@
 import io
 from datetime import datetime
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
+from django.template.loader import render_to_string
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.platypus import (
@@ -20,7 +21,7 @@ import matplotlib
 matplotlib.use("Agg")  # Use non-interactive backend
 import numpy as np
 from io import BytesIO
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from .models import Transaction, Category, ReportPreference
 
 
@@ -554,28 +555,121 @@ def schedule_and_send_reports():
         # Generate the PDF report
         pdf_data = generate_pdf_report(pref.user, period_start, period_end)
 
-        # Send the report via email
-        email_subject = f"Your {pref.get_frequency_display()} Financial Report"
-        email_body = f"""
-        Hello {pref.user.name or pref.user.username},
-        
-        Attached is your {pref.get_frequency_display().lower()} financial report from ExpenseBuddy.
-        
-        This report covers the period from {period_start.strftime('%B %d, %Y')} to {period_end.strftime('%B %d, %Y')}.
-        
-        We hope this helps you track your financial progress and make informed decisions.
-        
-        Best regards,
-        The ExpenseBuddy Team
-        """
+        # Get client URL from settings or use default
+        client_url = getattr(settings, "CLIENT_URL", "http://localhost:5000")
 
-        # Create the email
-        email = EmailMessage(
+        # Prepare financial highlights
+        highlights = []
+
+        # Get all transactions for the user
+        transactions = Transaction.objects.filter(
+            user=pref.user, date__gte=period_start, date__lte=period_end
+        )
+
+        # Calculate totals
+        total_income = (
+            transactions.filter(type="income").aggregate(total=Sum("amount"))["total"]
+            or 0
+        )
+        total_expenses = (
+            transactions.filter(type="expense").aggregate(total=Sum("amount"))["total"]
+            or 0
+        )
+
+        # Add savings rate highlight
+        if total_income > 0:
+            savings_rate = ((total_income - total_expenses) / total_income) * 100
+            highlights.append(
+                {
+                    "title": "Savings Rate",
+                    "description": f"{savings_rate:.2f}% of your income was saved",
+                }
+            )
+
+        # Add spending trend highlight
+        spending_data = []
+        current_date = period_start
+
+        while current_date <= period_end:
+            expense = (
+                Transaction.objects.filter(
+                    user=pref.user,
+                    type="expense",
+                    date__year=current_date.year,
+                    date__month=current_date.month,
+                ).aggregate(total=Sum("amount"))["total"]
+                or 0
+            )
+            spending_data.append((current_date.strftime("%B %Y"), float(expense)))
+
+            # Move to next month
+            if current_date.month == 12:
+                current_date = datetime(current_date.year + 1, 1, 1)
+            else:
+                current_date = datetime(current_date.year, current_date.month + 1, 1)
+
+        if len(spending_data) >= 2:
+            first_month = spending_data[0][1]
+            last_month = spending_data[-1][1]
+
+            if first_month > 0:
+                change_pct = (last_month - first_month) / first_month * 100
+
+                if last_month > first_month:
+                    highlights.append(
+                        {
+                            "title": "Spending Trend",
+                            "description": f"Your spending increased by {abs(change_pct):.1f}% compared to the start of this period",
+                        }
+                    )
+                elif last_month < first_month:
+                    highlights.append(
+                        {
+                            "title": "Spending Trend",
+                            "description": f"Your spending decreased by {abs(change_pct):.1f}% compared to the start of this period",
+                        }
+                    )
+
+        # Create context for email template
+        context = {
+            "username": pref.user.name or pref.user.username,
+            "report_frequency": pref.get_frequency_display(),
+            "period_start": period_start.strftime("%B %d, %Y"),
+            "period_end": period_end.strftime("%B %d, %Y"),
+            "generation_date": datetime.now().strftime("%B %d, %Y"),
+            "highlights": highlights,
+            "include_monthly_summary": pref.include_monthly_summary,
+            "include_category_distribution": pref.include_category_distribution,
+            "include_spending_trends": pref.include_spending_trends,
+            "include_insights": pref.include_insights,
+            "app_url": client_url,
+            "current_year": datetime.now().year,
+        }
+
+        # Render HTML email from template
+        html_message = render_to_string("report_email.html", context)
+
+        # Create plain text version for clients that don't support HTML
+        plain_message = f"""Hello {pref.user.name or pref.user.username},
+        
+Attached is your {pref.get_frequency_display().lower()} financial report from ExpenseBuddy.
+
+This report covers the period from {period_start.strftime('%B %d, %Y')} to {period_end.strftime('%B %d, %Y')}.
+
+We hope this helps you track your financial progress and make informed decisions.
+
+Best regards,
+The ExpenseBuddy Team"""
+
+        # Send email with both HTML and plain text versions
+        email_subject = f"Your {pref.get_frequency_display()} Financial Report"
+        email = EmailMultiAlternatives(
             subject=email_subject,
-            body=email_body,
+            body=plain_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[pref.user.email],
         )
+        email.attach_alternative(html_message, "text/html")
 
         # Attach PDF
         filename = f"Financial_Report_{period_start.strftime('%Y%m%d')}_{period_end.strftime('%Y%m%d')}.pdf"
@@ -645,28 +739,132 @@ def send_single_report(user, frequency=None):
         12: "Annual",
     }.get(frequency, "Custom")
 
-    # Send the report via email
-    email_subject = f"Your {frequency_text} Financial Report"
-    email_body = f"""
-    Hello {user.name or user.username},
-    
-    Attached is your {frequency_text.lower()} financial report from ExpenseBuddy.
-    
-    This report covers the period from {period_start.strftime('%B %d, %Y')} to {today.strftime('%B %d, %Y')}.
-    
-    We hope this helps you track your financial progress and make informed decisions.
-    
-    Best regards,
-    The ExpenseBuddy Team
-    """
+    # Get client URL from settings or use default
+    client_url = getattr(settings, "CLIENT_URL", "http://localhost:5000")
 
-    # Create the email
-    email = EmailMessage(
+    # Prepare financial highlights
+    highlights = []
+
+    # Get all transactions for the user
+    transactions = Transaction.objects.filter(
+        user=user, date__gte=period_start, date__lte=today
+    )
+
+    # Calculate totals
+    total_income = (
+        transactions.filter(type="income").aggregate(total=Sum("amount"))["total"] or 0
+    )
+    total_expenses = (
+        transactions.filter(type="expense").aggregate(total=Sum("amount"))["total"] or 0
+    )
+
+    # Add savings rate highlight
+    if total_income > 0:
+        savings_rate = ((total_income - total_expenses) / total_income) * 100
+        highlights.append(
+            {
+                "title": "Savings Rate",
+                "description": f"{savings_rate:.2f}% of your income was saved",
+            }
+        )
+
+    # Add spending trend highlight
+    spending_data = []
+    current_date = period_start
+
+    while current_date <= today:
+        expense = (
+            Transaction.objects.filter(
+                user=user,
+                type="expense",
+                date__year=current_date.year,
+                date__month=current_date.month,
+            ).aggregate(total=Sum("amount"))["total"]
+            or 0
+        )
+        spending_data.append((current_date.strftime("%B %Y"), float(expense)))
+
+        # Move to next month
+        if current_date.month == 12:
+            current_date = datetime(current_date.year + 1, 1, 1)
+        else:
+            current_date = datetime(current_date.year, current_date.month + 1, 1)
+
+    if len(spending_data) >= 2:
+        first_month = spending_data[0][1]
+        last_month = spending_data[-1][1]
+
+        if first_month > 0:
+            change_pct = (last_month - first_month) / first_month * 100
+
+            if last_month > first_month:
+                highlights.append(
+                    {
+                        "title": "Spending Trend",
+                        "description": f"Your spending increased by {abs(change_pct):.1f}% compared to the start of this period",
+                    }
+                )
+            elif last_month < first_month:
+                highlights.append(
+                    {
+                        "title": "Spending Trend",
+                        "description": f"Your spending decreased by {abs(change_pct):.1f}% compared to the start of this period",
+                    }
+                )
+
+    # Check if user has report preferences
+    try:
+        report_pref = ReportPreference.objects.get(user=user)
+        include_monthly_summary = report_pref.include_monthly_summary
+        include_category_distribution = report_pref.include_category_distribution
+        include_spending_trends = report_pref.include_spending_trends
+        include_insights = report_pref.include_insights
+    except ReportPreference.DoesNotExist:
+        include_monthly_summary = True
+        include_category_distribution = True
+        include_spending_trends = True
+        include_insights = True
+
+    # Create context for email template
+    context = {
+        "username": user.name or user.username,
+        "report_frequency": frequency_text,
+        "period_start": period_start.strftime("%B %d, %Y"),
+        "period_end": today.strftime("%B %d, %Y"),
+        "generation_date": today.strftime("%B %d, %Y"),
+        "highlights": highlights,
+        "include_monthly_summary": include_monthly_summary,
+        "include_category_distribution": include_category_distribution,
+        "include_spending_trends": include_spending_trends,
+        "include_insights": include_insights,
+        "app_url": client_url,
+        "current_year": datetime.now().year,
+    }
+
+    # Render HTML email from template
+    html_message = render_to_string("report_email.html", context)
+
+    # Create plain text version for clients that don't support HTML
+    plain_message = f"""Hello {user.name or user.username},
+    
+Attached is your {frequency_text.lower()} financial report from ExpenseBuddy.
+
+This report covers the period from {period_start.strftime('%B %d, %Y')} to {today.strftime('%B %d, %Y')}.
+
+We hope this helps you track your financial progress and make informed decisions.
+
+Best regards,
+The ExpenseBuddy Team"""
+
+    # Send email with both HTML and plain text versions
+    email_subject = f"Your {frequency_text} Financial Report"
+    email = EmailMultiAlternatives(
         subject=email_subject,
-        body=email_body,
+        body=plain_message,
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[user.email],
     )
+    email.attach_alternative(html_message, "text/html")
 
     # Attach PDF
     filename = f"Financial_Report_{period_start.strftime('%Y%m%d')}_{today.strftime('%Y%m%d')}.pdf"

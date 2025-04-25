@@ -5,7 +5,11 @@ from .models import User
 from django.db.models import Q
 from .serializers import UserSerializer
 from django.utils import timezone
-from .utils import send_verification_email, send_password_reset_email
+from .utils import (
+    send_verification_email,
+    send_password_reset_email,
+    send_welcome_email,
+)
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken, UntypedToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
@@ -201,6 +205,13 @@ class VerifyEmailView(APIView):
         user.verification_token = None
         user.verification_token_created_at = None
         user.save()
+
+        # Send welcome email to user after successful verification
+        try:
+            send_welcome_email(user)
+        except Exception as e:
+            # Log the error but continue with the verification process
+            print(f"Error sending welcome email: {str(e)}")
 
         return Response({"message": "Email verified successfully!"}, status=200)
 
