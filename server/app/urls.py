@@ -1,7 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from api.views import TransactionViewSet, CategoryViewSet, UserCategoryViewSet
+from api.views import (
+    TransactionViewSet,
+    CategoryViewSet,
+    UserCategoryViewSet,
+    BudgetViewSet,
+)
 from api.analyticsViews import (
     TransactionAnalyticsView,
     MonthlySummaryView,
@@ -20,6 +25,7 @@ from api.adminViews import (
     AdminSettingsView,
     AdminExportDataView,
 )
+from api.notificationViews import NotificationView, NotificationCountView
 from api.reportViews import ReportPreferenceView, GenerateReportView
 from django.http import JsonResponse
 
@@ -34,6 +40,7 @@ router = DefaultRouter()
 router.register(r"transaction", TransactionViewSet, basename="transaction")
 router.register(r"categories", CategoryViewSet, basename="category")
 router.register(r"user-categories", UserCategoryViewSet, basename="user-category")
+router.register(r"budgets", BudgetViewSet, basename="budget")
 
 urlpatterns = [
     path("api/v1/", include((router.urls, "api"), namespace="v1")),
@@ -64,6 +71,22 @@ urlpatterns = [
         "api/v1/analytics/transaction-insights/",
         TransactionInsightsView.as_view(),
         name="transaction-insights",
+    ),
+    # Notification endpoints
+    path(
+        "api/v1/notifications/",
+        NotificationView.as_view(),
+        name="notifications",
+    ),
+    path(
+        "api/v1/notifications/<int:notification_id>/",
+        NotificationView.as_view(),
+        name="notification-detail",
+    ),
+    path(
+        "api/v1/notifications/count/",
+        NotificationCountView.as_view(),
+        name="notification-count",
     ),
     # Report endpoints
     path(

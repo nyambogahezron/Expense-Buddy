@@ -1,115 +1,126 @@
 from .userViews import *
+from .reminderViews import ReminderViewSet
 from rest_framework.viewsets import ModelViewSet
-from .models import Transaction, Category, UserCategory
+from .models import (
+    Transaction,
+    Category,
+    UserCategory,
+    Budget,
+)
 from .serializers import (
     TransactionSerializer,
     CategorySerializer,
     UserCategorySerializer,
+    BudgetSerializer,
 )
 from app.permissions import AuthenticateUser, IsOwnTransaction
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
 
 
 class TransactionViewSet(ModelViewSet):
-    permission_classes = [AuthenticateUser, IsOwnTransaction]
-
-    queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
+    permission_classes = [IsAuthenticated, AuthenticateUser, IsOwnTransaction]
 
     def get_queryset(self):
         user = self.request.user
-        return self.queryset.filter(user=user)
+        queryset = Transaction.objects.filter(user=user)
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        # Implement search
+        search = self.request.query_params.get("search")
+        if search:
+            queryset = queryset.filter(
+                Q(title__icontains=search) | Q(description__icontains=search)
+            )
+
+        # Implement filtering by type (income/expense)
+        transaction_type = self.request.query_params.get("type")
+        if transaction_type:
+            queryset = queryset.filter(type=transaction_type)
+
+        # Implement filtering by date range
+        start_date = self.request.query_params.get("start_date")
+        end_date = self.request.query_params.get("end_date")
+        if start_date:
+            queryset = queryset.filter(date__gte=start_date)
+        if end_date:
+            queryset = queryset.filter(date__lte=end_date)
+
+        # Implement filtering by category
+        category = self.request.query_params.get("category")
+        if category:
+            queryset = queryset.filter(category_id=category)
+
+        # Implement sorting
+        sort = self.request.query_params.get("sort")
+        direction = self.request.query_params.get("direction", "desc")
+        if sort:
+            if direction == "desc":
+                queryset = queryset.order_by(f"-{sort}")
+            else:
+                queryset = queryset.order_by(sort)
+
+        return queryset
 
 
 class CategoryViewSet(ModelViewSet):
-    permission_classes = [AuthenticateUser]
-
-    queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated, AuthenticateUser]
+
+    def get_queryset(self):
+        return Category.objects.filter(user=self.request.user)
+
+
+class BudgetViewSet(ModelViewSet):
+    serializer_class = BudgetSerializer
+    permission_classes = [IsAuthenticated, AuthenticateUser]
 
     def get_queryset(self):
         user = self.request.user
-        user_categories = UserCategory.objects.filter(user=user).values_list(
-            "category_id", flat=True
-        )
-        return self.queryset.filter(Q(id__in=user_categories) | Q(user=user)).distinct()
+        queryset = Budget.objects.filter(user=user)
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context["request"] = self.request
-        return context
+        # Filter by status (active/inactive)
+        status_filter = self.request.query_params.get("status")
+        if status_filter:
+            if status_filter.lower() == "active":
+                queryset = queryset.filter(is_active=True)
+            elif status_filter.lower() == "inactive":
+                queryset = queryset.filter(is_active=False)
 
-    def perform_create(self, serializer):
-        category = serializer.save()
-        UserCategory.objects.create(user=self.request.user, category=category)
+        # Filter by category
+        category = self.request.query_params.get("category")
+        if category:
+            queryset = queryset.filter(category_id=category)
 
-    @action(detail=True, methods=["post"])
-    def share_with_user(self, request, pk=None):
-        """Share a category with another user by username or email"""
-        try:
-            category = self.get_object()
-            username_or_email = request.data.get("username_or_email")
+        # Filter by period
+        period = self.request.query_params.get("period")
+        if period:
+            queryset = queryset.filter(period=period)
 
-            if not username_or_email:
-                return Response(
-                    {"error": "Username or email is required"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+        # Search by title
+        search = self.request.query_params.get("search")
+        if search:
+            queryset = queryset.filter(title__icontains=search)
 
-            # Find the user by username or email
-            from django.db.models import Q
-            from apiAuth.models import User
+        return queryset
 
-            try:
-                target_user = User.objects.get(
-                    Q(username__iexact=username_or_email)
-                    | Q(email__iexact=username_or_email)
-                )
-            except User.DoesNotExist:
-                return Response(
-                    {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
-                )
-
-            # Check if already shared
-            if UserCategory.objects.filter(
-                user=target_user, category=category
-            ).exists():
-                return Response(
-                    {"message": "Category already shared with this user"},
-                    status=status.HTTP_200_OK,
-                )
-
-            # Create the association
-            UserCategory.objects.create(user=target_user, category=category)
-
-            return Response(
-                {
-                    "message": f"Category shared with {target_user.username} successfully"
-                },
-                status=status.HTTP_201_CREATED,
-            )
-
-        except Exception as e:
-            return Response(
-                {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+    @action(detail=True, methods=["get"])
+    def transactions(self, request, pk=None):
+        """
+        Get all transactions related to a specific budget
+        """
+        budget = self.get_object()
+        transactions = Transaction.objects.filter(budget=budget)
+        serializer = TransactionSerializer(transactions, many=True)
+        return Response(serializer.data)
 
 
 class UserCategoryViewSet(ModelViewSet):
-    permission_classes = [AuthenticateUser]
     serializer_class = UserCategorySerializer
-    queryset = UserCategory.objects.all()
+    permission_classes = [IsAuthenticated, AuthenticateUser]
 
     def get_queryset(self):
-        user = self.request.user
-        return self.queryset.filter(user=user)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        return UserCategory.objects.filter(user=self.request.user)

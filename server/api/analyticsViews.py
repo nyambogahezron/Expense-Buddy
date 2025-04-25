@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
 from app.permissions import AuthenticateUser
-from .models import Transaction, Category
+from .models import Transaction, Category, Budget
 from django.db.models import Sum, Count, Avg, F, Q
 from django.db.models.functions import (
     TruncMonth,
@@ -15,6 +15,7 @@ from django.db.models.functions import (
 from datetime import datetime, timedelta
 import calendar
 from collections import defaultdict
+from django.utils import timezone
 
 
 class TransactionAnalyticsView(APIView):
@@ -303,110 +304,198 @@ class BudgetAnalysisView(APIView):
     permission_classes = [AuthenticateUser]
 
     def get(self, request, *args, **kwargs):
-        user = request.user
+        user = self.request.user
 
-        # For now, we'll set placeholder dummy budgets by category
-        # In a real implementation, you would have a Budget model
-        dummy_budget = {
-            "Groceries": 500,
-            "Utilities": 200,
-            "Entertainment": 150,
-            "Transportation": 300,
-            "Food & Dining": 400,
-        }
+        # Get query parameters for filtering
+        period = request.query_params.get("period", "monthly")  # default to monthly
+        category_id = request.query_params.get("category_id", None)
 
-        # Get current month's expenses by category
-        today = datetime.now()
-        start_date = datetime(today.year, today.month, 1)
+        # Get today's date and calculate month/year based periods
+        today = timezone.now()
+        start_date = None
+        end_date = today
 
-        # Get all expense transactions for the user in the current month
+        # Determine period range based on user's selected period
+        if period == "weekly":
+            # Start from beginning of the week
+            start_date = today - timedelta(days=today.weekday())
+
+        elif period == "monthly":
+            # Start from beginning of the month
+            start_date = datetime(today.year, today.month, 1)
+
+        elif period == "yearly":
+            # Start from beginning of the year
+            start_date = datetime(today.year, 1, 1)
+
+        if not start_date:
+            start_date = datetime(today.year, today.month, 1)  # Default to monthly
+
+        # Get active budgets for the user within the period
+        filters = {"user": user, "is_active": True, "period": period}
+
+        if category_id:
+            filters["category_id"] = category_id
+
+        budgets = Budget.objects.filter(**filters)
+
+        # Get all expense transactions for the user in the current period
         transactions = Transaction.objects.filter(
-            user=user, type="expense", date__gte=start_date
+            user=user, type="expense", date__gte=start_date, date__lte=end_date
         )
 
-        # Group by category
-        category_expenses = transactions.values("category").annotate(
-            total=Sum("amount")
-        )
+        # Group transactions by category
+        category_expenses = {}
+        for transaction in transactions:
+            category_id = transaction.category_id
+            if category_id not in category_expenses:
+                category_expenses[category_id] = 0
+            category_expenses[category_id] += float(transaction.amount)
 
         # Prepare budget analysis
         budget_analysis = []
-        for expense in category_expenses:
-            try:
-                category = Category.objects.get(id=expense["category"])
-                budget_amount = dummy_budget.get(category.name, 0)
+        total_budget = 0
+        total_spent = 0
+        total_remaining = 0
 
-                if budget_amount > 0:
-                    spending = expense["total"]
-                    remaining = budget_amount - spending
-                    percentage_used = (spending / budget_amount) * 100
+        # Track newly created notifications for response
+        new_notifications = []
 
-                    budget_analysis.append(
-                        {
-                            "category_id": category.id,
-                            "category_name": category.name,
-                            "category_icon": category.icon,
-                            "budget_amount": budget_amount,
-                            "amount_spent": spending,
-                            "amount_remaining": remaining,
-                            "percentage_used": round(percentage_used, 2),
-                            "status": (
-                                "over_budget"
-                                if remaining < 0
-                                else "warning" if percentage_used > 80 else "good"
-                            ),
-                        }
+        # Analyze each budget
+        for budget in budgets:
+            category_id = budget.category_id
+            category = budget.category
+            budget_amount = float(budget.amount)
+            spending = category_expenses.get(category_id, 0)
+
+            # Calculate remaining and percentage
+            remaining = budget_amount - spending
+            percentage_used = (
+                (spending / budget_amount) * 100 if budget_amount > 0 else 0
+            )
+
+            # Determine status
+            if remaining < 0:
+                status = "over_budget"
+
+                # Check if we need to create a notification for this budget
+                # Look for existing notifications for this budget in the current period
+                from .models import Notification
+
+                existing_notification = Notification.objects.filter(
+                    user=user,
+                    notification_type="budget_alert",
+                    related_object_type="budget",
+                    related_object_id=budget.id,
+                    created_at__gte=start_date,
+                ).first()
+
+                # If no notification exists for this budget in this period, create one
+                if not existing_notification:
+                    # Create budget alert notification
+                    notification_title = f"Budget Alert: {budget.title}"
+                    notification_message = (
+                        f"You've exceeded your {budget.get_period_display().lower()} budget for "
+                        f"{category.name} by ${abs(remaining):.2f}. "
+                        f"Budget: ${budget_amount:.2f}, Spent: ${spending:.2f}"
                     )
-            except Category.DoesNotExist:
-                pass
 
-        # Add categories with budget but no expenses
-        for cat_name, budget_amount in dummy_budget.items():
+                    notification = Notification.objects.create(
+                        user=user,
+                        title=notification_title,
+                        message=notification_message,
+                        notification_type="budget_alert",
+                        related_object_type="budget",
+                        related_object_id=budget.id,
+                        is_email_sent=False,  # Will be sent by background task
+                    )
+                    new_notifications.append(
+                        {"id": notification.id, "title": notification.title}
+                    )
+
+                    # This notification will be picked up by a background task to send email
+
+            elif percentage_used > 80:
+                status = "warning"
+            else:
+                status = "good"
+
+            budget_analysis.append(
+                {
+                    "budget_id": budget.id,
+                    "budget_title": budget.title,
+                    "category_id": category_id,
+                    "category_name": category.name,
+                    "category_icon": category.icon,
+                    "category_color": category.color,
+                    "budget_amount": budget_amount,
+                    "amount_spent": spending,
+                    "amount_remaining": remaining,
+                    "percentage_used": round(percentage_used, 2),
+                    "period": period,
+                    "status": status,
+                }
+            )
+
+            total_budget += budget_amount
+            total_spent += spending
+            total_remaining += remaining
+
+        # Add categories with expenses but no budgets
+        for category_id, spending in category_expenses.items():
             if not any(
-                analysis["category_name"] == cat_name for analysis in budget_analysis
+                analysis["category_id"] == category_id for analysis in budget_analysis
             ):
                 try:
-                    category = Category.objects.filter(name=cat_name, user=user).first()
-                    if category:
-                        budget_analysis.append(
-                            {
-                                "category_id": category.id,
-                                "category_name": category.name,
-                                "category_icon": category.icon,
-                                "budget_amount": budget_amount,
-                                "amount_spent": 0,
-                                "amount_remaining": budget_amount,
-                                "percentage_used": 0,
-                                "status": "good",
-                            }
-                        )
-                except Exception:
+                    category = Category.objects.get(id=category_id)
+                    budget_analysis.append(
+                        {
+                            "budget_id": None,
+                            "budget_title": None,
+                            "category_id": category_id,
+                            "category_name": category.name,
+                            "category_icon": category.icon,
+                            "category_color": category.color,
+                            "budget_amount": 0,
+                            "amount_spent": spending,
+                            "amount_remaining": -spending,  # Over budget by definition
+                            "percentage_used": 100 if spending > 0 else 0,
+                            "period": period,
+                            "status": "no_budget",
+                        }
+                    )
+
+                    total_spent += spending
+                    total_remaining -= spending
+                except Category.DoesNotExist:
                     pass
 
-        return Response(
-            {
-                "month": today.strftime("%B %Y"),
-                "budget_analysis": budget_analysis,
-                "summary": {
-                    "total_budget": sum(
-                        item["budget_amount"] for item in budget_analysis
-                    ),
-                    "total_spent": sum(
-                        item["amount_spent"] for item in budget_analysis
-                    ),
-                    "total_remaining": sum(
-                        item["amount_remaining"] for item in budget_analysis
-                    ),
-                    "categories_over_budget": sum(
-                        1 for item in budget_analysis if item["status"] == "over_budget"
-                    ),
-                    "categories_warning": sum(
-                        1 for item in budget_analysis if item["status"] == "warning"
-                    ),
-                },
+        response_data = {
+            "period": period,
+            "period_start": start_date,
+            "period_end": end_date,
+            "budget_analysis": budget_analysis,
+            "summary": {
+                "total_budget": total_budget,
+                "total_spent": total_spent,
+                "total_remaining": total_remaining,
+                "categories_over_budget": sum(
+                    1 for item in budget_analysis if item["status"] == "over_budget"
+                ),
+                "categories_warning": sum(
+                    1 for item in budget_analysis if item["status"] == "warning"
+                ),
+                "categories_no_budget": sum(
+                    1 for item in budget_analysis if item["status"] == "no_budget"
+                ),
             },
-            status=status.HTTP_200_OK,
-        )
+        }
+
+        # Include new notifications in response if any were created
+        if new_notifications:
+            response_data["new_notifications"] = new_notifications
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class TransactionInsightsView(APIView):
