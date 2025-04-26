@@ -10,20 +10,20 @@ import InterfaceBanner from './components/sections/InterfaceBanner';
 import ContactUs from './components/sections/ContactUs';
 
 export default function App() {
-  return (
-    <div style={{ minHeight: '100vh' }}>
-      <Header />
-      <main className=''>
-        <Hero />
-        <Features />
-        <HowItWorks />
-        <WhyUs />
-        <AboutUs />
-        <InterfaceBanner />
-        <Testimonials />
-        <ContactUs />
-      </main>
-      <Footer />
-    </div>
-  );
+	return (
+		<div style={{ minHeight: '100vh' }}>
+			<Header />
+			<main className=''>
+				<Hero />
+				<Features />
+				<HowItWorks />
+				<WhyUs />
+				<AboutUs />
+				<InterfaceBanner />
+				<Testimonials />
+				<ContactUs />
+			</main>
+			<Footer />
+		</div>
+	);
 }
