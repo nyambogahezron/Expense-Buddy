@@ -18,7 +18,7 @@ export default function ProfileScreen() {
 	const [currentUser] = useState(dummyUsers[0]);
 
 	const handleLogout = () => {
-		router.replace('/login');
+		router.replace('/');
 	};
 
 	return (
