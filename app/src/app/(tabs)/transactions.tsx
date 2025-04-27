@@ -1,8 +1,12 @@
 import { useCallback, useState } from 'react';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, View, Text } from 'react-native';
 import Animated, {
 	useAnimatedScrollHandler,
 	useSharedValue,
+	FadeIn,
+	FadeOut,
+	SlideInDown,
+	SlideOutDown,
 } from 'react-native-reanimated';
 import { AnimatedHeader } from '@/components/AnimatedHeader';
 import { CategoryFilter } from '@/components/CategoryFilter';
@@ -14,10 +18,9 @@ import EmptyState from '@/components/EmptyState';
 import TransactionList from '@/components/transaction/TransactionList';
 import LoadingState from '@/components/LoadingState';
 import ErrorState from '@/components/ErrorState';
-import { Plus, Search } from 'lucide-react-native';
+import { Plus, Filter, ArrowDownUp } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { useTransactionStore } from '@/store/transactions';
-import { TransactionFilters } from '@/components/TransactionFilters';
 
 export default function TransactionsScreen() {
 	const { searchQuery, sortOrder, setSearchQuery, setSortOrder } =
@@ -28,6 +31,7 @@ export default function TransactionsScreen() {
 
 	const [showSearch, setShowSearch] = useState(false);
 	const { theme } = useThemeStore();
+	const [showFabMenu, setShowFabMenu] = useState(false);
 
 	const {
 		transactions,
@@ -56,6 +60,28 @@ export default function TransactionsScreen() {
 
 	const summary = getTransactionSummary();
 
+	const toggleFabMenu = () => {
+		setShowFabMenu(!showFabMenu);
+	};
+
+	const handleCreateTransaction = () => {
+		setShowFabMenu(false);
+		router.push('/transactions/new');
+	};
+
+	const handleShowFilters = () => {
+		setShowFabMenu(false);
+		// You could integrate TransactionFilters component here or navigate to a filters screen
+		// For now we'll just toggle search
+		setShowSearch(true);
+	};
+
+	const handleSort = () => {
+		setShowFabMenu(false);
+		// Toggle sort order
+		setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
+	};
+
 	if (loading && !isRefreshing) {
 		return <LoadingState />;
 	}
@@ -75,49 +101,6 @@ export default function TransactionsScreen() {
 					<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
 				}
 			>
-				<View style={styles.toolbar}>
-					{showSearch ? (
-						<View
-							style={[
-								styles.searchContainer,
-								{
-									backgroundColor: theme.colors.surface,
-									borderColor: theme.colors.border,
-								},
-							]}
-						>
-							<Search size={20} color={theme.colors.textSecondary} />
-							<TextInput
-								placeholder='Search transactions...'
-								value={searchQuery}
-								onChangeText={setSearchQuery}
-								style={[styles.searchInput, { color: theme.colors.text }]}
-								placeholderTextColor={theme.colors.textSecondary}
-								autoFocus
-							/>
-						</View>
-					) : (
-						<Pressable
-							onPress={() => setShowSearch(true)}
-							style={[
-								styles.searchButton,
-								{ backgroundColor: theme.colors.surface },
-							]}
-						>
-							<Search size={20} color={theme.colors.text} />
-						</Pressable>
-					)}
-					<Pressable
-						onPress={() => router.push('/transactions/new')}
-						style={[
-							styles.addButton,
-							{ backgroundColor: theme.colors.primary },
-						]}
-					>
-						<Plus size={24} color='#FFFFFF' />
-					</Pressable>
-				</View>
-
 				<CategoryFilter
 					selectedCategory={selectedCategory}
 					onSelectCategory={setSelectedCategory}
@@ -134,6 +117,84 @@ export default function TransactionsScreen() {
 					/>
 				)}
 			</Animated.ScrollView>
+
+			{/* Floating Action Button */}
+			<View style={styles.fabContainer}>
+				{showFabMenu && (
+					<Animated.View
+						entering={FadeIn.duration(200)}
+						exiting={FadeOut.duration(200)}
+						style={styles.backdrop}
+					>
+						<Pressable
+							style={{ flex: 1 }}
+							onPress={() => setShowFabMenu(false)}
+						/>
+					</Animated.View>
+				)}
+
+				{showFabMenu && (
+					<Animated.View
+						entering={SlideInDown.springify().damping(15)}
+						exiting={SlideOutDown.duration(200)}
+						style={styles.fabMenuContainer}
+					>
+						<Pressable
+							onPress={handleCreateTransaction}
+							style={[
+								styles.fabMenuItem,
+								{ backgroundColor: theme.colors.primary },
+							]}
+						>
+							<Plus size={20} color='#FFFFFF' />
+							<Text style={styles.fabMenuItemText}>New Transaction</Text>
+						</Pressable>
+
+						<Pressable
+							onPress={handleShowFilters}
+							style={[
+								styles.fabMenuItem,
+								{ backgroundColor: theme.colors.surface },
+							]}
+						>
+							<Filter size={20} color={theme.colors.text} />
+							<Text
+								style={[styles.fabMenuItemText, { color: theme.colors.text }]}
+							>
+								Filter
+							</Text>
+						</Pressable>
+
+						<Pressable
+							onPress={handleSort}
+							style={[
+								styles.fabMenuItem,
+								{ backgroundColor: theme.colors.surface },
+							]}
+						>
+							<ArrowDownUp size={20} color={theme.colors.text} />
+							<Text
+								style={[styles.fabMenuItemText, { color: theme.colors.text }]}
+							>
+								Sort {sortOrder === 'desc' ? 'Oldest First' : 'Newest First'}
+							</Text>
+						</Pressable>
+					</Animated.View>
+				)}
+
+				<Pressable
+					onPress={toggleFabMenu}
+					style={[
+						styles.fab,
+						{
+							backgroundColor: theme.colors.primary,
+							transform: [{ rotate: showFabMenu ? '45deg' : '0deg' }],
+						},
+					]}
+				>
+					<Plus size={28} color='#FFFFFF' />
+				</Pressable>
+			</View>
 		</View>
 	);
 }
@@ -175,5 +236,44 @@ const styles = StyleSheet.create({
 	},
 	transactionsList: {
 		padding: 20,
+	},
+	fabContainer: {
+		position: 'absolute',
+		bottom: 20,
+		right: 20,
+		alignItems: 'center',
+	},
+	fab: {
+		width: 50,
+		height: 50,
+		borderRadius: 30,
+		justifyContent: 'center',
+		alignItems: 'center',
+		zIndex: 2,
+	},
+	backdrop: {
+		...StyleSheet.absoluteFillObject,
+		zIndex: 1,
+	},
+	fabMenuContainer: {
+		position: 'absolute',
+		bottom: 80,
+		right: 0,
+		marginBottom: 8,
+		borderRadius: 12,
+		overflow: 'hidden',
+		width: 200,
+		zIndex: 3,
+	},
+	fabMenuItem: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		padding: 16,
+		gap: 12,
+	},
+	fabMenuItemText: {
+		color: '#FFFFFF',
+		fontSize: 16,
+		fontFamily: 'Inter-Medium',
 	},
 });

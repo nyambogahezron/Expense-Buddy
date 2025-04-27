@@ -12,22 +12,20 @@ import { useRouter } from 'expo-router';
 import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 import { useThemeStore } from '@/store/theme';
 import {
-	Home,
-	Info,
 	Settings,
-	HelpCircle,
 	Bell,
 	LogOut,
-	User,
 	X,
 	ShoppingCart,
+	MenuIcon,
 } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 
 export default function MenuNav() {
 	const [modalVisible, setModalVisible] = useState(false);
-	const { theme } = useThemeStore();
+
+	const { theme, isMenuOpen, closeMenu } = useThemeStore();
 	const router = useRouter();
 
 	const menuItems: Array<{
@@ -36,24 +34,32 @@ export default function MenuNav() {
 		route?: any;
 		action?: () => void;
 	}> = [
-		{ icon: User, label: 'Profile', route: '/(tabs)/profile' },
 		{ icon: ShoppingCart, label: 'Shopping List', route: '/shopping' },
 		{ icon: Bell, label: 'Notifications', route: '/notifications' },
-		{ icon: Settings, label: 'Settings', route: '/(tabs)/settings' },
-		{ icon: Info, label: 'About Us', route: '/about' },
-		{ icon: HelpCircle, label: 'Help & Support', route: '/help' },
+		{ icon: Settings, label: 'Settings', route: '/settings' },
 		{ icon: LogOut, label: 'Logout', action: () => handleLogout() },
 	];
 
 	const handleLogout = () => {
 		setModalVisible(false);
-		// Implement your logout logic here
-		console.log('Logging out...');
-		// router.push('/(auth)/login');
+		router.push('/(auth)/login');
+	};
+
+	const handleMenuToggle = () => {
+		if (isMenuOpen) {
+			closeMenu();
+		} else {
+			setModalVisible(true);
+		}
+	};
+	const handleBackdropPress = () => {
+		setModalVisible(false);
+		closeMenu();
 	};
 
 	const handleMenuItemPress = (route?: any, action?: () => void) => {
 		setModalVisible(false);
+		closeMenu();
 
 		if (action) {
 			action();
@@ -68,28 +74,26 @@ export default function MenuNav() {
 				style={styles.menuButton}
 				onPress={() => setModalVisible(true)}
 			>
-				<Text style={[styles.menuButtonText, { color: theme.colors.text }]}>
-					Menu
-				</Text>
+				<MenuIcon size={24} color={'#888'} />
 			</TouchableOpacity>
 
 			<Modal
-				animationType='fade'
+				animationType='slide'
 				transparent={true}
-				visible={modalVisible}
+				visible={modalVisible || isMenuOpen}
 				onRequestClose={() => setModalVisible(false)}
 			>
 				<View style={styles.centeredView}>
 					<Animated.View
-						style={[styles.modalView, { backgroundColor: theme.colors.accent }]}
+						style={[
+							styles.modalView,
+							{ backgroundColor: theme.colors.background },
+						]}
 						entering={FadeInDown.springify()}
 						exiting={FadeOutUp.springify()}
 					>
 						<View style={styles.modalHeader}>
-							<Text style={[styles.modalTitle, { color: theme.colors.text }]}>
-								Menu
-							</Text>
-							<TouchableOpacity onPress={() => setModalVisible(false)}>
+							<TouchableOpacity onPress={() => handleMenuToggle()}>
 								<X size={24} color={theme.colors.text} />
 							</TouchableOpacity>
 						</View>
@@ -131,6 +135,7 @@ export default function MenuNav() {
 
 const styles = StyleSheet.create({
 	menuButton: {
+		width: '100%',
 		padding: 10,
 		borderRadius: 8,
 		alignItems: 'center',
@@ -142,10 +147,14 @@ const styles = StyleSheet.create({
 	},
 	centeredView: {
 		flex: 1,
-		justifyContent: 'center',
+		position: 'absolute',
+		bottom: 0,
 		alignItems: 'center',
 	},
 	modalBackdrop: {
+		flex: 1,
+		width: '100%',
+		height: '100%',
 		position: 'absolute',
 		top: 0,
 		left: 0,
@@ -155,9 +164,8 @@ const styles = StyleSheet.create({
 		zIndex: -1,
 	},
 	modalView: {
-		width: width * 0.85,
-		maxHeight: '80%',
-		borderRadius: 16,
+		width: width,
+		maxHeight: '100%',
 		padding: 20,
 		elevation: 5,
 		shadowColor: '#000',
@@ -170,14 +178,11 @@ const styles = StyleSheet.create({
 	},
 	modalHeader: {
 		flexDirection: 'row',
-		justifyContent: 'space-between',
+		justifyContent: 'flex-end',
 		alignItems: 'center',
 		marginBottom: 20,
 	},
-	modalTitle: {
-		fontSize: 22,
-		fontWeight: 'bold',
-	},
+
 	menuItemsContainer: {
 		gap: 16,
 	},
