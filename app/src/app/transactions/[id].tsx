@@ -53,7 +53,7 @@ export default function TransactionsDetails() {
 		try {
 			setDeleting(true);
 			await deleteTransaction(transaction.id);
-			route.push('/(tabs)');
+			route.push('/(tabs)/transactions');
 		} catch (err) {
 			setError('Failed to delete transaction');
 			console.error(err);
@@ -85,7 +85,7 @@ export default function TransactionsDetails() {
 				<Text style={styles.errorText}>{error || 'Transaction not found'}</Text>
 				<TouchableOpacity
 					style={styles.backButton}
-					onPress={() => route.push('/(tabs)')}
+					onPress={() => route.push('/(tabs)/transactions')}
 				>
 					<Text style={styles.backButtonText}>Go Back</Text>
 				</TouchableOpacity>
@@ -100,7 +100,7 @@ export default function TransactionsDetails() {
 			<Animated.View style={styles.header} entering={FadeIn.duration(300)}>
 				<TouchableOpacity
 					style={styles.backButton}
-					onPress={() => route.push('/(tabs)')}
+					onPress={() => route.push('/(tabs)/transactions')}
 				>
 					<Feather name='arrow-left' size={24} color={theme.colors.text} />
 				</TouchableOpacity>

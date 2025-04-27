@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
-export default function CreateCategory() {
+export default function Notifications() {
 	return (
 		<View>
-			<Text>CreateCategory</Text>
+			<Text>Notifications</Text>
 		</View>
 	);
 }

@@ -40,7 +40,7 @@ const TransactionItem = ({ transaction, style }: TransactionItemProps) => {
 	const category = getCategoryDetails(transaction.category);
 
 	const handlePress = () => {
-		router.push(`/transactions/details/${transaction.id}`);
+		router.push(`/transactions/${transaction.id}`);
 	};
 
 	const handlePressIn = () => {

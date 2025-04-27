@@ -53,7 +53,7 @@ export default function Onboarding() {
 
 	const handleNext = useCallback(() => {
 		if (currentIndex === slides.length - 1) {
-			router.replace('/(tabs)');
+			router.replace('/(tabs)/transactions');
 		} else {
 			setCurrentIndex(currentIndex + 1);
 		}

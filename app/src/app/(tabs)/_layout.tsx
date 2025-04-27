@@ -3,9 +3,9 @@ import { Tabs } from 'expo-router';
 import {
 	ArrowUpDown,
 	ChartPie as PieChart,
-	Settings,
-	User,
 	Grid2x2 as Grid,
+	Wallet,
+	Menu as MenuIcon,
 } from 'lucide-react-native';
 
 export default function TabLayout() {
@@ -23,11 +23,28 @@ export default function TabLayout() {
 			}}
 		>
 			<Tabs.Screen
-				name='index'
+				name='transactions'
 				options={{
 					title: 'Transactions',
 					tabBarIcon: ({ size, color }: { size: number; color: string }) => (
 						<ArrowUpDown size={size} color={color} />
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name='budgets'
+				options={{
+					title: 'Budgets',
+					tabBarIcon: ({ size, color }) => <Wallet size={size} color={color} />,
+				}}
+			/>
+
+			<Tabs.Screen
+				name='menu'
+				options={{
+					title: 'Menu',
+					tabBarIcon: ({ size, color }: { size: number; color: string }) => (
+						<MenuIcon size={size} color={color} />
 					),
 				}}
 			/>
@@ -46,24 +63,6 @@ export default function TabLayout() {
 					title: 'Categories',
 					tabBarIcon: ({ size, color }: { size: number; color: string }) => (
 						<Grid size={size} color={color} />
-					),
-				}}
-			/>
-			<Tabs.Screen
-				name='profile'
-				options={{
-					title: 'Profile',
-					tabBarIcon: ({ size, color }: { size: number; color: string }) => (
-						<User size={size} color={color} />
-					),
-				}}
-			/>
-			<Tabs.Screen
-				name='settings'
-				options={{
-					title: 'Settings',
-					tabBarIcon: ({ size, color }: { size: number; color: string }) => (
-						<Settings size={size} color={color} />
 					),
 				}}
 			/>

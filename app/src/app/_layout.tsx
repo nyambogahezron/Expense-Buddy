@@ -28,6 +28,13 @@ export default function RootLayout() {
 				<Stack.Screen name='(onboarding)' options={{ headerShown: false }} />
 				<Stack.Screen name='(auth)' options={{ headerShown: false }} />
 				<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+				<Stack.Screen name='budgets' options={{ headerShown: false }} />
+				<Stack.Screen name='transactions' options={{ headerShown: false }} />
+				<Stack.Screen name='categories' options={{ headerShown: false }} />
+				<Stack.Screen name='shopping' options={{ headerShown: false }} />
+				<Stack.Screen name='settings' options={{ headerShown: false }} />
+				<Stack.Screen name='profile' options={{ headerShown: false }} />
+
 				<Stack.Screen name='+not-found' />
 			</Stack>
 			<StatusBar style='auto' />
