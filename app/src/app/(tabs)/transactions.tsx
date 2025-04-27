@@ -1,286 +1,279 @@
-import React, { useEffect, useState } from 'react';
-import {
-	FlatList,
-	Platform,
-	StyleSheet,
-	View,
-	Modal,
-	TouchableOpacity,
-	Dimensions,
-	ScrollView,
-} from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
-import { useTheme } from '@/context/ThemeProvider';
-import { useDataContext } from '@/context/DataProvider';
-import EmptyListCard from '@/components/EmptyListCard';
-import TransactionCard from '@/components/cards/TransactionCard';
-import Fab from '@/components/ui/Fab';
-import { router, Stack } from 'expo-router';
-import { Colors } from '@/constants/Colors';
-import useColorScheme from '@/hooks/useColorScheme';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
-import ThemedText from '@/components/ui/Text';
-import ThemedView from '@/components/ui/View';
-import { TransactionProps } from '@/types';
+import { useCallback, useState } from 'react';
+import { Pressable, StyleSheet, View, Text } from 'react-native';
+import Animated, {
+	useAnimatedScrollHandler,
+	useSharedValue,
+	FadeIn,
+	FadeOut,
+	SlideInDown,
+	SlideOutDown,
+} from 'react-native-reanimated';
+import { AnimatedHeader } from '@/components/AnimatedHeader';
+import { CategoryFilter } from '@/components/CategoryFilter';
+import { TransactionCategory } from '@/types/transaction';
+import { RefreshControl } from 'react-native';
+import { useThemeStore } from '@/store/theme';
+import { useTransactions } from '@/hooks/useTransactions';
+import EmptyState from '@/components/EmptyState';
+import TransactionList from '@/components/transaction/TransactionList';
+import LoadingState from '@/components/LoadingState';
+import ErrorState from '@/components/ErrorState';
+import { Plus, Filter, ArrowDownUp } from 'lucide-react-native';
+import { router } from 'expo-router';
+import { useTransactionStore } from '@/store/transactions';
 
-const { width, height } = Dimensions.get('window');
+export default function TransactionsScreen() {
+	const { searchQuery, sortOrder, setSearchQuery, setSortOrder } =
+		useTransactionStore();
+	const scrollY = useSharedValue(0);
+	const [selectedCategory, setSelectedCategory] =
+		useState<TransactionCategory | null>(null);
 
-export default function Transactions() {
-	const { transactionsData } = useDataContext();
-	const { theme } = useTheme();
-	const colorScheme = useColorScheme();
-	const [modalVisible, setModalVisible] = useState(false);
-	const [isFiltered, setIsFiltered] = useState(false);
-	const [distinctCategories, setDistinctCategories] = useState<string[]>([]);
-	const [filterOptions, setFilterOptions] = useState({
-		transactionsType: 'all',
-		category: 'all',
+	const [showSearch, setShowSearch] = useState(false);
+	const { theme } = useThemeStore();
+	const [showFabMenu, setShowFabMenu] = useState(false);
+
+	const {
+		transactions,
+		loading,
+		error,
+		refreshing,
+		onRefresh,
+		getTransactionSummary,
+	} = useTransactions();
+	const scrollHandler = useAnimatedScrollHandler({
+		onScroll: (event) => {
+			scrollY.value = event.contentOffset.y;
+		},
 	});
-	const [filteredTransactions, setFilteredTransactions] = useState<
-		TransactionProps[]
-	>([]);
+	const [isRefreshing, setIsRefreshing] = useState(false);
 
-	const openFilterModal = () => {
-		setModalVisible(true);
+	const handleRefresh = useCallback(async () => {
+		setIsRefreshing(true);
+		await onRefresh();
+		setIsRefreshing(false);
+	}, [onRefresh]);
+
+	const filteredTransactions = selectedCategory
+		? transactions.filter((t) => t.category === selectedCategory)
+		: transactions;
+
+	const summary = getTransactionSummary();
+
+	const toggleFabMenu = () => {
+		setShowFabMenu(!showFabMenu);
 	};
 
-	const closeFilterModal = () => {
-		setModalVisible(false);
+	const handleCreateTransaction = () => {
+		setShowFabMenu(false);
+		router.push('/transactions/new');
 	};
 
-	type transactionType = 'all' | 'income' | 'expense';
-
-	const handleToggleTranType = (type: transactionType) => {
-		setFilterOptions({ ...filterOptions, transactionsType: type });
+	const handleShowFilters = () => {
+		setShowFabMenu(false);
+		// You could integrate TransactionFilters component here or navigate to a filters screen
+		// For now we'll just toggle search
+		setShowSearch(true);
 	};
 
-	const handleToggleCategory = (category: string) => {
-		setFilterOptions({ ...filterOptions, category });
+	const handleSort = () => {
+		setShowFabMenu(false);
+		// Toggle sort order
+		setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
 	};
 
-	const filterTransactions = () => {
-		let filteredData = transactionsData;
+	if (loading && !isRefreshing) {
+		return <LoadingState />;
+	}
 
-		if (filterOptions.transactionsType !== 'all') {
-			filteredData = filteredData.filter(
-				(item: TransactionProps) => item.type === filterOptions.transactionsType
-			);
-		}
-
-		if (filterOptions.category !== 'all') {
-			filteredData = filteredData.filter(
-				(item: TransactionProps) =>
-					item.category.name === filterOptions.category
-			);
-		}
-
-		setFilteredTransactions(filteredData);
-	};
-
-	useEffect(() => {
-		setFilteredTransactions(transactionsData);
-
-		const getDistinctCategories = () => {
-			const categories =
-				transactionsData &&
-				transactionsData.map(
-					(item: TransactionProps) => item.category.name || 'unknown'
-				);
-			const data: string[] = [...new Set(categories as string[])];
-			setDistinctCategories(['all', ...data]);
-		};
-
-		getDistinctCategories();
-	}, [transactionsData]);
-
-	useEffect(() => {
-		filterTransactions();
-
-		if (
-			filterOptions.transactionsType !== 'all' ||
-			filterOptions.category !== 'all'
-		) {
-			setIsFiltered(true);
-		} else {
-			setIsFiltered(false);
-		}
-	}, [filterOptions]);
+	if (error) {
+		return <ErrorState message={error} onRetry={onRefresh} />;
+	}
 
 	return (
-		<ThemedSafeAreaView style={styles.safeArea}>
-			<StatusBar
-				style={theme === 'light' ? 'dark' : 'light'}
-				backgroundColor={Colors[colorScheme].background}
-			/>
-
-			<Stack.Screen
-				options={{
-					headerRight: () => (
-						<TouchableOpacity
-							onPress={
-								isFiltered
-									? () =>
-											setFilterOptions({
-												transactionsType: 'all',
-												category: 'all',
-											})
-									: openFilterModal
-							}
-							style={{ marginRight: 15 }}
-						>
-							{isFiltered ? (
-								<AntDesign name='close' size={24} color={'orange'} />
-							) : (
-								<Ionicons
-									name='filter'
-									size={24}
-									color={Colors[colorScheme].customIcon}
-								/>
-							)}
-						</TouchableOpacity>
-					),
-					headerTitleStyle: {
-						color: Colors[colorScheme].customIcon,
-						fontSize: 20,
-						fontWeight: 'bold',
-					},
-				}}
-			/>
-
-			<View style={styles.container}>
-				<FlatList
-					showsVerticalScrollIndicator={false}
-					showsHorizontalScrollIndicator={false}
-					data={filteredTransactions.slice(0, 50) || []}
-					keyExtractor={(item: TransactionProps) => item.id.toString()}
-					renderItem={({ item }) => <TransactionCard item={item} />}
-					ListEmptyComponent={
-						<EmptyListCard title='No transactions available' />
-					}
-				/>
-			</View>
-			<Fab onPress={() => router.push('/(transactions)/create')} />
-
-			<Modal
-				animationType='slide'
-				transparent={true}
-				visible={modalVisible}
-				onRequestClose={closeFilterModal}
+		<View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+			<AnimatedHeader scrollY={scrollY} balance={summary.balance} />
+			<Animated.ScrollView
+				onScroll={scrollHandler}
+				scrollEventThrottle={16}
+				contentContainerStyle={{ paddingBottom: 20 }}
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+				}
 			>
-				<ThemedView style={styles.modalView}>
-					<TouchableOpacity
-						onPress={closeFilterModal}
-						className='flex flex-col gap-5 p-2 w-full h-full'
+				<CategoryFilter
+					selectedCategory={selectedCategory}
+					onSelectCategory={setSelectedCategory}
+				/>
+
+				{transactions.length === 0 ? (
+					<EmptyState message='No transactions found' />
+				) : (
+					<TransactionList
+						transactions={filteredTransactions}
+						onTransactionPress={(id) => {
+							// Handle transaction press
+						}}
+					/>
+				)}
+			</Animated.ScrollView>
+
+			{/* Floating Action Button */}
+			<View style={styles.fabContainer}>
+				{showFabMenu && (
+					<Animated.View
+						entering={FadeIn.duration(200)}
+						exiting={FadeOut.duration(200)}
+						style={styles.backdrop}
 					>
-						<TouchableOpacity
-							style={{ position: 'absolute', top: 10, right: 10 }}
+						<Pressable
+							style={{ flex: 1 }}
+							onPress={() => setShowFabMenu(false)}
+						/>
+					</Animated.View>
+				)}
+
+				{showFabMenu && (
+					<Animated.View
+						entering={SlideInDown.springify().damping(15)}
+						exiting={SlideOutDown.duration(200)}
+						style={styles.fabMenuContainer}
+					>
+						<Pressable
+							onPress={handleCreateTransaction}
+							style={[
+								styles.fabMenuItem,
+								{ backgroundColor: theme.colors.primary },
+							]}
 						>
-							<Ionicons name='close' size={28} color='black' />
-						</TouchableOpacity>
+							<Plus size={20} color='#FFFFFF' />
+							<Text style={styles.fabMenuItemText}>New Transaction</Text>
+						</Pressable>
 
-						<ThemedText style={styles.modalText}>Filter Options</ThemedText>
-						<ScrollView className='flex-1'>
-							<ThemedText className='mt-4 mb-2'>Transaction Type</ThemedText>
-							<View className='flex flex-row flex-wrap gap-2'>
-								{['all', 'income', 'expense'].map((type) => (
-									<TouchableOpacity
-										key={type}
-										onPress={() =>
-											handleToggleTranType(type as transactionType)
-										}
-										className={`flex items-center justify-center rounded-lg h-10 border-2 border-gray-300 px-8 ${
-											filterOptions.transactionsType === type
-												? 'bg-gray-300 border-orange-500'
-												: 'bg-white'
-										}`}
-									>
-										<ThemedText
-											type='link'
-											className={`capitalize ${
-												filterOptions.transactionsType === type
-													? 'text-red-500'
-													: 'text-gray-500'
-											}`}
-										>
-											{type}
-										</ThemedText>
-									</TouchableOpacity>
-								))}
-							</View>
+						<Pressable
+							onPress={handleShowFilters}
+							style={[
+								styles.fabMenuItem,
+								{ backgroundColor: theme.colors.surface },
+							]}
+						>
+							<Filter size={20} color={theme.colors.text} />
+							<Text
+								style={[styles.fabMenuItemText, { color: theme.colors.text }]}
+							>
+								Filter
+							</Text>
+						</Pressable>
 
-							<ThemedText className='mt-4 mb-2'>Category</ThemedText>
-							<View className='flex flex-row flex-wrap gap-2'>
-								{distinctCategories.map((item, index: number) => (
-									<TouchableOpacity
-										key={index}
-										onPress={() => handleToggleCategory(item)}
-										className={`flex items-center justify-center rounded-lg h-10 border-2 border-gray-300 px-8 ${
-											filterOptions.category === item
-												? 'bg-gray-300 border-orange-500'
-												: 'bg-white'
-										}`}
-									>
-										<ThemedText
-											type='link'
-											className={`capitalize ${
-												filterOptions.category === item
-													? 'text-red-500'
-													: 'text-gray-500'
-											}`}
-										>
-											{item}
-										</ThemedText>
-									</TouchableOpacity>
-								))}
-							</View>
-						</ScrollView>
-					</TouchableOpacity>
-				</ThemedView>
-			</Modal>
-		</ThemedSafeAreaView>
+						<Pressable
+							onPress={handleSort}
+							style={[
+								styles.fabMenuItem,
+								{ backgroundColor: theme.colors.surface },
+							]}
+						>
+							<ArrowDownUp size={20} color={theme.colors.text} />
+							<Text
+								style={[styles.fabMenuItemText, { color: theme.colors.text }]}
+							>
+								Sort {sortOrder === 'desc' ? 'Oldest First' : 'Newest First'}
+							</Text>
+						</Pressable>
+					</Animated.View>
+				)}
+
+				<Pressable
+					onPress={toggleFabMenu}
+					style={[
+						styles.fab,
+						{
+							backgroundColor: theme.colors.primary,
+							transform: [{ rotate: showFabMenu ? '45deg' : '0deg' }],
+						},
+					]}
+				>
+					<Plus size={28} color='#FFFFFF' />
+				</Pressable>
+			</View>
+		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	safeArea: {
-		flex: 1,
-		paddingBottom: 20,
-	},
 	container: {
-		marginTop: Platform.select({ android: -35, default: 0 }),
+		flex: 1,
 	},
-	modalView: {
-		position: 'absolute',
-		bottom: 0,
-		justifyContent: 'center',
-		height: height * 0.6,
-		width: width,
-		borderTopLeftRadius: 20,
-		borderTopRightRadius: 20,
-		borderWidth: 0.4,
-		borderColor: '#ccc',
+	toolbar: {
+		flexDirection: 'row',
 		alignItems: 'center',
-		marginTop: 22,
-		padding: 10,
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 2,
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 4,
-		elevation: 5,
+		padding: 20,
+		gap: 12,
 	},
-	modalText: {
-		top: 10,
-		marginBottom: 1,
-		textAlign: 'center',
-		fontSize: 20,
-		fontWeight: 'bold',
+	searchButton: {
+		padding: 12,
+		borderRadius: 12,
 	},
-	closeButton: {
-		marginTop: 15,
-		color: 'blue',
+	searchContainer: {
+		flex: 1,
+		flexDirection: 'row',
+		alignItems: 'center',
+		padding: 12,
+		borderRadius: 12,
+		borderWidth: 1,
+		gap: 12,
+	},
+	searchInput: {
+		flex: 1,
+		fontSize: 16,
+		fontFamily: 'Inter-Regular',
+	},
+	addButton: {
+		width: 48,
+		height: 48,
+		borderRadius: 24,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	transactionsList: {
+		padding: 20,
+	},
+	fabContainer: {
+		position: 'absolute',
+		bottom: 20,
+		right: 20,
+		alignItems: 'center',
+	},
+	fab: {
+		width: 50,
+		height: 50,
+		borderRadius: 30,
+		justifyContent: 'center',
+		alignItems: 'center',
+		zIndex: 2,
+	},
+	backdrop: {
+		...StyleSheet.absoluteFillObject,
+		zIndex: 1,
+	},
+	fabMenuContainer: {
+		position: 'absolute',
+		bottom: 80,
+		right: 0,
+		marginBottom: 8,
+		borderRadius: 12,
+		overflow: 'hidden',
+		width: 200,
+		zIndex: 3,
+	},
+	fabMenuItem: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		padding: 16,
+		gap: 12,
+	},
+	fabMenuItemText: {
+		color: '#FFFFFF',
+		fontSize: 16,
+		fontFamily: 'Inter-Medium',
 	},
 });

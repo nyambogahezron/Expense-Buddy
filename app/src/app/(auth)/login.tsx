@@ -1,145 +1,207 @@
-import React, { useState } from 'react';
-import {
-	Text,
-	TouchableOpacity,
-	ScrollView,
-	Alert,
-	StyleSheet,
-} from 'react-native';
-import { router, Stack } from 'expo-router';
+import { useState } from 'react';
+import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
+import { Link, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useTheme } from '@/context/ThemeProvider';
-import ThemedSafeAreaView from '@/components/ui/ThemedSafeAreaView';
-import CustomTextInput from '@/components/ui/CustomTextInput';
-import AuthFooter from '@/components/AuthFooter';
-import Button from '@/components/ui/Button';
-import { supabase } from '@/utils/supabase';
-import { useToast } from 'react-native-toast-notifications';
-import ThemedView from '@/components/ui/View';
-import ThemedText from '@/components/ui/Text';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import { Lock, Mail } from 'lucide-react-native';
+import { useThemeStore } from '@/store/theme';
 
-export default function Login() {
-	const [passwordVisible, setPasswordVisible] = useState(false);
-	const [email, setEmail] = useState<string>('');
-	const [password, setPassword] = useState<string>('');
-	const [loading, setLoading] = useState(false);
+export default function LoginScreen() {
+	const { theme } = useThemeStore();
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [error, setError] = useState<string | null>(null);
 
-	const { theme } = useTheme();
-	const toast = useToast();
-
-	async function signInWithUser() {
-		if (!email || !password)
-			return toast.show('Input all fields', { type: 'danger' });
-
-		setLoading(true);
-		const { error } = await supabase.auth.signInWithPassword({
-			email: email,
-			password: password,
-		});
-
-		if (error) Alert.alert(error.message);
-		setLoading(false);
-	}
+	const handleLogin = () => {
+		if (!email || !password) {
+			setError('Please fill in all fields');
+			return;
+		}
+		// TODO: Implement actual login logic
+		router.replace('/(tabs)');
+	};
 
 	return (
-		<ThemedSafeAreaView style={styles.container}>
-			<StatusBar
-				style={theme === 'light' ? 'dark' : 'light'}
-				backgroundColor='transparent'
-			/>
-			<Stack.Screen options={{ headerShown: false }} />
-			<ScrollView
-				style={styles.scrollView}
-				showsVerticalScrollIndicator={false}
-				showsHorizontalScrollIndicator={false}
+		<View
+			style={[styles.container, { backgroundColor: theme.colors.background }]}
+		>
+			<StatusBar style='auto' />
+
+			<View style={styles.header}>
+				<Text style={[styles.title, { color: theme.colors.text }]}>
+					Welcome Back
+				</Text>
+				<Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
+					Sign in to continue tracking your finances
+				</Text>
+			</View>
+
+			<Animated.View
+				entering={FadeInDown.duration(1000).springify()}
+				style={styles.form}
 			>
-				{/* Logo and Title */}
-				<ThemedView style={styles.headerContainer}>
-					<ThemedView>
-						<Text style={styles.title}>Login</Text>
-						<ThemedText style={styles.description}>
-							Welcome Back, Login Now
-						</ThemedText>
-					</ThemedView>
-				</ThemedView>
+				<View style={styles.inputGroup}>
+					<View
+						style={[
+							styles.inputContainer,
+							{
+								backgroundColor: theme.colors.surface,
+								borderColor: theme.colors.border,
+							},
+						]}
+					>
+						<Mail size={20} color={theme.colors.textSecondary} />
+						<TextInput
+							placeholder='Email'
+							value={email}
+							onChangeText={setEmail}
+							autoCapitalize='none'
+							keyboardType='email-address'
+							style={[styles.input, { color: theme.colors.text }]}
+							placeholderTextColor={theme.colors.textSecondary}
+						/>
+					</View>
 
-				<CustomTextInput
-					title='Email'
-					onChangeText={(text) => setEmail(text)}
-					placeholder='Enter Email'
-					keyboardType='email-address'
-				/>
+					<View
+						style={[
+							styles.inputContainer,
+							{
+								backgroundColor: theme.colors.surface,
+								borderColor: theme.colors.border,
+							},
+						]}
+					>
+						<Lock size={20} color={theme.colors.textSecondary} />
+						<TextInput
+							placeholder='Password'
+							value={password}
+							onChangeText={setPassword}
+							secureTextEntry
+							style={[styles.input, { color: theme.colors.text }]}
+							placeholderTextColor={theme.colors.textSecondary}
+						/>
+					</View>
 
-				<CustomTextInput
-					inputType='password'
-					title='Password'
-					onChangeText={(text) => setPassword(text)}
-					placeholder='Enter Password'
-					passwordVisible={passwordVisible}
-					handleOnPress={() => setPasswordVisible(!passwordVisible)}
-				/>
+					{error && (
+						<Text style={[styles.errorText, { color: theme.colors.error }]}>
+							{error}
+						</Text>
+					)}
+				</View>
 
-				{/* Forgot Password */}
-				<TouchableOpacity
-					activeOpacity={0.7}
-					onPress={() => router.push('/(auth)/forgotPassword')}
-					className='mb-8'
+				<Link href='/forgot-password' style={styles.forgotPassword}>
+					<Text
+						style={[styles.forgotPasswordText, { color: theme.colors.primary }]}
+					>
+						Forgot Password?
+					</Text>
+				</Link>
+
+				<Pressable
+					onPress={handleLogin}
+					style={({ pressed }) => [
+						styles.button,
+						{ backgroundColor: theme.colors.primary },
+						pressed && { opacity: 0.8 },
+					]}
 				>
-					<Text className='text-blue-600 text-right'>Forget password?</Text>
-				</TouchableOpacity>
+					<Text style={styles.buttonText}>Sign In</Text>
+				</Pressable>
 
-				{/* Login Button */}
-				<Button
-					isLoading={loading}
-					title={loading ? 'Loading...' : 'Login'}
-					customStyles={styles.button}
-					handleOpenPress={signInWithUser}
-					textStyles={styles.buttonText}
-				/>
-				{/* Signup Option */}
-				<AuthFooter
-					title={`Don't Have An Account ?`}
-					handleOnPress={() => router.push('/(auth)/register')}
-					buttonText='Signup'
-				/>
-			</ScrollView>
-		</ThemedSafeAreaView>
+				<View style={styles.footer}>
+					<Text
+						style={[styles.footerText, { color: theme.colors.textSecondary }]}
+					>
+						Don't have an account?
+					</Text>
+					<Link href='/register' style={styles.link}>
+						<Text style={[styles.linkText, { color: theme.colors.primary }]}>
+							Sign Up
+						</Text>
+					</Link>
+				</View>
+			</Animated.View>
+		</View>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingHorizontal: 12,
-		width: '100%',
-		justifyContent: 'center',
+		padding: 24,
 	},
-	scrollView: {
-		marginVertical: 20,
-		paddingHorizontal: 10,
-	},
-	button: {
-		backgroundColor: '#2563eb',
-	},
-	buttonText: {
-		color: '#ffffff',
-		fontSize: 18,
-		fontWeight: 'bold',
-	},
-	headerContainer: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		marginVertical: 40,
+	header: {
+		marginTop: 60,
+		marginBottom: 40,
 	},
 	title: {
-		fontSize: 40,
-		fontWeight: '800',
-		marginVertical: 10,
-		color: '#1e3a8a',
+		fontSize: 32,
+		fontFamily: 'Inter-Bold',
+		marginBottom: 8,
 	},
-	description: {
-		fontSize: 20,
-		fontWeight: '600',
+	subtitle: {
+		fontSize: 16,
+		fontFamily: 'Inter-Regular',
+	},
+	form: {
+		flex: 1,
+	},
+	inputGroup: {
+		gap: 16,
+		marginBottom: 24,
+	},
+	inputContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		padding: 16,
+		borderRadius: 12,
+		borderWidth: 1,
+		gap: 12,
+	},
+	input: {
+		flex: 1,
+		fontSize: 16,
+		fontFamily: 'Inter-Regular',
+	},
+	errorText: {
+		fontSize: 14,
+		fontFamily: 'Inter-Regular',
+		marginTop: 8,
+	},
+	forgotPassword: {
+		alignSelf: 'flex-end',
+		marginBottom: 24,
+	},
+	forgotPasswordText: {
+		fontSize: 14,
+		fontFamily: 'Inter-SemiBold',
+	},
+	button: {
+		padding: 16,
+		borderRadius: 12,
+		alignItems: 'center',
+	},
+	buttonText: {
+		color: '#FFFFFF',
+		fontSize: 16,
+		fontFamily: 'Inter-SemiBold',
+	},
+	footer: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginTop: 24,
+		gap: 8,
+	},
+	footerText: {
+		fontSize: 14,
+		fontFamily: 'Inter-Regular',
+	},
+	link: {
+		padding: 4,
+	},
+	linkText: {
+		fontSize: 14,
+		fontFamily: 'Inter-SemiBold',
 	},
 });

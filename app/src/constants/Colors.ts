@@ -1,87 +1,34 @@
-const tintColorLight = '#FFA500';
-const tintColorDark = tintColorLight
-const white = '#ffffff';
-const whiteLight = '#f2f2f2';
-const whiteDim = '#f3f4f6';
-const whiteDim2 = '#ECEDEE';
-const blue = '#007AFF';
-const orange = '#FFA500';
-const orangeRed = '#FF4500';
-const tomato = '#FF6347';
-const red = '#F44336';
-const hotPink = '#FF69B4';
-const deepPink = '#FF1493';
-const blueViolet = '#3030cc';
-const darkOrange = '#FF4500';
-const black = '#000000';
-const blackLight = '#070B11';
-const textGray = '#4B5563';
-const gray = '#333333';
-const grayLight = '#9BA1A6';
+const tintColorLight = '#0a7ea4';
+const tintColorDark = '#fff';
 
 export const Colors = {
-  white,
-  blue,
-  orange,
-  orangeRed,
-  tomato,
-  red,
-  hotPink,
-  deepPink,
-  blueViolet,
-  darkOrange,
-  black,
-  textGray,
-  grayLight,
-  blackLight,
-  gray,
-  whiteDim,
+	light: {
+		text: '#11181C',
+		background: '#fff',
+		tint: tintColorLight,
+		icon: '#687076',
+		tabIconDefault: '#687076',
+		tabIconSelected: tintColorLight,
+	},
+	dark: {
+		text: '#ECEDEE',
+		background: '#151718',
+		tint: tintColorDark,
+		icon: '#9BA1A6',
+		tabIconDefault: '#9BA1A6',
+		tabIconSelected: tintColorDark,
+	},
 
-  light: {
-    text: '#11181C',
-    textPrimary: whiteDim2,
-    background: whiteDim,
-    tint: tintColorLight,
-    icon: gray,
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
-    headerBackground: whiteLight,
-    header: whiteLight,
-    customIcon: gray,
-    border: '#ccc',
-    bgLight: whiteDim,
-    bgLight2: '#e5e7eb',
-    customIcon2: '#141518',
-    bg2 : '#D8DCE2',
-    darkGray : '#fff'
-  },
-  dark: {
-    text: whiteDim2,
-    textPrimary: black,
-    background: blackLight,
-    tint: tintColorDark,
-    icon: grayLight,
-    tabIconDefault: grayLight,
-    tabIconSelected: tintColorDark,
-    headerBackground: blackLight,
-    header: blackLight,
-    customIcon: white,
-    border: gray,
-    bgLight: '#1c1c1e',
-    bgLight2: '#1c1c1e',
-    customIcon2 : '#f2f2f2',
-    bg2 : '#1c1c1e',
-    darkGray : '#333',
-  },
+	primary: '#6200ee',
+	primaryDark: '#3700b3',
+	secondary: '#03dac6',
+	secondaryDark: '#018786',
+	background: '#f5f5f5',
+	surface: '#ffffff',
+	error: '#e74c3c',
+	success: '#2ecc71',
+	text: '#333333',
+	textSecondary: '#666666',
+	border: '#e0e0e0',
+	disabled: '#9e9e9e',
 };
-
-export const IconColors = [
-  Colors.orange,
-  Colors.orangeRed,
-  Colors.tomato,
-  Colors.red,
-  Colors.hotPink,
-  Colors.deepPink,
-  Colors.blueViolet,
-  Colors.darkOrange,
-];
