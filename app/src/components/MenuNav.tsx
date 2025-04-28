@@ -7,9 +7,15 @@ import {
 	Pressable,
 	Dimensions,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { useRouter } from 'expo-router';
-import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
+import Animated, {
+	FadeInDown,
+	FadeOutUp,
+	useAnimatedStyle,
+	useSharedValue,
+	withTiming,
+} from 'react-native-reanimated';
 import { useThemeStore } from '@/store/theme';
 import {
 	Settings,
@@ -18,70 +24,101 @@ import {
 	X,
 	ShoppingCart,
 	MenuIcon,
+	LucideIcon,
 } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 
+type MenuItemProps = {
+	icon: LucideIcon;
+	label: string;
+	onPress: () => void;
+	color: string;
+};
+
+const MenuItem = memo(
+	({ icon: Icon, label, onPress, color }: MenuItemProps) => (
+		<Animated.View entering={FadeInDown.springify().damping(15)}>
+			<TouchableOpacity
+				style={styles.menuItem}
+				onPress={onPress}
+				activeOpacity={0.7}
+			>
+				<Icon size={24} color={color} />
+				<Text style={[styles.menuItemText, { color }]}>{label}</Text>
+			</TouchableOpacity>
+		</Animated.View>
+	)
+);
+
 export default function MenuNav() {
 	const [modalVisible, setModalVisible] = useState(false);
 
-	const { theme, isMenuOpen, closeMenu } = useThemeStore();
+	const { theme, closeMenu } = useThemeStore();
 	const router = useRouter();
 
-	const menuItems: Array<{
-		icon: React.ComponentType<any>;
-		label: string;
-		route?: any;
-		action?: () => void;
-	}> = [
+	const opacity = useSharedValue(0);
+
+	const backdropStyle = useAnimatedStyle(() => {
+		return {
+			opacity: opacity.value,
+		};
+	});
+
+	const menuItems = [
 		{ icon: ShoppingCart, label: 'Shopping List', route: '/shopping' },
 		{ icon: Bell, label: 'Notifications', route: '/notifications' },
 		{ icon: Settings, label: 'Settings', route: '/settings' },
 		{ icon: LogOut, label: 'Logout', action: () => handleLogout() },
 	];
 
-	const handleLogout = () => {
+	const handleLogout = useCallback(() => {
 		setModalVisible(false);
 		router.push('/(auth)/login');
-	};
+	}, [router]);
 
-	const handleMenuToggle = () => {
-		if (isMenuOpen) {
+	const handleMenuItemPress = useCallback(
+		(route: any, action: any) => {
+			setModalVisible(false);
 			closeMenu();
-		} else {
-			setModalVisible(true);
-		}
-	};
-	const handleBackdropPress = () => {
-		setModalVisible(false);
-		closeMenu();
-	};
 
-	const handleMenuItemPress = (route?: any, action?: () => void) => {
-		setModalVisible(false);
-		closeMenu();
+			if (action) {
+				action();
+			} else if (route) {
+				router.push(route);
+			}
+		},
+		[router, closeMenu]
+	);
 
-		if (action) {
-			action();
-		} else if (route) {
-			router.push(route);
-		}
-	};
+	const handleOpenModal = useCallback(() => {
+		setModalVisible(true);
+		opacity.value = withTiming(1, { duration: 200 });
+	}, [opacity]);
+
+	const handleCloseModal = useCallback(() => {
+		opacity.value = withTiming(0, { duration: 150 });
+		setTimeout(() => {
+			setModalVisible(false);
+			closeMenu();
+		}, 100);
+	}, [opacity, closeMenu]);
 
 	return (
 		<View>
 			<TouchableOpacity
 				style={styles.menuButton}
-				onPress={() => setModalVisible(true)}
+				onPress={handleOpenModal}
+				activeOpacity={0.7}
 			>
 				<MenuIcon size={24} color={'#888'} />
 			</TouchableOpacity>
 
 			<Modal
-				animationType='slide'
+				animationType='none'
 				transparent={true}
-				visible={modalVisible || isMenuOpen}
-				onRequestClose={() => setModalVisible(false)}
+				visible={modalVisible}
+				onRequestClose={handleCloseModal}
 			>
 				<View style={styles.centeredView}>
 					<Animated.View
@@ -89,44 +126,34 @@ export default function MenuNav() {
 							styles.modalView,
 							{ backgroundColor: theme.colors.background },
 						]}
-						entering={FadeInDown.springify()}
-						exiting={FadeOutUp.springify()}
+						entering={FadeInDown.springify().damping(15)}
+						exiting={FadeOutUp.springify().damping(15)}
 					>
 						<View style={styles.modalHeader}>
-							<TouchableOpacity onPress={() => handleMenuToggle()}>
+							<TouchableOpacity onPress={handleCloseModal} activeOpacity={0.7}>
 								<X size={24} color={theme.colors.text} />
 							</TouchableOpacity>
 						</View>
 
 						<View style={styles.menuItemsContainer}>
 							{menuItems.map((item, index) => (
-								<Animated.View
+								<MenuItem
 									key={index}
-									entering={FadeInDown.delay(100 * index).springify()}
-								>
-									<TouchableOpacity
-										style={styles.menuItem}
-										onPress={() => handleMenuItemPress(item.route, item.action)}
-									>
-										<item.icon size={24} color={theme.colors.primary} />
-										<Text
-											style={[
-												styles.menuItemText,
-												{ color: theme.colors.text },
-											]}
-										>
-											{item.label}
-										</Text>
-									</TouchableOpacity>
-								</Animated.View>
+									icon={item.icon}
+									label={item.label}
+									color={theme.colors.text}
+									onPress={() => handleMenuItemPress(item.route, item.action)}
+								/>
 							))}
 						</View>
 					</Animated.View>
 
-					<Pressable
-						style={styles.modalBackdrop}
-						onPress={() => setModalVisible(false)}
-					/>
+					<Animated.View style={[styles.modalBackdrop, backdropStyle]}>
+						<Pressable
+							style={styles.pressableBackdrop}
+							onPress={handleCloseModal}
+						/>
+					</Animated.View>
 				</View>
 			</Modal>
 		</View>
@@ -162,6 +189,10 @@ const styles = StyleSheet.create({
 		bottom: 0,
 		backgroundColor: 'rgba(0, 0, 0, 0.5)',
 		zIndex: -1,
+	},
+	pressableBackdrop: {
+		width: '100%',
+		height: '100%',
 	},
 	modalView: {
 		width: width,

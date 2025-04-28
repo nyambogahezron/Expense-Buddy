@@ -21,7 +21,6 @@ export default function RootLayout() {
 		'Inter-Bold': Inter_700Bold,
 	});
 
-	// Load saved theme when app starts
 	useEffect(() => {
 		initializeTheme();
 	}, []);

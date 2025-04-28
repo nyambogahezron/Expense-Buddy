@@ -7,8 +7,8 @@ const THEME_STORAGE_KEY = 'expense-buddy-theme';
 interface ThemeState {
 	currentTheme: ThemeType;
 	theme: Theme;
-	setTheme: (themeType: ThemeType) => void;
 	isMenuOpen: boolean;
+	setTheme: (themeType: ThemeType) => void;
 	openMenu: () => void;
 	closeMenu: () => void;
 	toggleMenu: () => void;
@@ -19,20 +19,36 @@ export const useThemeStore = create<ThemeState>((set) => ({
 	currentTheme: 'light',
 	theme: themes.light,
 	isMenuOpen: false,
-	setTheme: (themeType) => {
-		// Save theme to AsyncStorage
-		AsyncStorage.setItem(THEME_STORAGE_KEY, themeType).catch((error) => {
-			console.error('Error saving theme preference:', error);
-		});
 
-		set({
-			currentTheme: themeType,
-			theme: themes[themeType],
+	setTheme: (themeType) => {
+		set((state) => {
+			if (state.currentTheme === themeType) return state;
+
+			AsyncStorage.setItem(THEME_STORAGE_KEY, themeType).catch((error) => {
+				console.error('Error saving theme preference:', error);
+			});
+
+			return {
+				currentTheme: themeType,
+				theme: themes[themeType],
+			};
 		});
 	},
-	openMenu: () => set({ isMenuOpen: true }),
-	closeMenu: () => set({ isMenuOpen: false }),
+
+	openMenu: () =>
+		set((state) => {
+			if (state.isMenuOpen) return state;
+			return { isMenuOpen: true };
+		}),
+
+	closeMenu: () =>
+		set((state) => {
+			if (!state.isMenuOpen) return state;
+			return { isMenuOpen: false };
+		}),
+
 	toggleMenu: () => set((state) => ({ isMenuOpen: !state.isMenuOpen })),
+
 	initializeTheme: async () => {
 		try {
 			const savedTheme = await AsyncStorage.getItem(THEME_STORAGE_KEY);
