@@ -8,8 +8,14 @@ import {
 	Inter_600SemiBold,
 	Inter_700Bold,
 } from '@expo-google-fonts/inter';
+import { useThemeStore } from '@/store/theme';
 
 export default function RootLayout() {
+	const { theme } = useThemeStore();
+
+	const status_bar_style = theme.name === 'light' ? 'dark' : 'light';
+	const status_bar_background =
+		theme.name === 'dark' ? theme.colors.background : theme.colors.primary;
 	useFrameworkReady();
 
 	const [fontsLoaded] = useFonts({
@@ -35,12 +41,15 @@ export default function RootLayout() {
 				<Stack.Screen name='transactions' options={{ headerShown: false }} />
 				<Stack.Screen name='categories' options={{ headerShown: false }} />
 				<Stack.Screen name='shopping' options={{ headerShown: false }} />
-				<Stack.Screen name='settings' options={{ headerShown: false }} />
+				<Stack.Screen name='settings' options={{ headerShown: true }} />
 				<Stack.Screen name='profile' options={{ headerShown: false }} />
 
 				<Stack.Screen name='+not-found' />
 			</Stack>
-			<StatusBar style='auto' />
+			<StatusBar
+				style={status_bar_style}
+				backgroundColor={status_bar_background}
+			/>
 		</GestureHandlerRootView>
 	);
 }
