@@ -1,3 +1,4 @@
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useThemeStore } from '@/store/theme';
 import Animated, { FadeIn } from 'react-native-reanimated';
@@ -13,12 +14,7 @@ interface MetricCardProps {
 	prefix?: string;
 }
 
-export function MetricCard({
-	title,
-	value,
-	change,
-	prefix = '$',
-}: MetricCardProps) {
+function MetricCard({ title, value, change, prefix = '$' }: MetricCardProps) {
 	const { theme } = useThemeStore();
 
 	return (
@@ -87,3 +83,5 @@ const styles = StyleSheet.create({
 		fontFamily: 'Inter-SemiBold',
 	},
 });
+
+export default memo(MetricCard);

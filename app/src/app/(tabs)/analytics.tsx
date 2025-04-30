@@ -8,9 +8,9 @@ import {
 	VictoryPie,
 	VictoryBar,
 } from 'victory-native';
-import { MetricCard } from '@/components/MetricCard';
 import { DateRangePicker } from '@/components/DateRangePicker';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import MetricCard from '@/components/MetricCard';
 
 // Custom chart theme
 const customChartTheme = {

@@ -1,13 +1,13 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
 	useFonts,
 	Inter_400Regular,
 	Inter_600SemiBold,
 	Inter_700Bold,
 } from '@expo-google-fonts/inter';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function RootLayout() {
 	useFrameworkReady();
@@ -24,8 +24,11 @@ export default function RootLayout() {
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
-			<Stack screenOptions={{ headerShown: false }}>
-				<Stack.Screen name='(onboarding)' options={{ headerShown: false }} />
+			<Stack
+				screenOptions={{ headerShown: false }}
+				initialRouteName='onboarding'
+			>
+				<Stack.Screen name='onboarding' options={{ headerShown: false }} />
 				<Stack.Screen name='(auth)' options={{ headerShown: false }} />
 				<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
 				<Stack.Screen name='budgets' options={{ headerShown: false }} />
