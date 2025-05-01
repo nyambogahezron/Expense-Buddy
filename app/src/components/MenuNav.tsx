@@ -26,6 +26,7 @@ import {
 	MenuIcon,
 	LucideIcon,
 } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 
@@ -40,12 +41,21 @@ const MenuItem = memo(
 	({ icon: Icon, label, onPress, color }: MenuItemProps) => (
 		<Animated.View entering={FadeInDown.springify().damping(15)}>
 			<TouchableOpacity
-				style={styles.menuItem}
+				style={[
+					styles.menuItem,
+					{ borderBottomWidth: 0.3, borderColor: '#333' },
+				]}
 				onPress={onPress}
 				activeOpacity={0.7}
 			>
-				<Icon size={24} color={color} />
+				<Icon size={20} color={color} />
 				<Text style={[styles.menuItemText, { color }]}>{label}</Text>
+				<Ionicons
+					name='chevron-forward-outline'
+					size={18}
+					color={color}
+					style={{ position: 'absolute', right: 0 }}
+				/>
 			</TouchableOpacity>
 		</Animated.View>
 	)
@@ -68,7 +78,7 @@ export default function MenuNav() {
 	const menuItems = [
 		{ icon: ShoppingCart, label: 'Shopping List', route: '/shopping' },
 		{ icon: Bell, label: 'Notifications', route: '/notifications' },
-		{ icon: Settings, label: 'Settings', route: '/settings' },
+		{ icon: Settings, label: 'Theme', route: '/settings/theme' },
 		{ icon: LogOut, label: 'Logout', action: () => handleLogout() },
 	];
 
@@ -215,7 +225,7 @@ const styles = StyleSheet.create({
 	},
 
 	menuItemsContainer: {
-		gap: 16,
+		gap: 5,
 	},
 	menuItem: {
 		flexDirection: 'row',

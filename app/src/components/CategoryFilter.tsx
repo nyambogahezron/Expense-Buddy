@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 16,
 		paddingVertical: 8,
 		borderRadius: 20,
+		height: 35,
 	},
 	chipText: {
 		fontSize: 14,

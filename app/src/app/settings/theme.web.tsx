@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { useThemeStore } from '@/store/theme';
 import { ThemePreview } from '@/components/ThemePreview';
 import { themes, ThemeType } from '@/types/theme';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { Stack } from 'expo-router';
 
 export default function SettingsScreen() {
 	const { currentTheme, setTheme } = useThemeStore();
@@ -13,14 +14,22 @@ export default function SettingsScreen() {
 			style={[styles.container, { backgroundColor: theme.colors.background }]}
 			contentContainerStyle={styles.content}
 		>
-			<Text style={[styles.title, { color: theme.colors.text }]}>Settings</Text>
-
+			<Stack.Screen
+				options={{
+					title: 'Theme Customization',
+					headerStyle: {
+						backgroundColor: theme.colors.primary,
+					},
+					headerTitleStyle: {
+						color: theme.colors.text,
+						fontFamily: 'Inter-SemiBold',
+						fontSize: 20,
+					},
+					headerTintColor: theme.colors.text,
+					headerTitleAlign: 'center',
+				}}
+			/>
 			<View style={styles.section}>
-				<Text
-					style={[styles.sectionTitle, { color: theme.colors.textSecondary }]}
-				>
-					Theme
-				</Text>
 				<Animated.View entering={FadeIn} style={styles.themesGrid}>
 					{(Object.keys(themes) as ThemeType[]).map((themeKey) => (
 						<ThemePreview
