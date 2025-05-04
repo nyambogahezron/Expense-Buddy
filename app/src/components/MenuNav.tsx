@@ -25,6 +25,7 @@ import {
 	ShoppingCart,
 	MenuIcon,
 	LucideIcon,
+	PaintBucket,
 } from 'lucide-react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -41,10 +42,7 @@ const MenuItem = memo(
 	({ icon: Icon, label, onPress, color }: MenuItemProps) => (
 		<Animated.View entering={FadeInDown.springify().damping(15)}>
 			<TouchableOpacity
-				style={[
-					styles.menuItem,
-					{ borderBottomWidth: 0.3, borderColor: '#333' },
-				]}
+				style={[styles.menuItem]}
 				onPress={onPress}
 				activeOpacity={0.7}
 			>
@@ -78,7 +76,8 @@ export default function MenuNav() {
 	const menuItems = [
 		{ icon: ShoppingCart, label: 'Shopping List', route: '/shopping' },
 		{ icon: Bell, label: 'Notifications', route: '/notifications' },
-		{ icon: Settings, label: 'Theme', route: '/settings/theme' },
+		{ icon: PaintBucket, label: 'Theme', route: '/settings/theme' },
+		{ icon: Settings, label: 'Settings', route: '/settings/' },
 		{ icon: LogOut, label: 'Logout', action: () => handleLogout() },
 	];
 

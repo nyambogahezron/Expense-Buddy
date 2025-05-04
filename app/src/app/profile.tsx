@@ -11,7 +11,8 @@ import { useThemeStore } from '@/store/theme';
 import { dummyUsers } from '@/types/user';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { CreditCard as Edit2, LogOut } from 'lucide-react-native';
-import { router } from 'expo-router';
+import { router, Stack } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
 	const { theme } = useThemeStore();
@@ -22,180 +23,191 @@ export default function ProfileScreen() {
 	};
 
 	return (
-		<ScrollView
-			style={[styles.container, { backgroundColor: theme.colors.background }]}
-			contentContainerStyle={styles.content}
-		>
-			<View style={styles.header}>
-				<Text style={[styles.title, { color: theme.colors.text }]}>
-					Profile
-				</Text>
-				<Pressable
-					onPress={handleLogout}
-					style={({ pressed }) => [
-						styles.logoutButton,
-						{ opacity: pressed ? 0.8 : 1 },
-					]}
-				>
-					<LogOut size={24} color={theme.colors.error} />
-				</Pressable>
-			</View>
-
-			<Animated.View
-				entering={FadeIn.duration(1000)}
-				style={[
-					styles.profileCard,
-					{
-						backgroundColor: theme.colors.surface,
-						borderColor: theme.colors.border,
-					},
-				]}
+		<SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+			<Stack.Screen
+				options={{
+					headerShown: true,
+					header: () => (
+						<View style={styles.header}>
+							<Text style={[styles.title, { color: theme.colors.text }]}>
+								Profile
+							</Text>
+							<Pressable
+								onPress={handleLogout}
+								style={({ pressed }) => [
+									styles.logoutButton,
+									{ opacity: pressed ? 0.8 : 1 },
+								]}
+							>
+								<LogOut size={24} color={theme.colors.error} />
+							</Pressable>
+						</View>
+					),
+				}}
+			/>
+			<ScrollView
+				style={[styles.container, { backgroundColor: theme.colors.background }]}
+				contentContainerStyle={styles.content}
 			>
-				<Image source={{ uri: currentUser.avatar }} style={styles.avatar} />
-				<View style={styles.profileInfo}>
-					<Text style={[styles.username, { color: theme.colors.text }]}>
-						{currentUser.username}
-					</Text>
-					<Text style={[styles.bio, { color: theme.colors.textSecondary }]}>
-						{currentUser.bio}
-					</Text>
-					<Text
-						style={[styles.joinDate, { color: theme.colors.textSecondary }]}
+				<Animated.View
+					entering={FadeIn.duration(1000)}
+					style={[
+						styles.profileCard,
+						{
+							backgroundColor: theme.colors.surface,
+							borderColor: theme.colors.border,
+						},
+					]}
+				>
+					<Image source={{ uri: currentUser.avatar }} style={styles.avatar} />
+					<View style={styles.profileInfo}>
+						<Text style={[styles.username, { color: theme.colors.text }]}>
+							{currentUser.username}
+						</Text>
+						<Text style={[styles.bio, { color: theme.colors.textSecondary }]}>
+							{currentUser.bio}
+						</Text>
+						<Text
+							style={[styles.joinDate, { color: theme.colors.textSecondary }]}
+						>
+							Joined {new Date(currentUser.joinDate).toLocaleDateString()}
+						</Text>
+					</View>
+					<Pressable
+						style={[
+							styles.editButton,
+							{ backgroundColor: theme.colors.primary },
+						]}
 					>
-						Joined {new Date(currentUser.joinDate).toLocaleDateString()}
-					</Text>
+						<Edit2 size={20} color='#FFFFFF' />
+					</Pressable>
+				</Animated.View>
+
+				<View style={styles.statsGrid}>
+					<Animated.View
+						entering={FadeIn.delay(200)}
+						style={[
+							styles.statCard,
+							{
+								backgroundColor: theme.colors.surface,
+								borderColor: theme.colors.border,
+							},
+						]}
+					>
+						<Text style={[styles.statValue, { color: theme.colors.text }]}>
+							{currentUser.stats.transactions}
+						</Text>
+						<Text
+							style={[styles.statLabel, { color: theme.colors.textSecondary }]}
+						>
+							Transactions
+						</Text>
+					</Animated.View>
+
+					<Animated.View
+						entering={FadeIn.delay(400)}
+						style={[
+							styles.statCard,
+							{
+								backgroundColor: theme.colors.surface,
+								borderColor: theme.colors.border,
+							},
+						]}
+					>
+						<Text style={[styles.statValue, { color: theme.colors.text }]}>
+							{currentUser.stats.categories}
+						</Text>
+						<Text
+							style={[styles.statLabel, { color: theme.colors.textSecondary }]}
+						>
+							Categories
+						</Text>
+					</Animated.View>
+
+					<Animated.View
+						entering={FadeIn.delay(600)}
+						style={[
+							styles.statCard,
+							{
+								backgroundColor: theme.colors.surface,
+								borderColor: theme.colors.border,
+							},
+						]}
+					>
+						<Text style={[styles.statValue, { color: theme.colors.text }]}>
+							${currentUser.stats.totalSaved.toLocaleString()}
+						</Text>
+						<Text
+							style={[styles.statLabel, { color: theme.colors.textSecondary }]}
+						>
+							Total Saved
+						</Text>
+					</Animated.View>
 				</View>
-				<Pressable
-					style={[styles.editButton, { backgroundColor: theme.colors.primary }]}
-				>
-					<Edit2 size={20} color='#FFFFFF' />
-				</Pressable>
-			</Animated.View>
 
-			<View style={styles.statsGrid}>
 				<Animated.View
-					entering={FadeIn.delay(200)}
+					entering={FadeIn.delay(800)}
 					style={[
-						styles.statCard,
+						styles.preferencesCard,
 						{
 							backgroundColor: theme.colors.surface,
 							borderColor: theme.colors.border,
 						},
 					]}
 				>
-					<Text style={[styles.statValue, { color: theme.colors.text }]}>
-						{currentUser.stats.transactions}
+					<Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
+						Preferences
 					</Text>
-					<Text
-						style={[styles.statLabel, { color: theme.colors.textSecondary }]}
-					>
-						Transactions
-					</Text>
-				</Animated.View>
-
-				<Animated.View
-					entering={FadeIn.delay(400)}
-					style={[
-						styles.statCard,
-						{
-							backgroundColor: theme.colors.surface,
-							borderColor: theme.colors.border,
-						},
-					]}
-				>
-					<Text style={[styles.statValue, { color: theme.colors.text }]}>
-						{currentUser.stats.categories}
-					</Text>
-					<Text
-						style={[styles.statLabel, { color: theme.colors.textSecondary }]}
-					>
-						Categories
-					</Text>
-				</Animated.View>
-
-				<Animated.View
-					entering={FadeIn.delay(600)}
-					style={[
-						styles.statCard,
-						{
-							backgroundColor: theme.colors.surface,
-							borderColor: theme.colors.border,
-						},
-					]}
-				>
-					<Text style={[styles.statValue, { color: theme.colors.text }]}>
-						${currentUser.stats.totalSaved.toLocaleString()}
-					</Text>
-					<Text
-						style={[styles.statLabel, { color: theme.colors.textSecondary }]}
-					>
-						Total Saved
-					</Text>
-				</Animated.View>
-			</View>
-
-			<Animated.View
-				entering={FadeIn.delay(800)}
-				style={[
-					styles.preferencesCard,
-					{
-						backgroundColor: theme.colors.surface,
-						borderColor: theme.colors.border,
-					},
-				]}
-			>
-				<Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
-					Preferences
-				</Text>
-				<View style={styles.preferencesList}>
-					<View style={styles.preferenceItem}>
-						<Text
-							style={[styles.preferenceLabel, { color: theme.colors.text }]}
-						>
-							Notifications
-						</Text>
-						<Text
-							style={[
-								styles.preferenceValue,
-								{ color: theme.colors.textSecondary },
-							]}
-						>
-							{currentUser.preferences.notifications ? 'Enabled' : 'Disabled'}
-						</Text>
+					<View style={styles.preferencesList}>
+						<View style={styles.preferenceItem}>
+							<Text
+								style={[styles.preferenceLabel, { color: theme.colors.text }]}
+							>
+								Notifications
+							</Text>
+							<Text
+								style={[
+									styles.preferenceValue,
+									{ color: theme.colors.textSecondary },
+								]}
+							>
+								{currentUser.preferences.notifications ? 'Enabled' : 'Disabled'}
+							</Text>
+						</View>
+						<View style={styles.preferenceItem}>
+							<Text
+								style={[styles.preferenceLabel, { color: theme.colors.text }]}
+							>
+								Dark Mode
+							</Text>
+							<Text
+								style={[
+									styles.preferenceValue,
+									{ color: theme.colors.textSecondary },
+								]}
+							>
+								{currentUser.preferences.darkMode ? 'Enabled' : 'Disabled'}
+							</Text>
+						</View>
+						<View style={styles.preferenceItem}>
+							<Text
+								style={[styles.preferenceLabel, { color: theme.colors.text }]}
+							>
+								Currency
+							</Text>
+							<Text
+								style={[
+									styles.preferenceValue,
+									{ color: theme.colors.textSecondary },
+								]}
+							>
+								{currentUser.preferences.currency}
+							</Text>
+						</View>
 					</View>
-					<View style={styles.preferenceItem}>
-						<Text
-							style={[styles.preferenceLabel, { color: theme.colors.text }]}
-						>
-							Dark Mode
-						</Text>
-						<Text
-							style={[
-								styles.preferenceValue,
-								{ color: theme.colors.textSecondary },
-							]}
-						>
-							{currentUser.preferences.darkMode ? 'Enabled' : 'Disabled'}
-						</Text>
-					</View>
-					<View style={styles.preferenceItem}>
-						<Text
-							style={[styles.preferenceLabel, { color: theme.colors.text }]}
-						>
-							Currency
-						</Text>
-						<Text
-							style={[
-								styles.preferenceValue,
-								{ color: theme.colors.textSecondary },
-							]}
-						>
-							{currentUser.preferences.currency}
-						</Text>
-					</View>
-				</View>
-			</Animated.View>
-		</ScrollView>
+				</Animated.View>
+			</ScrollView>
+		</SafeAreaView>
 	);
 }
 
@@ -211,6 +223,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		marginBottom: 20,
+		height: 60,
 	},
 	title: {
 		fontSize: 24,

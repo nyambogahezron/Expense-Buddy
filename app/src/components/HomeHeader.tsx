@@ -11,9 +11,16 @@ interface HomeHeaderProps {
 export default function HomeHeader({ balance, onUserPress }: HomeHeaderProps) {
 	const insets = useSafeAreaInsets();
 	const { openMenu } = useThemeStore();
+	const { theme } = useThemeStore();
 
 	return (
-		<View style={[styles.header, { paddingTop: insets.top }]}>
+		<View
+			style={[
+				styles.header,
+				{ paddingTop: insets.top },
+				{ backgroundColor: theme.colors.primary },
+			]}
+		>
 			<View style={styles.topRow}>
 				<Pressable onPress={openMenu} style={styles.iconButton}>
 					<Menu size={24} color='#FFFFFF' />
@@ -36,7 +43,6 @@ export default function HomeHeader({ balance, onUserPress }: HomeHeaderProps) {
 
 const styles = StyleSheet.create({
 	header: {
-		backgroundColor: '#6366F1',
 		paddingHorizontal: 20,
 		flexDirection: 'column',
 		justifyContent: 'center',
