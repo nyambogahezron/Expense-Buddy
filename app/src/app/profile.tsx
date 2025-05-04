@@ -12,7 +12,6 @@ import { dummyUsers } from '@/types/user';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { CreditCard as Edit2, LogOut } from 'lucide-react-native';
 import { router, Stack } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
 	const { theme } = useThemeStore();
@@ -23,7 +22,7 @@ export default function ProfileScreen() {
 	};
 
 	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+		<View style={{ flex: 1, backgroundColor: theme.colors.background }}>
 			<Stack.Screen
 				options={{
 					headerShown: true,
@@ -207,7 +206,7 @@ export default function ProfileScreen() {
 					</View>
 				</Animated.View>
 			</ScrollView>
-		</SafeAreaView>
+		</View>
 	);
 }
 

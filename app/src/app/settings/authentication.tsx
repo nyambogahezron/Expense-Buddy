@@ -5,39 +5,100 @@ import {
 	Switch,
 	Pressable,
 	TextInput,
+	Modal,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
 import { useThemeStore } from '@/store/theme';
-import { useState } from 'react';
-import { Lock, Fingerprint, KeyRound, ShieldCheck } from 'lucide-react-native';
+import { useAppLockStore } from '@/store/appLock';
+import { useState, useEffect } from 'react';
+import {
+	Lock,
+	Fingerprint,
+	KeyRound,
+	ShieldCheck,
+	Clock,
+} from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import * as LocalAuthentication from 'expo-local-authentication';
+import { Platform } from 'react-native';
 
 export default function AuthenticationScreen() {
 	const { theme } = useThemeStore();
-	const [authSettings, setAuthSettings] = useState({
-		passwordAuth: true,
-		biometricAuth: false,
-		twoFactorAuth: false,
-		appLock: false,
-	});
+	const {
+		isEnabled: appLockEnabled,
+		lockInterval,
+		pin,
+		useBiometrics,
+		setEnabled: setAppLockEnabled,
+		setLockInterval,
+		setPin,
+		setUseBiometrics,
+	} = useAppLockStore();
 
-	interface AuthSettings {
-		passwordAuth: boolean;
-		biometricAuth: boolean;
-		twoFactorAuth: boolean;
-		appLock: boolean;
-	}
+	const [showPinModal, setShowPinModal] = useState(false);
+	const [newPin, setNewPin] = useState('');
+	const [confirmPin, setConfirmPin] = useState('');
+	const [pinError, setPinError] = useState('');
+	const [biometricsAvailable, setBiometricsAvailable] = useState(false);
 
-	const toggleSetting = (key: keyof AuthSettings): void => {
-		setAuthSettings((prev: AuthSettings) => ({
-			...prev,
-			[key]: !prev[key],
-		}));
+	useEffect(() => {
+		checkBiometrics();
+	}, []);
+
+	const checkBiometrics = async () => {
+		const compatible = await LocalAuthentication.hasHardwareAsync();
+		const enrolled = await LocalAuthentication.isEnrolledAsync();
+		setBiometricsAvailable(compatible && enrolled);
+	};
+
+	const handleAppLockToggle = (enabled: boolean) => {
+		if (enabled) {
+			setShowPinModal(true);
+		} else {
+			setAppLockEnabled(false);
+			setPin('');
+			setUseBiometrics(false);
+		}
+	};
+
+	const handleBiometricToggle = async (enabled: boolean) => {
+		if (enabled) {
+			try {
+				const result = await LocalAuthentication.authenticateAsync({
+					promptMessage: 'Authenticate to enable biometrics',
+				});
+				if (result.success) {
+					setUseBiometrics(true);
+				}
+			} catch (error) {
+				console.error('Biometric authentication error:', error);
+			}
+		} else {
+			setUseBiometrics(false);
+		}
+	};
+
+	const handlePinSubmit = () => {
+		if (newPin.length !== 4) {
+			setPinError('PIN must be 4 digits');
+			return;
+		}
+
+		if (newPin !== confirmPin) {
+			setPinError('PINs do not match');
+			return;
+		}
+
+		setPin(newPin);
+		setAppLockEnabled(true);
+		setShowPinModal(false);
+		setNewPin('');
+		setConfirmPin('');
+		setPinError('');
 	};
 
 	return (
-		<SafeAreaView
+		<View
 			style={[styles.container, { backgroundColor: theme.colors.background }]}
 		>
 			<Stack.Screen
@@ -80,81 +141,6 @@ export default function AuthenticationScreen() {
 								<Text
 									style={[styles.settingText, { color: theme.colors.text }]}
 								>
-									Password Authentication
-								</Text>
-							</View>
-							<Switch
-								trackColor={{
-									false: theme.colors.border,
-									true: theme.colors.primary,
-								}}
-								thumbColor='#FFFFFF'
-								ios_backgroundColor={theme.colors.border}
-								onValueChange={() => toggleSetting('passwordAuth')}
-								value={authSettings.passwordAuth}
-							/>
-						</View>
-
-						<View
-							style={[styles.divider, { backgroundColor: theme.colors.border }]}
-						/>
-
-						<View style={styles.settingItem}>
-							<View style={styles.settingLabel}>
-								<Fingerprint size={20} color={theme.colors.text} />
-								<Text
-									style={[styles.settingText, { color: theme.colors.text }]}
-								>
-									Biometric Authentication
-								</Text>
-							</View>
-							<Switch
-								trackColor={{
-									false: theme.colors.border,
-									true: theme.colors.primary,
-								}}
-								thumbColor='#FFFFFF'
-								ios_backgroundColor={theme.colors.border}
-								onValueChange={() => toggleSetting('biometricAuth')}
-								value={authSettings.biometricAuth}
-							/>
-						</View>
-
-						<View
-							style={[styles.divider, { backgroundColor: theme.colors.border }]}
-						/>
-
-						<View style={styles.settingItem}>
-							<View style={styles.settingLabel}>
-								<KeyRound size={20} color={theme.colors.text} />
-								<Text
-									style={[styles.settingText, { color: theme.colors.text }]}
-								>
-									Two-Factor Authentication
-								</Text>
-							</View>
-							<Switch
-								trackColor={{
-									false: theme.colors.border,
-									true: theme.colors.primary,
-								}}
-								thumbColor='#FFFFFF'
-								ios_backgroundColor={theme.colors.border}
-								onValueChange={() => toggleSetting('twoFactorAuth')}
-								value={authSettings.twoFactorAuth}
-							/>
-						</View>
-
-						<View
-							style={[styles.divider, { backgroundColor: theme.colors.border }]}
-						/>
-
-						<View style={styles.settingItem}>
-							<View style={styles.settingLabel}>
-								<Lock size={20} color={theme.colors.text} />
-								<Text
-									style={[styles.settingText, { color: theme.colors.text }]}
-								>
 									App Lock
 								</Text>
 							</View>
@@ -165,10 +151,98 @@ export default function AuthenticationScreen() {
 								}}
 								thumbColor='#FFFFFF'
 								ios_backgroundColor={theme.colors.border}
-								onValueChange={() => toggleSetting('appLock')}
-								value={authSettings.appLock}
+								onValueChange={handleAppLockToggle}
+								value={appLockEnabled}
 							/>
 						</View>
+
+						{appLockEnabled && (
+							<>
+								<View
+									style={[
+										styles.divider,
+										{ backgroundColor: theme.colors.border },
+									]}
+								/>
+
+								{biometricsAvailable && (
+									<>
+										<View style={styles.settingItem}>
+											<View style={styles.settingLabel}>
+												<Fingerprint size={20} color={theme.colors.text} />
+												<Text
+													style={[
+														styles.settingText,
+														{ color: theme.colors.text },
+													]}
+												>
+													Use {Platform.OS === 'ios' ? 'Face ID' : 'Biometrics'}
+												</Text>
+											</View>
+											<Switch
+												trackColor={{
+													false: theme.colors.border,
+													true: theme.colors.primary,
+												}}
+												thumbColor='#FFFFFF'
+												ios_backgroundColor={theme.colors.border}
+												onValueChange={handleBiometricToggle}
+												value={useBiometrics}
+											/>
+										</View>
+
+										<View
+											style={[
+												styles.divider,
+												{ backgroundColor: theme.colors.border },
+											]}
+										/>
+									</>
+								)}
+
+								<View style={styles.settingItem}>
+									<View style={styles.settingLabel}>
+										<Clock size={20} color={theme.colors.text} />
+										<Text
+											style={[styles.settingText, { color: theme.colors.text }]}
+										>
+											Lock Interval
+										</Text>
+									</View>
+									<View style={styles.intervalSelector}>
+										{[10, 15, 30].map((minutes) => (
+											<Pressable
+												key={minutes}
+												style={[
+													styles.intervalButton,
+													{
+														backgroundColor:
+															lockInterval === minutes
+																? theme.colors.primary
+																: theme.colors.border,
+													},
+												]}
+												onPress={() => setLockInterval(minutes)}
+											>
+												<Text
+													style={[
+														styles.intervalText,
+														{
+															color:
+																lockInterval === minutes
+																	? '#FFFFFF'
+																	: theme.colors.text,
+														},
+													]}
+												>
+													{minutes}m
+												</Text>
+											</Pressable>
+										))}
+									</View>
+								</View>
+							</>
+						)}
 					</View>
 				</Animated.View>
 
@@ -183,31 +257,113 @@ export default function AuthenticationScreen() {
 						<Text
 							style={[styles.infoText, { color: theme.colors.textSecondary }]}
 						>
-							Enable authentication methods to secure your account and protect
-							your financial data. We recommend using at least two different
-							authentication methods for maximum security.
+							Enable app lock to secure your financial data when the app is in
+							the background. Choose a PIN and set the lock interval to
+							automatically lock the app after the specified time. You can also
+							use biometric authentication if available on your device.
 						</Text>
 					</View>
 				</Animated.View>
+			</View>
 
-				<Animated.View
-					entering={FadeInUp.delay(300).duration(400)}
-					style={styles.buttonContainer}
+			<Modal
+				visible={showPinModal}
+				transparent
+				animationType='fade'
+				onRequestClose={() => setShowPinModal(false)}
+			>
+				<View
+					style={[
+						styles.modalContainer,
+						{ backgroundColor: theme.colors.background + 'CC' },
+					]}
 				>
-					<Pressable
-						style={({ pressed }) => [
-							styles.button,
-							{
-								backgroundColor: theme.colors.primary,
-								opacity: pressed ? 0.9 : 1,
-							},
+					<View
+						style={[
+							styles.modalContent,
+							{ backgroundColor: theme.colors.surface },
 						]}
 					>
-						<Text style={styles.buttonText}>Save Changes</Text>
-					</Pressable>
-				</Animated.View>
-			</View>
-		</SafeAreaView>
+						<Text style={[styles.modalTitle, { color: theme.colors.text }]}>
+							Set PIN
+						</Text>
+
+						<TextInput
+							style={[
+								styles.input,
+								{
+									color: theme.colors.text,
+									borderColor: theme.colors.border,
+								},
+							]}
+							placeholder='Enter 4-digit PIN'
+							placeholderTextColor={theme.colors.textSecondary}
+							value={newPin}
+							onChangeText={setNewPin}
+							keyboardType='number-pad'
+							maxLength={4}
+							secureTextEntry
+						/>
+
+						<TextInput
+							style={[
+								styles.input,
+								{
+									color: theme.colors.text,
+									borderColor: theme.colors.border,
+									marginTop: 16,
+								},
+							]}
+							placeholder='Confirm PIN'
+							placeholderTextColor={theme.colors.textSecondary}
+							value={confirmPin}
+							onChangeText={setConfirmPin}
+							keyboardType='number-pad'
+							maxLength={4}
+							secureTextEntry
+						/>
+
+						{pinError ? (
+							<Text style={[styles.errorText, { color: theme.colors.error }]}>
+								{pinError}
+							</Text>
+						) : null}
+
+						<View style={styles.modalButtons}>
+							<Pressable
+								style={[
+									styles.modalButton,
+									{
+										backgroundColor: theme.colors.border,
+										marginRight: 8,
+									},
+								]}
+								onPress={() => setShowPinModal(false)}
+							>
+								<Text style={[styles.buttonText, { color: theme.colors.text }]}>
+									Cancel
+								</Text>
+							</Pressable>
+
+							<Pressable
+								style={[
+									styles.modalButton,
+									{
+										backgroundColor: theme.colors.primary,
+										marginLeft: 8,
+									},
+								]}
+								onPress={handlePinSubmit}
+							>
+								<Text style={[styles.buttonText, { color: '#FFFFFF' }]}>
+									Confirm
+								</Text>
+							</Pressable>
+						</View>
+					</View>
+				</View>
+			</Modal>
+		</View>
 	);
 }
 
@@ -278,26 +434,68 @@ const styles = StyleSheet.create({
 		fontFamily: 'Poppins-Regular',
 		lineHeight: 20,
 	},
-	buttonContainer: {
-		marginTop: 24,
+	intervalSelector: {
+		flexDirection: 'row',
+		gap: 8,
+	},
+	intervalButton: {
+		paddingVertical: 6,
+		paddingHorizontal: 12,
+		borderRadius: 6,
+	},
+	intervalText: {
+		fontSize: 14,
+		fontFamily: 'Poppins-Medium',
+	},
+	modalContainer: {
+		flex: 1,
+		justifyContent: 'center',
 		alignItems: 'center',
 	},
-	button: {
-		paddingVertical: 12,
-		paddingHorizontal: 24,
-		borderRadius: 12,
-		minWidth: 200,
-		alignItems: 'center',
-		justifyContent: 'center',
-		elevation: 2,
+	modalContent: {
+		width: '80%',
+		padding: 24,
+		borderRadius: 16,
+		elevation: 5,
 		shadowColor: '#000',
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.2,
-		shadowRadius: 2,
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.25,
+		shadowRadius: 3.84,
+	},
+	modalTitle: {
+		fontSize: 20,
+		fontFamily: 'Poppins-SemiBold',
+		marginBottom: 24,
+		textAlign: 'center',
+	},
+	input: {
+		width: '100%',
+		height: 50,
+		borderWidth: 1,
+		borderRadius: 8,
+		paddingHorizontal: 16,
+		fontSize: 16,
+		fontFamily: 'Poppins-Regular',
+	},
+	errorText: {
+		marginTop: 8,
+		fontSize: 14,
+		fontFamily: 'Poppins-Regular',
+		textAlign: 'center',
+	},
+	modalButtons: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		marginTop: 24,
+	},
+	modalButton: {
+		flex: 1,
+		paddingVertical: 12,
+		borderRadius: 8,
+		alignItems: 'center',
 	},
 	buttonText: {
 		fontSize: 16,
 		fontFamily: 'Poppins-SemiBold',
-		color: '#FFFFFF',
 	},
 });

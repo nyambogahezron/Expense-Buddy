@@ -22,7 +22,6 @@ import {
 	Gesture,
 	GestureDetector,
 } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -196,7 +195,7 @@ export default function SettingsScreen() {
 	});
 
 	return (
-		<SafeAreaView
+		<View
 			style={[styles.container, { backgroundColor: theme.colors.background }]}
 		>
 			<Stack.Screen
@@ -452,7 +451,7 @@ export default function SettingsScreen() {
 					)}
 				</View>
 			</View>
-		</SafeAreaView>
+		</View>
 	);
 }
 

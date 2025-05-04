@@ -6,7 +6,7 @@ import {
 	ScrollView,
 	Switch,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { Stack, router } from 'expo-router';
 import { useThemeStore } from '@/store/theme';
 import { useState } from 'react';
@@ -55,7 +55,7 @@ export default function SettingsScreen() {
 	};
 
 	return (
-		<SafeAreaView
+		<View
 			style={[styles.container, { backgroundColor: theme.colors.background }]}
 		>
 			<Stack.Screen
@@ -418,7 +418,7 @@ export default function SettingsScreen() {
 					Expense Buddy v1.0.0
 				</Text>
 			</ScrollView>
-		</SafeAreaView>
+		</View>
 	);
 }
 

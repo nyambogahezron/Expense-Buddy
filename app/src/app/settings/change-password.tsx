@@ -6,7 +6,7 @@ import {
 	Pressable,
 	ScrollView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { Stack } from 'expo-router';
 import { useThemeStore } from '@/store/theme';
 import { useState } from 'react';
@@ -131,7 +131,7 @@ export default function ChangePasswordScreen() {
 	};
 
 	return (
-		<SafeAreaView
+		<View
 			style={[styles.container, { backgroundColor: theme.colors.background }]}
 		>
 			<Stack.Screen
@@ -406,7 +406,7 @@ export default function ChangePasswordScreen() {
 					</Pressable>
 				</Animated.View>
 			</ScrollView>
-		</SafeAreaView>
+		</View>
 	);
 }
 

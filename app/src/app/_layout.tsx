@@ -9,9 +9,12 @@ import {
 	Inter_700Bold,
 } from '@expo-google-fonts/inter';
 import { useThemeStore } from '@/store/theme';
+import { useAppLock } from '@/hooks/useAppLock';
+import LockScreen from '@/components/LockScreen';
 
 export default function RootLayout() {
 	const { theme } = useThemeStore();
+	const { isLocked, unlock } = useAppLock();
 
 	const status_bar_style = theme.name === 'light' ? 'dark' : 'light';
 	const status_bar_background = theme.colors.primary;
@@ -58,6 +61,7 @@ export default function RootLayout() {
 				style={status_bar_style}
 				backgroundColor={status_bar_background}
 			/>
+			<LockScreen visible={true} onUnlock={unlock} />
 		</GestureHandlerRootView>
 	);
 }

@@ -6,7 +6,6 @@ import {
 	ActivityIndicator,
 	TouchableOpacity,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import Animated, { FadeIn, SlideInRight } from 'react-native-reanimated';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -73,15 +72,15 @@ export default function TransactionsDetails() {
 
 	if (loading) {
 		return (
-			<SafeAreaView style={styles.loadingContainer}>
+			<View style={styles.loadingContainer}>
 				<ActivityIndicator size='large' color={theme.colors.primary} />
-			</SafeAreaView>
+			</View>
 		);
 	}
 
 	if (error || !transaction) {
 		return (
-			<SafeAreaView style={styles.errorContainer}>
+			<View style={styles.errorContainer}>
 				<Text style={styles.errorText}>{error || 'Transaction not found'}</Text>
 				<TouchableOpacity
 					style={styles.backButton}
@@ -89,14 +88,14 @@ export default function TransactionsDetails() {
 				>
 					<Text style={styles.backButtonText}>Go Back</Text>
 				</TouchableOpacity>
-			</SafeAreaView>
+			</View>
 		);
 	}
 
 	const category = getCategoryDetails(transaction.category);
 
 	return (
-		<SafeAreaView style={styles.container}>
+		<View style={styles.container}>
 			<Animated.View style={styles.header} entering={FadeIn.duration(300)}>
 				<TouchableOpacity
 					style={styles.backButton}
@@ -196,7 +195,7 @@ export default function TransactionsDetails() {
 					</View>
 				</View>
 			</Animated.View>
-		</SafeAreaView>
+		</View>
 	);
 }
 
