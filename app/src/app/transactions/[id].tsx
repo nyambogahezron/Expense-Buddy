@@ -7,7 +7,12 @@ import {
 	TouchableOpacity,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import Animated, { FadeIn, SlideInRight } from 'react-native-reanimated';
+import Animated, {
+	FadeIn,
+	SlideInDown,
+	SlideInRight,
+	SlideInUp,
+} from 'react-native-reanimated';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Transaction } from '@/types';
 import { deleteTransaction, getTransactionById } from '@/data/transactions';
@@ -117,11 +122,9 @@ export default function TransactionsDetails() {
 				</TouchableOpacity>
 			</Animated.View>
 
-			<Animated.View
-				style={styles.content}
-				entering={SlideInRight.duration(400).delay(200)}
-			>
-				<View
+			<Animated.View style={styles.content}>
+				<Animated.View
+					entering={SlideInDown.duration(500).delay(200)}
 					style={[
 						styles.amountContainer,
 						{
@@ -140,9 +143,12 @@ export default function TransactionsDetails() {
 						{formatCurrency(transaction.amount)}
 					</Text>
 					<Text style={styles.date}>{formatDate(transaction.date)}</Text>
-				</View>
+				</Animated.View>
 
-				<View style={styles.detailsCard}>
+				<Animated.View
+					style={styles.detailsCard}
+					entering={SlideInDown.duration(500).delay(300)}
+				>
 					<View style={styles.detailRow}>
 						<View style={styles.categoryIcon}>
 							<Feather
@@ -193,7 +199,7 @@ export default function TransactionsDetails() {
 							<Text style={styles.detailValue}>{transaction.id}</Text>
 						</View>
 					</View>
-				</View>
+				</Animated.View>
 			</Animated.View>
 		</View>
 	);
@@ -286,8 +292,8 @@ const createStyles = (theme: any) =>
 			shadowColor: '#000',
 			shadowOffset: { width: 0, height: 1 },
 			shadowOpacity: 0.05,
-			shadowRadius: 2,
-			elevation: 2,
+			shadowRadius: 0.5,
+			elevation: 0.5,
 		},
 		detailRow: {
 			flexDirection: 'row',

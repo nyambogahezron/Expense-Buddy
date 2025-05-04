@@ -4,15 +4,15 @@ import {
 	Text,
 	StyleSheet,
 	Modal,
-	TextInput,
 	Pressable,
 	Dimensions,
 	Platform,
+	Vibration,
 } from 'react-native';
 import { useThemeStore } from '@/store/theme';
 import { useAppLockStore } from '@/store/appLock';
 import { Lock, Fingerprint, Delete } from 'lucide-react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, { FadeIn, withSpring } from 'react-native-reanimated';
 import * as LocalAuthentication from 'expo-local-authentication';
 
 const { width, height } = Dimensions.get('window');
@@ -28,11 +28,13 @@ export default function LockScreen({ visible, onUnlock }: LockScreenProps) {
 	const [enteredPin, setEnteredPin] = useState('');
 	const [error, setError] = useState(false);
 	const [biometricsAvailable, setBiometricsAvailable] = useState(false);
+	const [isSuccess, setIsSuccess] = useState(false);
 
 	useEffect(() => {
 		if (visible) {
 			setEnteredPin('');
 			setError(false);
+			setIsSuccess(false);
 			checkBiometrics();
 		}
 	}, [visible]);
@@ -61,16 +63,25 @@ export default function LockScreen({ visible, onUnlock }: LockScreenProps) {
 	const handlePinSubmit = () => {
 		if (enteredPin === pin) {
 			setError(false);
-			onUnlock();
+			setIsSuccess(true);
+			Vibration.vibrate(50); // Short vibration for success
+			setTimeout(() => {
+				onUnlock();
+			}, 300); // Small delay to show success state
 		} else {
 			setError(true);
+			Vibration.vibrate(400); // Longer vibration for error
 			setEnteredPin('');
 		}
 	};
 
 	const handleKeyPress = (key: string) => {
 		if (enteredPin.length < 4) {
-			setEnteredPin((prev) => prev + key);
+			const newPin = enteredPin + key;
+			setEnteredPin(newPin);
+			if (newPin.length === 4) {
+				handlePinSubmit();
+			}
 		}
 	};
 
@@ -78,12 +89,20 @@ export default function LockScreen({ visible, onUnlock }: LockScreenProps) {
 		setEnteredPin((prev) => prev.slice(0, -1));
 	};
 
+	const getPinDotColor = (index: number) => {
+		if (isSuccess) return theme.colors.success;
+		if (error) return theme.colors.error;
+		return index < enteredPin.length
+			? theme.colors.primary
+			: theme.colors.border;
+	};
+
 	const renderKeypad = () => {
 		const keys = [
 			['1', '2', '3'],
 			['4', '5', '6'],
 			['7', '8', '9'],
-			['OK', '0', 'backspace'],
+			['', '0', 'backspace'],
 		];
 
 		return (
@@ -133,11 +152,31 @@ export default function LockScreen({ visible, onUnlock }: LockScreenProps) {
 			statusBarTranslucent
 		>
 			<View
-				style={[styles.container, { backgroundColor: theme.colors.background }]}
+				style={[
+					styles.container,
+					{
+						backgroundColor: theme.colors.background,
+						position: 'absolute',
+						top: 0,
+						left: 0,
+						right: 0,
+						bottom: 0,
+					},
+				]}
 			>
 				<Animated.View
 					entering={FadeIn.duration(300)}
-					style={[styles.content, { backgroundColor: theme.colors.surface }]}
+					style={[
+						styles.content,
+						{
+							backgroundColor: theme.colors.surface,
+							position: 'absolute',
+							top: 0,
+							left: 0,
+							right: 0,
+							bottom: 0,
+						},
+					]}
 				>
 					<View style={styles.iconContainer}>
 						<Lock size={32} color={theme.colors.primary} />
@@ -149,15 +188,12 @@ export default function LockScreen({ visible, onUnlock }: LockScreenProps) {
 
 					<View style={styles.pinContainer}>
 						{[...Array(4)].map((_, index) => (
-							<View
+							<Animated.View
 								key={index}
 								style={[
 									styles.pinDot,
 									{
-										backgroundColor:
-											index < enteredPin.length
-												? theme.colors.primary
-												: theme.colors.border,
+										backgroundColor: getPinDotColor(index),
 									},
 								]}
 							/>
@@ -205,6 +241,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#000',
 		height: height,
 		width: width,
+		zIndex: 9999,
 	},
 	content: {
 		height: height,
@@ -219,6 +256,7 @@ const styles = StyleSheet.create({
 		shadowOffset: { width: 0, height: 2 },
 		shadowOpacity: 0.25,
 		shadowRadius: 3.84,
+		zIndex: 10000,
 	},
 	iconContainer: {
 		width: 64,

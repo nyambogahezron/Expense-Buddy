@@ -21,6 +21,7 @@ import {
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { Platform } from 'react-native';
+import PageContainer from '@/components/PageContainer';
 
 export default function AuthenticationScreen() {
 	const { theme } = useThemeStore();
@@ -98,9 +99,7 @@ export default function AuthenticationScreen() {
 	};
 
 	return (
-		<View
-			style={[styles.container, { backgroundColor: theme.colors.background }]}
-		>
+		<PageContainer>
 			<Stack.Screen
 				options={{
 					title: 'Authentication',
@@ -115,7 +114,9 @@ export default function AuthenticationScreen() {
 				}}
 			/>
 
-			<View style={styles.content}>
+			<View
+				style={[styles.content, { backgroundColor: theme.colors.background }]}
+			>
 				<Animated.View
 					entering={FadeInUp.delay(100).duration(400)}
 					style={[styles.card, { backgroundColor: theme.colors.surface }]}
@@ -363,7 +364,7 @@ export default function AuthenticationScreen() {
 					</View>
 				</View>
 			</Modal>
-		</View>
+		</PageContainer>
 	);
 }
 

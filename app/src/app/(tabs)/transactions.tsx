@@ -1,5 +1,12 @@
 import { useCallback, useState } from 'react';
-import { Pressable, StyleSheet, View, Text, Dimensions } from 'react-native';
+import {
+	Pressable,
+	StyleSheet,
+	View,
+	Text,
+	Dimensions,
+	Platform,
+} from 'react-native';
 import Animated, {
 	useAnimatedScrollHandler,
 	useSharedValue,
@@ -191,7 +198,7 @@ export default function TransactionsScreen() {
 								{
 									width: '100%',
 									zIndex: 999,
-									top: 35,
+									top: Platform.select({ web: 0, native: 35 }),
 									backgroundColor: theme.colors.background,
 								},
 							]}
@@ -206,7 +213,10 @@ export default function TransactionsScreen() {
 			/>
 
 			<Animated.ScrollView
-				style={{ marginTop: -23 }}
+				style={{
+					marginTop: Platform.select({ web: 20, android: -20 }),
+					position: 'relative',
+				}}
 				ref={scrollRef}
 				onScroll={scrollHandler}
 				scrollEventThrottle={16}

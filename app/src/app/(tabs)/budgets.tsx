@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
-import { router } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { useThemeStore } from '@/store/theme';
 import { useBudgetStore } from '@/store/budgets';
 import { Plus } from 'lucide-react-native';
@@ -19,18 +19,38 @@ export default function BudgetsScreen() {
 		<View
 			style={[styles.container, { backgroundColor: theme.colors.background }]}
 		>
-			<StatusBar style='dark' />
-			<View style={styles.header}>
-				<Text style={[styles.title, { color: theme.colors.text }]}>
-					Budgets
-				</Text>
-				<Pressable
-					onPress={() => router.push('/budgets/new')}
-					style={[styles.addButton, { backgroundColor: theme.colors.primary }]}
-				>
-					<Plus size={24} color='#FFFFFF' />
-				</Pressable>
-			</View>
+			<StatusBar
+				style={theme.name.toLocaleLowerCase() === 'light' ? 'dark' : 'light'}
+			/>
+
+			<Stack.Screen
+				options={{
+					headerShown: true,
+					header: () => {
+						return (
+							<View
+								style={[
+									styles.header,
+									{ backgroundColor: theme.colors.primary },
+								]}
+							>
+								<Text style={[styles.title, { color: theme.colors.border }]}>
+									Budgets
+								</Text>
+								<Pressable
+									onPress={() => router.push('/budgets/new')}
+									style={[
+										styles.addButton,
+										{ backgroundColor: theme.colors.background },
+									]}
+								>
+									<Plus size={24} color={theme.colors.primary} />
+								</Pressable>
+							</View>
+						);
+					},
+				}}
+			/>
 
 			<ScrollView style={styles.content}>
 				{budgets.map((budget, index) => {
@@ -145,25 +165,25 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		padding: 20,
-		paddingTop: 60,
+		paddingTop: 45,
 	},
 	title: {
-		fontSize: 32,
+		fontSize: 28,
 		fontFamily: 'Inter-Bold',
 	},
 	addButton: {
-		width: 48,
-		height: 48,
+		width: 40,
+		height: 40,
 		borderRadius: 24,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
 	content: {
 		flex: 1,
-		padding: 20,
+		padding: 5,
 	},
 	budgetCard: {
-		borderRadius: 16,
+		borderRadius: 8,
 		padding: 20,
 		marginBottom: 16,
 		borderWidth: 1,
