@@ -1,4 +1,5 @@
 import { Stack } from 'expo-router';
+import { Platform } from 'react-native';
 
 export default function TransactionLayout() {
 	return (
@@ -6,6 +7,9 @@ export default function TransactionLayout() {
 			screenOptions={{
 				headerShown: false,
 				animation: 'fade',
+				headerStyle: {
+					...(Platform.OS === 'web' && {}),
+				},
 			}}
 		>
 			<Stack.Screen name='[id]' />

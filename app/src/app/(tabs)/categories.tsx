@@ -6,6 +6,7 @@ import {
 	ScrollView,
 	Pressable,
 	TextInput,
+	Platform,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useThemeStore } from '@/store/theme';
@@ -69,90 +70,91 @@ export default function CategoriesScreen() {
 					placeholderTextColor={theme.colors.textSecondary}
 				/>
 			</View>
-
-			<ScrollView
-				style={styles.categoriesList}
-				contentContainerStyle={styles.categoriesContent}
-			>
-				{filteredCategories.map((category, index) => (
-					<Animated.View
-						key={category.id}
-						entering={FadeInUp.delay(index * 100)}
-						style={styles.categoryCard}
-					>
-						<Pressable
-							onPress={() => handleCategoryPress(category)}
-							style={styles.categoryContent}
+			<View style={styles.content}>
+				<ScrollView
+					style={styles.categoriesList}
+					contentContainerStyle={styles.categoriesContent}
+				>
+					{filteredCategories.map((category, index) => (
+						<Animated.View
+							key={category.id}
+							entering={FadeInUp.delay(index * 100)}
+							style={styles.categoryCard}
 						>
-							<View
-								style={[
-									styles.categoryIcon,
-									{ backgroundColor: category.color + '20' },
-								]}
-							>
-								<Text style={[styles.iconText, { color: category.color }]}>
-									{category.name[0].toUpperCase()}
-								</Text>
-							</View>
-							<View style={styles.categoryInfo}>
-								<Text style={styles.categoryName}>{category.name}</Text>
-								<Text style={styles.categoryDescription}>
-									{category.description}
-								</Text>
-							</View>
-							<View
-								style={[
-									styles.itemCount,
-									{ backgroundColor: theme.colors.primary + '20' },
-								]}
-							>
-								<Text style={styles.itemCountText}>{category.itemCount}</Text>
-							</View>
-						</Pressable>
-
-						<View style={styles.actions}>
 							<Pressable
-								onPress={() => handleEditPress(category)}
-								style={[
-									styles.actionButton,
-									{ backgroundColor: theme.colors.primary + '20' },
-								]}
+								onPress={() => handleCategoryPress(category)}
+								style={styles.categoryContent}
 							>
-								<Edit size={20} color={theme.colors.primary} />
-							</Pressable>
-							<Pressable
-								onPress={() => handleDeletePress(category.id)}
-								style={[
-									styles.actionButton,
-									{ backgroundColor: theme.colors.error + '20' },
-								]}
-							>
-								<Trash2 size={20} color={theme.colors.error} />
-							</Pressable>
-						</View>
-
-						{showDeleteConfirm === category.id && (
-							<View style={styles.deleteConfirm}>
-								<Text style={styles.deleteText}>Delete this category?</Text>
-								<View style={styles.deleteActions}>
-									<Pressable
-										onPress={() => setShowDeleteConfirm(null)}
-										style={styles.cancelButton}
-									>
-										<Text style={styles.cancelButtonText}>Cancel</Text>
-									</Pressable>
-									<Pressable
-										onPress={() => handleDeleteConfirm(category.id)}
-										style={styles.confirmDeleteButton}
-									>
-										<Text style={styles.deleteButtonText}>Delete</Text>
-									</Pressable>
+								<View
+									style={[
+										styles.categoryIcon,
+										{ backgroundColor: category.color + '20' },
+									]}
+								>
+									<Text style={[styles.iconText, { color: category.color }]}>
+										{category.name[0].toUpperCase()}
+									</Text>
 								</View>
+								<View style={styles.categoryInfo}>
+									<Text style={styles.categoryName}>{category.name}</Text>
+									<Text style={styles.categoryDescription}>
+										{category.description}
+									</Text>
+								</View>
+								<View
+									style={[
+										styles.itemCount,
+										{ backgroundColor: theme.colors.primary + '20' },
+									]}
+								>
+									<Text style={styles.itemCountText}>{category.itemCount}</Text>
+								</View>
+							</Pressable>
+
+							<View style={styles.actions}>
+								<Pressable
+									onPress={() => handleEditPress(category)}
+									style={[
+										styles.actionButton,
+										{ backgroundColor: theme.colors.primary + '20' },
+									]}
+								>
+									<Edit size={20} color={theme.colors.primary} />
+								</Pressable>
+								<Pressable
+									onPress={() => handleDeletePress(category.id)}
+									style={[
+										styles.actionButton,
+										{ backgroundColor: theme.colors.error + '20' },
+									]}
+								>
+									<Trash2 size={20} color={theme.colors.error} />
+								</Pressable>
 							</View>
-						)}
-					</Animated.View>
-				))}
-			</ScrollView>
+
+							{showDeleteConfirm === category.id && (
+								<View style={styles.deleteConfirm}>
+									<Text style={styles.deleteText}>Delete this category?</Text>
+									<View style={styles.deleteActions}>
+										<Pressable
+											onPress={() => setShowDeleteConfirm(null)}
+											style={styles.cancelButton}
+										>
+											<Text style={styles.cancelButtonText}>Cancel</Text>
+										</Pressable>
+										<Pressable
+											onPress={() => handleDeleteConfirm(category.id)}
+											style={styles.confirmDeleteButton}
+										>
+											<Text style={styles.deleteButtonText}>Delete</Text>
+										</Pressable>
+									</View>
+								</View>
+							)}
+						</Animated.View>
+					))}
+				</ScrollView>
+			</View>
 		</View>
 	);
 }
@@ -163,11 +165,25 @@ const createStyles = (theme: any) =>
 			flex: 1,
 			backgroundColor: theme.colors.background,
 		},
+		content: {
+			flex: 1,
+			padding: 20,
+			...(Platform.OS === 'web' && {
+				maxWidth: 1200,
+				marginHorizontal: 'auto',
+				width: '100%',
+			}),
+		},
 		header: {
 			flexDirection: 'row',
 			justifyContent: 'space-between',
 			alignItems: 'center',
 			padding: 20,
+			...(Platform.OS === 'web' && {
+				maxWidth: 1200,
+				marginHorizontal: 'auto',
+				width: '100%',
+			}),
 		},
 		title: {
 			fontSize: 24,
@@ -187,11 +203,16 @@ const createStyles = (theme: any) =>
 			alignItems: 'center',
 			marginHorizontal: 20,
 			marginBottom: 20,
-			padding: 12,
+			padding: 20,
 			borderRadius: 12,
 			borderWidth: 1,
 			backgroundColor: theme.colors.surface,
 			borderColor: theme.colors.border,
+			...(Platform.OS === 'web' && {
+				maxWidth: 1200,
+				marginHorizontal: 'auto',
+				width: '100%',
+			}),
 		},
 		searchInput: {
 			flex: 1,

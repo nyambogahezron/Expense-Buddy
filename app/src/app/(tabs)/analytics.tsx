@@ -11,6 +11,7 @@ import {
 import { DateRangePicker } from '@/components/DateRangePicker';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import MetricCard from '@/components/MetricCard';
+import { Platform } from 'react-native';
 
 // Custom chart theme
 const customChartTheme = {
@@ -267,6 +268,11 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		padding: 20,
+		...(Platform.OS === 'web' && {
+			maxWidth: 1200,
+			marginHorizontal: 'auto',
+			width: '100%',
+		}),
 	},
 	header: {
 		flexDirection: 'row',
@@ -295,7 +301,7 @@ const styles = StyleSheet.create({
 		marginBottom: 12,
 	},
 	chartsRow: {
-		flexDirection: 'row',
+		flexDirection: 'column',
 		gap: 12,
 	},
 	halfChart: {

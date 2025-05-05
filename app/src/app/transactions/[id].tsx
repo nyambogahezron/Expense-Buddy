@@ -5,15 +5,11 @@ import {
 	Text,
 	ActivityIndicator,
 	TouchableOpacity,
+	Platform,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import Animated, {
-	FadeIn,
-	SlideInDown,
-	SlideInRight,
-	SlideInUp,
-} from 'react-native-reanimated';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
+import { useRouter, useLocalSearchParams, Stack } from 'expo-router';
 import { Transaction } from '@/types';
 import { deleteTransaction, getTransactionById } from '@/data/transactions';
 import { CATEGORIES } from '@/constants/categories';
@@ -101,106 +97,139 @@ export default function TransactionsDetails() {
 
 	return (
 		<View style={styles.container}>
-			<Animated.View style={styles.header} entering={FadeIn.duration(300)}>
-				<TouchableOpacity
-					style={styles.backButton}
-					onPress={() => route.push('/(tabs)/transactions')}
-				>
-					<Feather name='arrow-left' size={24} color={theme.colors.text} />
-				</TouchableOpacity>
-				<Text style={styles.headerTitle}>Transaction Details</Text>
-				<TouchableOpacity
-					style={styles.deleteButton}
-					onPress={handleDelete}
-					disabled={deleting}
-				>
-					{deleting ? (
-						<ActivityIndicator size='small' color={theme.colors.error} />
-					) : (
-						<Feather name='trash-2' size={24} color={theme.colors.error} />
-					)}
-				</TouchableOpacity>
-			</Animated.View>
+			<Stack.Screen
+				options={{
+					headerShown: true,
+					animation: 'fade',
+					header: () => (
+						<Animated.View
+							style={styles.header}
+							entering={FadeIn.duration(300)}
+						>
+							<View style={styles.headerWrapper}>
+								<TouchableOpacity
+									style={styles.backButton}
+									onPress={() => route.push('/(tabs)/transactions')}
+								>
+									<Feather
+										name='arrow-left'
+										size={24}
+										color={theme.colors.text}
+									/>
+								</TouchableOpacity>
+								<Text style={styles.headerTitle}>Transaction Details</Text>
+								<TouchableOpacity
+									style={styles.deleteButton}
+									onPress={handleDelete}
+									disabled={deleting}
+								>
+									{deleting ? (
+										<ActivityIndicator
+											size='small'
+											color={theme.colors.error}
+										/>
+									) : (
+										<Feather
+											name='trash-2'
+											size={24}
+											color={theme.colors.error}
+										/>
+									)}
+								</TouchableOpacity>
+							</View>
+						</Animated.View>
+					),
+				}}
+			/>
+			{/* Header */}
 
-			<Animated.View style={styles.content}>
-				<Animated.View
-					entering={SlideInDown.duration(500).delay(200)}
-					style={[
-						styles.amountContainer,
-						{
-							backgroundColor:
-								transaction.type === 'income'
-									? theme.colors.success
-									: theme.colors.error,
-						},
-					]}
-				>
-					<Text style={styles.amountLabel}>
-						{transaction.type === 'income' ? 'Income' : 'Expense'}
-					</Text>
-					<Text style={styles.amount}>
-						{transaction.type === 'income' ? '+' : '-'}
-						{formatCurrency(transaction.amount)}
-					</Text>
-					<Text style={styles.date}>{formatDate(transaction.date)}</Text>
-				</Animated.View>
+			<View style={styles.wrapper}>
+				<Animated.View style={styles.content}>
+					<Animated.View
+						entering={FadeInDown.duration(200).delay(200)}
+						style={[
+							styles.amountContainer,
+							{
+								backgroundColor:
+									transaction.type === 'income'
+										? theme.colors.success
+										: theme.colors.error,
+							},
+						]}
+					>
+						<Text style={styles.amountLabel}>
+							{transaction.type === 'income' ? 'Income' : 'Expense'}
+						</Text>
+						<Text style={styles.amount}>
+							{transaction.type === 'income' ? '+' : '-'}
+							{formatCurrency(transaction.amount)}
+						</Text>
+						<Text style={styles.date}>{formatDate(transaction.date)}</Text>
+					</Animated.View>
 
-				<Animated.View
-					style={styles.detailsCard}
-					entering={SlideInDown.duration(500).delay(300)}
-				>
-					<View style={styles.detailRow}>
-						<View style={styles.categoryIcon}>
+					<Animated.View
+						style={styles.detailsCard}
+						entering={FadeInDown.duration(200).delay(300)}
+					>
+						<View style={styles.detailRow}>
+							<View style={styles.categoryIcon}>
+								<Feather
+									name={category.icon as any}
+									size={20}
+									color='#fff'
+									style={{
+										backgroundColor: category.color,
+										padding: 10,
+										borderRadius: 20,
+									}}
+								/>
+							</View>
+							<View>
+								<Text style={styles.detailLabel}>Category</Text>
+								<Text style={styles.detailValue}>{category.name}</Text>
+							</View>
+						</View>
+
+						<View style={styles.separator} />
+
+						<View style={styles.detailRow}>
 							<Feather
-								name={category.icon as any}
+								name='align-left'
 								size={20}
-								color='#fff'
-								style={{
-									backgroundColor: category.color,
-									padding: 10,
-									borderRadius: 20,
-								}}
+								color={theme.colors.primary}
 							/>
+							<View>
+								<Text style={styles.detailLabel}>Description</Text>
+								<Text style={styles.detailValue}>
+									{transaction.description}
+								</Text>
+							</View>
 						</View>
-						<View>
-							<Text style={styles.detailLabel}>Category</Text>
-							<Text style={styles.detailValue}>{category.name}</Text>
+
+						<View style={styles.separator} />
+
+						<View style={styles.detailRow}>
+							<Feather name='calendar' size={20} color={theme.colors.primary} />
+							<View>
+								<Text style={styles.detailLabel}>Date & Time</Text>
+								<Text style={styles.detailValue}>
+									{formatDate(transaction.date, true)}
+								</Text>
+							</View>
 						</View>
-					</View>
 
-					<View style={styles.separator} />
+						<View style={styles.separator} />
 
-					<View style={styles.detailRow}>
-						<Feather name='align-left' size={20} color={theme.colors.primary} />
-						<View>
-							<Text style={styles.detailLabel}>Description</Text>
-							<Text style={styles.detailValue}>{transaction.description}</Text>
+						<View style={styles.detailRow}>
+							<Feather name='hash' size={20} color={theme.colors.primary} />
+							<View>
+								<Text style={styles.detailLabel}>Transaction ID</Text>
+								<Text style={styles.detailValue}>{transaction.id}</Text>
+							</View>
 						</View>
-					</View>
-
-					<View style={styles.separator} />
-
-					<View style={styles.detailRow}>
-						<Feather name='calendar' size={20} color={theme.colors.primary} />
-						<View>
-							<Text style={styles.detailLabel}>Date & Time</Text>
-							<Text style={styles.detailValue}>
-								{formatDate(transaction.date, true)}
-							</Text>
-						</View>
-					</View>
-
-					<View style={styles.separator} />
-
-					<View style={styles.detailRow}>
-						<Feather name='hash' size={20} color={theme.colors.primary} />
-						<View>
-							<Text style={styles.detailLabel}>Transaction ID</Text>
-							<Text style={styles.detailValue}>{transaction.id}</Text>
-						</View>
-					</View>
+					</Animated.View>
 				</Animated.View>
-			</Animated.View>
+			</View>
 		</View>
 	);
 }
@@ -210,6 +239,13 @@ const createStyles = (theme: any) =>
 		container: {
 			flex: 1,
 			backgroundColor: theme.colors.background,
+		},
+		wrapper: {
+			...(Platform.OS === 'web' && {
+				maxWidth: 1200,
+				marginHorizontal: 'auto',
+				width: '100%',
+			}),
 		},
 		loadingContainer: {
 			flex: 1,
@@ -242,6 +278,19 @@ const createStyles = (theme: any) =>
 			shadowOffset: { width: 0, height: 2 },
 			shadowOpacity: 0.1,
 			shadowRadius: 3,
+		},
+		headerWrapper: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'space-between',
+			flex: 1,
+			...Platform.select({
+				web: {
+					maxWidth: 1200,
+					marginHorizontal: 'auto',
+					width: '100%',
+				},
+			}),
 		},
 		headerTitle: {
 			fontSize: 18,

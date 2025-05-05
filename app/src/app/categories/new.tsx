@@ -7,11 +7,12 @@ import {
 	TextInput,
 	Pressable,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { useThemeStore } from '@/store/theme';
 import { useCategoryStore } from '@/store/categories';
 import { ArrowLeft } from 'lucide-react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import ContentWrapper from '@/components/ui/ContentWrapper';
 
 const COLORS = [
 	'#EF4444',
@@ -55,118 +56,143 @@ export default function NewCategoryScreen() {
 		<View
 			style={[styles.container, { backgroundColor: theme.colors.background }]}
 		>
-			<View style={styles.header}>
-				<Pressable onPress={() => router.back()} style={styles.backButton}>
-					<ArrowLeft size={24} color={theme.colors.text} />
-				</Pressable>
-				<Text style={[styles.title, { color: theme.colors.text }]}>
-					New Category
-				</Text>
-			</View>
-
+			<Stack.Screen
+				options={{
+					headerShown: true,
+					header: () => (
+						<View
+							style={[
+								styles.header,
+								{ backgroundColor: theme.colors.background },
+							]}
+						>
+							<ContentWrapper
+								style={{
+									flexDirection: 'row',
+									alignItems: 'center',
+								}}
+							>
+								<Pressable
+									onPress={() => router.back()}
+									style={styles.backButton}
+								>
+									<ArrowLeft size={24} color={theme.colors.text} />
+								</Pressable>
+								<Text style={[styles.title, { color: theme.colors.text }]}>
+									New Category
+								</Text>
+							</ContentWrapper>
+						</View>
+					),
+				}}
+			/>
 			<ScrollView style={styles.content}>
-				<Animated.View entering={FadeIn}>
-					{error && (
-						<Text style={[styles.error, { color: theme.colors.error }]}>
-							{error}
-						</Text>
-					)}
-
-					<View style={styles.form}>
-						<View style={styles.inputGroup}>
-							<Text style={[styles.label, { color: theme.colors.text }]}>
-								Category Name
+				<ContentWrapper>
+					<Animated.View entering={FadeIn}>
+						{error && (
+							<Text style={[styles.error, { color: theme.colors.error }]}>
+								{error}
 							</Text>
-							<TextInput
-								value={name}
-								onChangeText={setName}
-								placeholder='Enter category name'
-								style={[
-									styles.input,
-									{
-										backgroundColor: theme.colors.surface,
-										borderColor: theme.colors.border,
-										color: theme.colors.text,
-									},
-								]}
-								placeholderTextColor={theme.colors.textSecondary}
-							/>
-						</View>
+						)}
 
-						<View style={styles.inputGroup}>
-							<Text style={[styles.label, { color: theme.colors.text }]}>
-								Description (Optional)
-							</Text>
-							<TextInput
-								value={description}
-								onChangeText={setDescription}
-								placeholder='Enter description'
-								multiline
-								numberOfLines={3}
-								style={[
-									styles.input,
-									styles.textArea,
-									{
-										backgroundColor: theme.colors.surface,
-										borderColor: theme.colors.border,
-										color: theme.colors.text,
-									},
-								]}
-								placeholderTextColor={theme.colors.textSecondary}
-							/>
-						</View>
+						<View style={styles.form}>
+							<View style={styles.inputGroup}>
+								<Text style={[styles.label, { color: theme.colors.text }]}>
+									Category Name
+								</Text>
+								<TextInput
+									value={name}
+									onChangeText={setName}
+									placeholder='Enter category name'
+									style={[
+										styles.input,
+										{
+											backgroundColor: theme.colors.surface,
+											borderColor: theme.colors.border,
+											color: theme.colors.text,
+										},
+									]}
+									placeholderTextColor={theme.colors.textSecondary}
+								/>
+							</View>
 
-						<View style={styles.inputGroup}>
-							<Text style={[styles.label, { color: theme.colors.text }]}>
-								Color
-							</Text>
-							<View style={styles.colorGrid}>
-								{COLORS.map((color) => (
-									<Pressable
-										key={color}
-										onPress={() => setSelectedColor(color)}
-										style={[
-											styles.colorButton,
-											{
-												backgroundColor: color,
-												borderWidth: selectedColor === color ? 3 : 0,
-												borderColor: theme.colors.surface,
-											},
-										]}
-									/>
-								))}
+							<View style={styles.inputGroup}>
+								<Text style={[styles.label, { color: theme.colors.text }]}>
+									Description (Optional)
+								</Text>
+								<TextInput
+									value={description}
+									onChangeText={setDescription}
+									placeholder='Enter description'
+									multiline
+									numberOfLines={3}
+									style={[
+										styles.input,
+										styles.textArea,
+										{
+											backgroundColor: theme.colors.surface,
+											borderColor: theme.colors.border,
+											color: theme.colors.text,
+										},
+									]}
+									placeholderTextColor={theme.colors.textSecondary}
+								/>
+							</View>
+
+							<View style={styles.inputGroup}>
+								<Text style={[styles.label, { color: theme.colors.text }]}>
+									Color
+								</Text>
+								<View style={styles.colorGrid}>
+									{COLORS.map((color) => (
+										<Pressable
+											key={color}
+											onPress={() => setSelectedColor(color)}
+											style={[
+												styles.colorButton,
+												{
+													backgroundColor: color,
+													borderWidth: selectedColor === color ? 3 : 0,
+													borderColor: theme.colors.surface,
+												},
+											]}
+										/>
+									))}
+								</View>
+							</View>
+
+							<View style={styles.buttons}>
+								<Pressable
+									onPress={() => router.back()}
+									style={[
+										styles.button,
+										{
+											backgroundColor: theme.colors.surface,
+											borderColor: theme.colors.border,
+										},
+									]}
+								>
+									<Text
+										style={[styles.buttonText, { color: theme.colors.text }]}
+									>
+										Cancel
+									</Text>
+								</Pressable>
+								<Pressable
+									onPress={handleSubmit}
+									style={[
+										styles.button,
+										{ backgroundColor: theme.colors.primary },
+									]}
+								>
+									<Text style={[styles.buttonText, { color: '#FFFFFF' }]}>
+										Create Category
+									</Text>
+								</Pressable>
 							</View>
 						</View>
-
-						<View style={styles.buttons}>
-							<Pressable
-								onPress={() => router.back()}
-								style={[
-									styles.button,
-									{
-										backgroundColor: theme.colors.surface,
-										borderColor: theme.colors.border,
-									},
-								]}
-							>
-								<Text style={[styles.buttonText, { color: theme.colors.text }]}>
-									Cancel
-								</Text>
-							</Pressable>
-							<Pressable
-								onPress={handleSubmit}
-								style={[
-									styles.button,
-									{ backgroundColor: theme.colors.primary },
-								]}
-							>
-								<Text style={[styles.buttonText, { color: '#FFFFFF' }]}>
-									Create Category
-								</Text>
-							</Pressable>
-						</View>
-					</View>
-				</Animated.View>
+					</Animated.View>
+				</ContentWrapper>
 			</ScrollView>
 		</View>
 	);
@@ -180,7 +206,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		padding: 20,
-		paddingTop: 60,
+		paddingTop: 20,
 	},
 	backButton: {
 		padding: 8,

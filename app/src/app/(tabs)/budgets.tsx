@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
+import {
+	View,
+	Text,
+	StyleSheet,
+	Pressable,
+	ScrollView,
+	Platform,
+} from 'react-native';
 import { router, Stack } from 'expo-router';
 import { useThemeStore } from '@/store/theme';
 import { useBudgetStore } from '@/store/budgets';
@@ -25,7 +32,7 @@ export default function BudgetsScreen() {
 
 			<Stack.Screen
 				options={{
-					headerShown: true,
+					headerShown: Platform.OS === 'web' ? false : true,
 					header: () => {
 						return (
 							<View
@@ -152,6 +159,21 @@ export default function BudgetsScreen() {
 					);
 				})}
 			</ScrollView>
+			{/* add butget fab  */}
+			<Pressable
+				onPress={() => router.push('/budgets/new')}
+				style={[
+					styles.addButton,
+					{
+						position: 'absolute',
+						bottom: 20,
+						right: 20,
+						backgroundColor: theme.colors.primary,
+					},
+				]}
+			>
+				<Plus size={24} color={theme.colors.background} />
+			</Pressable>
 		</View>
 	);
 }
@@ -181,6 +203,11 @@ const styles = StyleSheet.create({
 	content: {
 		flex: 1,
 		padding: 5,
+		...(Platform.OS === 'web' && {
+			maxWidth: 1200,
+			marginHorizontal: 'auto',
+			width: '100%',
+		}),
 	},
 	budgetCard: {
 		borderRadius: 8,

@@ -1,5 +1,4 @@
-import { StyleSheet, Pressable, View, Text } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StyleSheet, Pressable, View, Text, Platform } from 'react-native';
 import { Menu, User } from 'lucide-react-native';
 import { useThemeStore } from '@/store/theme';
 import { router } from 'expo-router';
@@ -9,18 +8,11 @@ interface HomeHeaderProps {
 	onUserPress?: () => void;
 }
 export default function HomeHeader({ balance, onUserPress }: HomeHeaderProps) {
-	const insets = useSafeAreaInsets();
 	const { openMenu } = useThemeStore();
 	const { theme } = useThemeStore();
 
 	return (
-		<View
-			style={[
-				styles.header,
-				{ paddingTop: insets.top },
-				{ backgroundColor: theme.colors.primary },
-			]}
-		>
+		<View style={[styles.header, { backgroundColor: theme.colors.primary }]}>
 			<View style={styles.topRow}>
 				<Pressable onPress={openMenu} style={styles.iconButton}>
 					<Menu size={24} color='#FFFFFF' />
@@ -44,14 +36,18 @@ export default function HomeHeader({ balance, onUserPress }: HomeHeaderProps) {
 const styles = StyleSheet.create({
 	header: {
 		paddingHorizontal: 20,
+		paddingVertical: 10,
 		flexDirection: 'column',
 		justifyContent: 'center',
 		height: 200,
 	},
 	topRow: {
+		visibility: Platform.OS === 'web' ? 'hidden' : 'visible',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		marginBottom: 10,
+		paddingTop: 50,
+		zIndex: 1,
 	},
 	iconButton: {
 		width: 40,

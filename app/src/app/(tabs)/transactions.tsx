@@ -174,7 +174,13 @@ export default function TransactionsScreen() {
 	}
 
 	return (
-		<View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+		<View
+			style={{
+				flex: 1,
+				backgroundColor: theme.colors.background,
+				marginTop: -80,
+			}}
+		>
 			<Stack.Screen
 				options={{
 					headerShown: true,
@@ -198,8 +204,13 @@ export default function TransactionsScreen() {
 								{
 									width: '100%',
 									zIndex: 999,
-									top: Platform.select({ web: 0, native: 35 }),
+									marginTop: Platform.select({ web: 0, native: 35 }),
 									backgroundColor: theme.colors.background,
+									...(Platform.OS === 'web' && {
+										maxWidth: 1200,
+										marginHorizontal: 'auto',
+										width: '100%',
+									}),
 								},
 							]}
 						>
@@ -209,18 +220,28 @@ export default function TransactionsScreen() {
 							/>
 						</Animated.View>
 					),
+					headerStyle: {
+						backgroundColor: theme.colors.primary,
+					},
 				}}
 			/>
 
 			<Animated.ScrollView
 				style={{
-					marginTop: Platform.select({ web: 20, android: -20 }),
+					marginTop: Platform.select({ web: -10, android: -20 }),
 					position: 'relative',
 				}}
 				ref={scrollRef}
 				onScroll={scrollHandler}
 				scrollEventThrottle={16}
-				contentContainerStyle={{ paddingBottom: 20 }}
+				contentContainerStyle={{
+					paddingBottom: 20,
+					...(Platform.OS === 'web' && {
+						maxWidth: 1200,
+						marginHorizontal: 'auto',
+						width: '100%',
+					}),
+				}}
 				refreshControl={
 					<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
 				}
@@ -232,7 +253,6 @@ export default function TransactionsScreen() {
 							height: HEADER_HEIGHT,
 							backgroundColor: theme.colors.background,
 						},
-						headerAnimatedStyles,
 					]}
 				>
 					<HomeHeader balance={summary.balance} />

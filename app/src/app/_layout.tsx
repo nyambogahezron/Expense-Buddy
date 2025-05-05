@@ -25,6 +25,7 @@ export default function RootLayout() {
 	const status_bar_style =
 		theme.name.toLocaleLowerCase() === 'light' ? 'dark' : 'light';
 	const status_bar_background = theme.colors.background;
+	console.log('Theme background color:', theme.colors.background);
 	useFrameworkReady();
 
 	const [fontsLoaded] = useFonts({
@@ -56,9 +57,7 @@ export default function RootLayout() {
 	}
 
 	return (
-		<GestureHandlerRootView
-			style={{ flex: 1, backgroundColor: theme.colors.background }}
-		>
+		<GestureHandlerRootView style={{ flex: 1, backgroundColor: '#111827' }}>
 			<Stack
 				screenOptions={{ headerShown: false }}
 				initialRouteName='onboarding'

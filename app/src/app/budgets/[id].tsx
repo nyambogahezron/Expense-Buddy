@@ -1,5 +1,12 @@
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import {
+	View,
+	Text,
+	StyleSheet,
+	ScrollView,
+	Pressable,
+	Platform,
+} from 'react-native';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useThemeStore } from '@/store/theme';
 import { useBudgetStore } from '@/store/budgets';
 import { ArrowLeft, CreditCard as Edit2, Trash } from 'lucide-react-native';
@@ -29,173 +36,193 @@ export default function BudgetDetailScreen() {
 		<View
 			style={[styles.container, { backgroundColor: theme.colors.background }]}
 		>
-			<View style={styles.header}>
-				<Pressable onPress={() => router.back()} style={styles.backButton}>
-					<ArrowLeft size={24} color={theme.colors.text} />
-				</Pressable>
-				<Text style={[styles.title, { color: theme.colors.text }]}>
-					{selectedBudget.name}
-				</Text>
-				<View style={styles.actions}>
-					<Pressable
-						onPress={() => router.push('/budgets/edit')}
-						style={[
-							styles.actionButton,
-							{ backgroundColor: theme.colors.primary },
-						]}
-					>
-						<Edit2 size={20} color='#FFFFFF' />
-					</Pressable>
-					<Pressable
-						onPress={handleDelete}
-						style={[
-							styles.actionButton,
-							{ backgroundColor: theme.colors.error },
-						]}
-					>
-						<Trash size={20} color='#FFFFFF' />
-					</Pressable>
-				</View>
-			</View>
+			<Stack.Screen
+				options={{
+					headerShown: true,
+					animation: 'fade',
+					header: () => (
+						<View
+							style={[
+								styles.header,
+								{ backgroundColor: theme.colors.background },
+							]}
+						>
+							<View style={styles.headerWrapper}>
+								<Pressable
+									onPress={() => router.back()}
+									style={styles.backButton}
+								>
+									<ArrowLeft size={24} color={theme.colors.text} />
+								</Pressable>
+								<Text style={[styles.title, { color: theme.colors.text }]}>
+									{selectedBudget.name}
+								</Text>
+								<View style={styles.actions}>
+									<Pressable
+										onPress={() => router.push('/budgets/edit')}
+										style={[
+											styles.actionButton,
+											{ backgroundColor: theme.colors.primary },
+										]}
+									>
+										<Edit2 size={20} color='#FFFFFF' />
+									</Pressable>
+									<Pressable
+										onPress={handleDelete}
+										style={[
+											styles.actionButton,
+											{ backgroundColor: theme.colors.error },
+										]}
+									>
+										<Trash size={20} color='#FFFFFF' />
+									</Pressable>
+								</View>
+							</View>
+						</View>
+					),
+				}}
+			/>
 
 			<ScrollView style={styles.content}>
-				<Animated.View
-					entering={FadeIn}
-					style={[
-						styles.summaryCard,
-						{
-							backgroundColor: theme.colors.surface,
-							borderColor: theme.colors.border,
-						},
-					]}
-				>
-					<View style={styles.summaryRow}>
-						<Text
-							style={[
-								styles.summaryLabel,
-								{ color: theme.colors.textSecondary },
-							]}
-						>
-							Total Budget
-						</Text>
-						<Text style={[styles.summaryValue, { color: theme.colors.text }]}>
-							${selectedBudget.totalAmount.toLocaleString()}
-						</Text>
-					</View>
-					<View style={styles.summaryRow}>
-						<Text
-							style={[
-								styles.summaryLabel,
-								{ color: theme.colors.textSecondary },
-							]}
-						>
-							Total Spent
-						</Text>
-						<Text style={[styles.summaryValue, { color: theme.colors.text }]}>
-							${totalSpent.toLocaleString()}
-						</Text>
-					</View>
-					<View style={styles.summaryRow}>
-						<Text
-							style={[
-								styles.summaryLabel,
-								{ color: theme.colors.textSecondary },
-							]}
-						>
-							Remaining
-						</Text>
-						<Text
-							style={[
-								styles.summaryValue,
-								{
-									color:
-										remaining < 0 ? theme.colors.error : theme.colors.success,
-								},
-							]}
-						>
-							${remaining.toLocaleString()}
-						</Text>
-					</View>
-				</Animated.View>
-
-				<View style={styles.section}>
-					<Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
-						Categories
-					</Text>
-					{selectedBudget.categories.map((category) => {
-						const progress = (category.spent / category.amount) * 100;
-						return (
-							<Animated.View
-								key={category.id}
-								entering={FadeIn}
+				<View style={styles.contentWrapper}>
+					<Animated.View
+						entering={FadeIn}
+						style={[
+							styles.summaryCard,
+							{
+								backgroundColor: theme.colors.surface,
+								borderColor: theme.colors.border,
+							},
+						]}
+					>
+						<View style={styles.summaryRow}>
+							<Text
 								style={[
-									styles.categoryCard,
+									styles.summaryLabel,
+									{ color: theme.colors.textSecondary },
+								]}
+							>
+								Total Budget
+							</Text>
+							<Text style={[styles.summaryValue, { color: theme.colors.text }]}>
+								${selectedBudget.totalAmount.toLocaleString()}
+							</Text>
+						</View>
+						<View style={styles.summaryRow}>
+							<Text
+								style={[
+									styles.summaryLabel,
+									{ color: theme.colors.textSecondary },
+								]}
+							>
+								Total Spent
+							</Text>
+							<Text style={[styles.summaryValue, { color: theme.colors.text }]}>
+								${totalSpent.toLocaleString()}
+							</Text>
+						</View>
+						<View style={styles.summaryRow}>
+							<Text
+								style={[
+									styles.summaryLabel,
+									{ color: theme.colors.textSecondary },
+								]}
+							>
+								Remaining
+							</Text>
+							<Text
+								style={[
+									styles.summaryValue,
 									{
-										backgroundColor: theme.colors.surface,
-										borderColor: theme.colors.border,
+										color:
+											remaining < 0 ? theme.colors.error : theme.colors.success,
 									},
 								]}
 							>
-								<View style={styles.categoryHeader}>
-									<View style={styles.categoryInfo}>
-										<Text
-											style={[
-												styles.categoryName,
-												{ color: theme.colors.text },
-											]}
-										>
-											{category.name}
-										</Text>
-										<Text
-											style={[
-												styles.categoryAmount,
-												{ color: theme.colors.textSecondary },
-											]}
-										>
-											${category.spent.toLocaleString()} of $
-											{category.amount.toLocaleString()}
-										</Text>
-									</View>
-									<Text
-										style={[
-											styles.categoryPercentage,
-											{
-												color:
-													progress > 100
-														? theme.colors.error
-														: progress > 80
-														? theme.colors.accent
-														: theme.colors.success,
-											},
-										]}
-									>
-										{Math.round(progress)}%
-									</Text>
-								</View>
-								<View
+								${remaining.toLocaleString()}
+							</Text>
+						</View>
+					</Animated.View>
+
+					<View style={styles.section}>
+						<Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
+							Categories
+						</Text>
+						{selectedBudget.categories.map((category) => {
+							const progress = (category.spent / category.amount) * 100;
+							return (
+								<Animated.View
+									key={category.id}
+									entering={FadeIn}
 									style={[
-										styles.progressBar,
-										{ backgroundColor: theme.colors.border },
+										styles.categoryCard,
+										{
+											backgroundColor: theme.colors.surface,
+											borderColor: theme.colors.border,
+										},
 									]}
 								>
+									<View style={styles.categoryHeader}>
+										<View style={styles.categoryInfo}>
+											<Text
+												style={[
+													styles.categoryName,
+													{ color: theme.colors.text },
+												]}
+											>
+												{category.name}
+											</Text>
+											<Text
+												style={[
+													styles.categoryAmount,
+													{ color: theme.colors.textSecondary },
+												]}
+											>
+												${category.spent.toLocaleString()} of $
+												{category.amount.toLocaleString()}
+											</Text>
+										</View>
+										<Text
+											style={[
+												styles.categoryPercentage,
+												{
+													color:
+														progress > 100
+															? theme.colors.error
+															: progress > 80
+															? theme.colors.accent
+															: theme.colors.success,
+												},
+											]}
+										>
+											{Math.round(progress)}%
+										</Text>
+									</View>
 									<View
 										style={[
-											styles.progressFill,
-											{
-												width: `${Math.min(progress, 100)}%`,
-												backgroundColor:
-													progress > 100
-														? theme.colors.error
-														: progress > 80
-														? theme.colors.accent
-														: theme.colors.success,
-											},
+											styles.progressBar,
+											{ backgroundColor: theme.colors.border },
 										]}
-									/>
-								</View>
-							</Animated.View>
-						);
-					})}
+									>
+										<View
+											style={[
+												styles.progressFill,
+												{
+													width: `${Math.min(progress, 100)}%`,
+													backgroundColor:
+														progress > 100
+															? theme.colors.error
+															: progress > 80
+															? theme.colors.accent
+															: theme.colors.success,
+												},
+											]}
+										/>
+									</View>
+								</Animated.View>
+							);
+						})}
+					</View>
 				</View>
 			</ScrollView>
 		</View>
@@ -211,7 +238,20 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		padding: 20,
-		paddingTop: 60,
+		paddingTop: 50,
+	},
+	headerWrapper: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		width: '100%',
+		...Platform.select({
+			web: {
+				maxWidth: 1200,
+				marginHorizontal: 'auto',
+				width: '100%',
+			},
+		}),
 	},
 	backButton: {
 		padding: 8,
@@ -236,6 +276,15 @@ const styles = StyleSheet.create({
 	content: {
 		flex: 1,
 		padding: 20,
+	},
+	contentWrapper: {
+		...Platform.select({
+			web: {
+				maxWidth: 1200,
+				marginHorizontal: 'auto',
+				width: '100%',
+			},
+		}),
 	},
 	summaryCard: {
 		padding: 20,

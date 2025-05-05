@@ -166,22 +166,26 @@ export default function WebTabLayout() {
 					</View>
 				</PageContainer>
 			</View>
-			<PageContainer>
-				<View style={styles.content}>
-					<Tabs
-						screenOptions={{
-							headerShown: false,
-							tabBarStyle: { display: 'none' },
-						}}
-					>
-						<Tabs.Screen name='transactions' />
-						<Tabs.Screen name='budgets' />
-						<Tabs.Screen name='analytics' />
-						<Tabs.Screen name='categories' />
-						<Tabs.Screen name='menu' />
-					</Tabs>
-				</View>
-			</PageContainer>
+			{/* ensure the tabs are returned  */}
+
+			<View style={styles.content}>
+				<Tabs
+					screenOptions={{
+						headerShown: false,
+						tabBarStyle: {
+							display: 'none',
+
+							borderWidth: 0,
+						},
+					}}
+				>
+					<Tabs.Screen name='transactions' />
+					<Tabs.Screen name='budgets' />
+					<Tabs.Screen name='analytics' />
+					<Tabs.Screen name='categories' />
+					<Tabs.Screen name='menu' />
+				</Tabs>
+			</View>
 		</View>
 	);
 }
@@ -192,8 +196,6 @@ const styles = StyleSheet.create({
 	},
 	navbar: {
 		height: 64,
-		borderBottomWidth: 1,
-		borderBottomColor: '#E5E7EB',
 	},
 	navContent: {
 		flex: 1,
