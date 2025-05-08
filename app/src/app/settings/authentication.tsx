@@ -7,9 +7,10 @@ import {
 	TextInput,
 	Modal,
 } from 'react-native';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import { useThemeStore } from '@/store/theme';
 import { useAppLockStore } from '@/store/appLock';
+import { useNotificationStore } from '@/store/notifications';
 import { useState, useEffect } from 'react';
 import {
 	Lock,
@@ -17,6 +18,7 @@ import {
 	KeyRound,
 	ShieldCheck,
 	Clock,
+	Bell,
 } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import * as LocalAuthentication from 'expo-local-authentication';
@@ -35,12 +37,15 @@ export default function AuthenticationScreen() {
 		setPin,
 		setUseBiometrics,
 	} = useAppLockStore();
+	const { notifications } = useNotificationStore();
 
 	const [showPinModal, setShowPinModal] = useState(false);
 	const [newPin, setNewPin] = useState('');
 	const [confirmPin, setConfirmPin] = useState('');
 	const [pinError, setPinError] = useState('');
 	const [biometricsAvailable, setBiometricsAvailable] = useState(false);
+
+	const unreadCount = notifications.filter((n) => !n.read).length;
 
 	useEffect(() => {
 		checkBiometrics();
@@ -111,6 +116,29 @@ export default function AuthenticationScreen() {
 					},
 					headerTintColor: theme.colors.text,
 					headerTitleAlign: 'center',
+					headerRight: () => (
+						<Pressable
+							onPress={() => router.push('/notifications')}
+							style={({ pressed }) => [
+								styles.notificationButton,
+								{ opacity: pressed ? 0.7 : 1 },
+							]}
+						>
+							<Bell size={24} color={theme.colors.text} />
+							{unreadCount > 0 && (
+								<View
+									style={[
+										styles.badge,
+										{ backgroundColor: theme.colors.error },
+									]}
+								>
+									<Text style={styles.badgeText}>
+										{unreadCount > 99 ? '99+' : unreadCount}
+									</Text>
+								</View>
+							)}
+						</Pressable>
+					),
 				}}
 			/>
 
@@ -498,5 +526,25 @@ const styles = StyleSheet.create({
 	buttonText: {
 		fontSize: 16,
 		fontFamily: 'Poppins-SemiBold',
+	},
+	notificationButton: {
+		marginRight: 16,
+		position: 'relative',
+	},
+	badge: {
+		position: 'absolute',
+		top: -4,
+		right: -4,
+		minWidth: 18,
+		height: 18,
+		borderRadius: 9,
+		alignItems: 'center',
+		justifyContent: 'center',
+		paddingHorizontal: 4,
+	},
+	badgeText: {
+		color: '#FFFFFF',
+		fontSize: 10,
+		fontFamily: 'Poppins-Medium',
 	},
 });

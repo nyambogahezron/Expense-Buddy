@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Modal, Dimensions } from 'react-native';
 import { useThemeStore } from '@/store/theme';
+import { LockIcon } from 'lucide-react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,7 +26,17 @@ export default function AppOverlay({ visible }: AppOverlayProps) {
 						backgroundColor: theme.colors.background,
 					},
 				]}
-			/>
+			>
+				<LockIcon
+					size={100}
+					color={theme.colors.text}
+					style={{
+						position: 'absolute',
+						top: height / 2 - 50,
+						left: width / 2 - 50,
+					}}
+				/>
+			</View>
 		</Modal>
 	);
 }

@@ -1,9 +1,20 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { StyleSheet, Text, View, SectionList } from 'react-native';
 import TransactionItem from './TransactionItem';
-import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
+import Animated, {
+	FadeInDown,
+	Layout,
+	useAnimatedStyle,
+	withSpring,
+} from 'react-native-reanimated';
 import { Transaction } from '@/types';
 import { formatDate } from '@/utils/helpers';
+import Swipeable, {
+	SwipeableMethods,
+} from 'react-native-gesture-handler/ReanimatedSwipeable';
+import { useThemeStore } from '@/store/theme';
+import { useTransactionStore } from '@/store/transactions';
+import { Trash2 } from 'lucide-react-native';
 
 interface TransactionListProps {
 	transactions: Transaction[];
@@ -14,6 +25,23 @@ export default function TransactionList({
 	transactions,
 	onTransactionPress,
 }: TransactionListProps) {
+	const { theme } = useThemeStore();
+	const { deleteTransaction } = useTransactionStore();
+	const swipeableRefs = useRef<{ [key: string]: SwipeableMethods | null }>({});
+
+	const animatedStyle = useAnimatedStyle(() => {
+		return {
+			transform: [
+				{
+					scale: withSpring(1, {
+						damping: 15,
+						stiffness: 100,
+					}),
+				},
+			],
+		};
+	});
+
 	// Group transactions by date
 	const groupedTransactions = React.useMemo(() => {
 		const groups: { [key: string]: Transaction[] } = {};
@@ -54,6 +82,35 @@ export default function TransactionList({
 		[]
 	);
 
+	const handleDelete = useCallback(
+		(id: string) => {
+			// Close the swipeable
+			swipeableRefs.current[id]?.close();
+			// Delete the transaction with animation
+			setTimeout(() => {
+				deleteTransaction(id);
+			}, 300);
+		},
+		[deleteTransaction]
+	);
+
+	const renderRightActions = useCallback(
+		(transaction: Transaction) => {
+			return (
+				<Animated.View
+					style={[
+						styles.rightAction,
+						{ backgroundColor: theme.colors.error },
+						animatedStyle,
+					]}
+				>
+					<Trash2 size={24} color='#FFFFFF' />
+				</Animated.View>
+			);
+		},
+		[theme, animatedStyle]
+	);
+
 	const renderItem = useCallback(
 		({ item, index }: { item: Transaction; index: number }) => {
 			return (
@@ -61,11 +118,21 @@ export default function TransactionList({
 					entering={FadeInDown.delay(150 + index * 50).springify()}
 					layout={Layout.springify()}
 				>
-					<TransactionItem transaction={item} />
+					<Swipeable
+						ref={(ref) => {
+							swipeableRefs.current[item.id] = ref;
+						}}
+						renderRightActions={() => renderRightActions(item)}
+						onSwipeableOpen={() => handleDelete(item.id)}
+						overshootRight={false}
+						rightThreshold={40}
+					>
+						<TransactionItem transaction={item} />
+					</Swipeable>
 				</Animated.View>
 			);
 		},
-		[onTransactionPress]
+		[onTransactionPress, renderRightActions, handleDelete]
 	);
 
 	return (
@@ -108,5 +175,11 @@ const styles = StyleSheet.create({
 	},
 	separator: {
 		height: 8,
+	},
+	rightAction: {
+		justifyContent: 'center',
+		alignItems: 'center',
+		width: 80,
+		height: '100%',
 	},
 });

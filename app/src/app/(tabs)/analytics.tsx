@@ -12,6 +12,8 @@ import { DateRangePicker } from '@/components/DateRangePicker';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import MetricCard from '@/components/MetricCard';
 import { Platform } from 'react-native';
+import { Stack } from 'expo-router';
+import ContentWrapper from '@/components/ui/ContentWrapper';
 
 // Custom chart theme
 const customChartTheme = {
@@ -105,16 +107,31 @@ export default function AnalyticsScreen() {
 			style={[styles.container, { backgroundColor: theme.colors.background }]}
 			contentContainerStyle={styles.content}
 		>
-			<View style={styles.header}>
-				<Text style={[styles.title, { color: theme.colors.text }]}>
-					Analytics
-				</Text>
-				<DateRangePicker
-					startDate={startDate}
-					endDate={endDate}
-					onPress={() => {}}
-				/>
-			</View>
+			<Stack.Screen
+				options={{
+					headerShown: true,
+					header: () => (
+						<View style={styles.header}>
+							<ContentWrapper
+								style={{
+									flexDirection: 'row',
+									justifyContent: 'space-between',
+									alignItems: 'center',
+								}}
+							>
+								<Text style={[styles.title, { color: theme.colors.text }]}>
+									Analytics
+								</Text>
+								<DateRangePicker
+									startDate={startDate}
+									endDate={endDate}
+									onPress={() => {}}
+								/>
+							</ContentWrapper>
+						</View>
+					),
+				}}
+			/>
 
 			<View style={styles.metricsGrid}>
 				<MetricCard title='Total Revenue' value='21,500' change={12.5} />
@@ -278,7 +295,8 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		marginBottom: 20,
+		marginTop: 50,
+		paddingHorizontal: 10,
 	},
 	title: {
 		fontSize: 24,

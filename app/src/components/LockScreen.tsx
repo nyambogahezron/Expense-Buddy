@@ -12,7 +12,7 @@ import {
 import { useThemeStore } from '@/store/theme';
 import { useAppLockStore } from '@/store/appLock';
 import { Lock, Fingerprint, Delete } from 'lucide-react-native';
-import Animated, { FadeIn, withSpring } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import * as LocalAuthentication from 'expo-local-authentication';
 
 const { width, height } = Dimensions.get('window');
@@ -24,11 +24,13 @@ interface LockScreenProps {
 
 export default function LockScreen({ visible, onUnlock }: LockScreenProps) {
 	const { theme } = useThemeStore();
-	const { pin, useBiometrics } = useAppLockStore();
+	const { useBiometrics } = useAppLockStore();
+	// const { pin, useBiometrics } = useAppLockStore();
 	const [enteredPin, setEnteredPin] = useState('');
 	const [error, setError] = useState(false);
 	const [biometricsAvailable, setBiometricsAvailable] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
+	const pin = '1234';
 
 	useEffect(() => {
 		if (visible) {
@@ -64,13 +66,16 @@ export default function LockScreen({ visible, onUnlock }: LockScreenProps) {
 		if (enteredPin === pin) {
 			setError(false);
 			setIsSuccess(true);
-			Vibration.vibrate(50); // Short vibration for success
+			Vibration.vibrate(50);
 			setTimeout(() => {
 				onUnlock();
-			}, 300); // Small delay to show success state
+			}, 300);
 		} else {
 			setError(true);
-			Vibration.vibrate(400); // Longer vibration for error
+			Vibration.vibrate(400);
+			setTimeout(() => {
+				setError(false);
+			}, 1000);
 			setEnteredPin('');
 		}
 	};
