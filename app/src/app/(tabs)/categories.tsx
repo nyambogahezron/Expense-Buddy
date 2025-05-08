@@ -8,12 +8,14 @@ import {
 	TextInput,
 	Platform,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { useThemeStore } from '@/store/theme';
 import { useCategoryStore } from '@/store/categories';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { Search, Plus, Trash2, CreditCard as Edit } from 'lucide-react-native';
 import { Category } from '@/types/category';
+import ContentWrapper from '@/components/ui/ContentWrapper';
+import KeyboardAvoidingView from '@/components/ui/KeyboardAvoidingView';
 
 export default function CategoriesScreen() {
 	const { theme } = useThemeStore();
@@ -49,17 +51,31 @@ export default function CategoriesScreen() {
 	};
 
 	return (
-		<View style={styles.container}>
-			<View style={styles.header}>
-				<Text style={styles.title}>Categories</Text>
-				<Pressable
-					onPress={() => router.push('/categories/new')}
-					style={styles.addButton}
-				>
-					<Plus size={24} color='#FFFFFF' />
-				</Pressable>
-			</View>
-
+		<KeyboardAvoidingView style={styles.container}>
+			<Stack.Screen
+				options={{
+					headerShown: true,
+					header: () => (
+						<View style={styles.header}>
+							<ContentWrapper
+								style={{
+									flexDirection: 'row',
+									justifyContent: 'space-between',
+									alignItems: 'center',
+								}}
+							>
+								<Text style={styles.title}>Categories</Text>
+								<Pressable
+									onPress={() => router.push('/categories/new')}
+									style={styles.addButton}
+								>
+									<Plus size={24} color='#FFFFFF' />
+								</Pressable>
+							</ContentWrapper>
+						</View>
+					),
+				}}
+			/>
 			<View style={styles.searchContainer}>
 				<Search size={20} color={theme.colors.textSecondary} />
 				<TextInput
@@ -155,7 +171,7 @@ export default function CategoriesScreen() {
 					))}
 				</ScrollView>
 			</View>
-		</View>
+		</KeyboardAvoidingView>
 	);
 }
 
@@ -178,7 +194,8 @@ const createStyles = (theme: any) =>
 			flexDirection: 'row',
 			justifyContent: 'space-between',
 			alignItems: 'center',
-			padding: 20,
+			marginTop: 40,
+			paddingHorizontal: 10,
 			...(Platform.OS === 'web' && {
 				maxWidth: 1200,
 				marginHorizontal: 'auto',
@@ -202,8 +219,9 @@ const createStyles = (theme: any) =>
 			flexDirection: 'row',
 			alignItems: 'center',
 			marginHorizontal: 20,
-			marginBottom: 20,
-			padding: 20,
+			marginTop: 20,
+			padding: 5,
+			paddingHorizontal: 10,
 			borderRadius: 12,
 			borderWidth: 1,
 			backgroundColor: theme.colors.surface,

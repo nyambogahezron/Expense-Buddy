@@ -177,23 +177,29 @@ export default function Onboarding() {
 										>
 											<slide.icon size={40} color={theme.colors.primary} />
 										</Animated.View>
-										<Animated.Text
-											key={`title-${animationKey}`}
+										<Animated.View
+											key={`title-wrapper-${animationKey}`}
 											entering={FadeInUp.duration(800).delay(400)}
-											style={[styles.title, { color: theme.colors.surface }]}
 										>
-											{slide.title}
-										</Animated.Text>
-										<Animated.Text
-											key={`desc-${animationKey}`}
+											<Animated.Text
+												style={[styles.title, { color: theme.colors.surface }]}
+											>
+												{slide.title}
+											</Animated.Text>
+										</Animated.View>
+										<Animated.View
+											key={`desc-wrapper-${animationKey}`}
 											entering={FadeInUp.duration(800).delay(600)}
-											style={[
-												styles.description,
-												{ color: theme.colors.surface },
-											]}
 										>
-											{slide.description}
-										</Animated.Text>
+											<Animated.Text
+												style={[
+													styles.description,
+													{ color: theme.colors.surface },
+												]}
+											>
+												{slide.description}
+											</Animated.Text>
+										</Animated.View>
 									</Animated.View>
 								)}
 

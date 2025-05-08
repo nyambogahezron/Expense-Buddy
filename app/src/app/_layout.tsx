@@ -1,6 +1,4 @@
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
 	useFonts,
@@ -15,18 +13,15 @@ import LockScreen from '@/components/LockScreen';
 import AppOverlay from '@/components/AppOverlay';
 import { useState, useEffect } from 'react';
 import { AppState } from 'react-native';
+import * as SystemUI from 'expo-system-ui';
+
+SystemUI.setBackgroundColorAsync('transparent');
 
 export default function RootLayout() {
 	const { theme } = useThemeStore();
 	const { isLocked, showOverlay, unlock, showAppOverlay, hideAppOverlay } =
 		useAppLock();
 	const [appState, setAppState] = useState(AppState.currentState);
-
-	const status_bar_style =
-		theme.name.toLocaleLowerCase() === 'light' ? 'dark' : 'light';
-	const status_bar_background = theme.colors.background;
-	console.log('Theme background color:', theme.colors.background);
-	useFrameworkReady();
 
 	const [fontsLoaded] = useFonts({
 		'Inter-Regular': Inter_400Regular,
@@ -59,7 +54,12 @@ export default function RootLayout() {
 	return (
 		<GestureHandlerRootView style={{ flex: 1, backgroundColor: '#111827' }}>
 			<Stack
-				screenOptions={{ headerShown: false }}
+				screenOptions={{
+					headerShown: false,
+					statusBarStyle:
+						theme.name.toLocaleLowerCase() === 'light' ? 'dark' : 'light',
+					statusBarBackgroundColor: theme.colors.primary,
+				}}
 				initialRouteName='onboarding'
 			>
 				<Stack.Screen name='onboarding' options={{ headerShown: false }} />
@@ -90,10 +90,6 @@ export default function RootLayout() {
 
 				<Stack.Screen name='+not-found' />
 			</Stack>
-			<StatusBar
-				style={status_bar_style}
-				backgroundColor={status_bar_background}
-			/>
 			<LockScreen visible={isLocked} onUnlock={unlock} />
 			<AppOverlay visible={showOverlay} />
 		</GestureHandlerRootView>
