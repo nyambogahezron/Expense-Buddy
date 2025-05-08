@@ -66,7 +66,10 @@ export const useThemeStore = create<ThemeState>()(
 		{
 			name: 'expense-buddy-theme',
 			storage: createJSONStorage(() => AsyncStorage),
-			partialize: (state) => ({ currentTheme: state.currentTheme }),
+			partialize: (state: ThemeState) => ({
+				currentTheme: state.currentTheme,
+				theme: state.theme,
+			}),
 		}
 	)
 );
