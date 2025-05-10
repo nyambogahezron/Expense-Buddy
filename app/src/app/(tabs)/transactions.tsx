@@ -32,6 +32,7 @@ import { Plus, Filter, ArrowDownUp } from 'lucide-react-native';
 import { router, Stack } from 'expo-router';
 import { useTransactionStore } from '@/store/transactions';
 import HomeHeader from '@/components/HomeHeader';
+import { TransactionSkeleton } from '@/components/TransactionItem';
 const { width, height } = Dimensions.get('window');
 
 const HEADER_HEIGHT = height * 0.4;
@@ -166,7 +167,13 @@ export default function TransactionsScreen() {
 	};
 
 	if (loading && !isRefreshing) {
-		return <LoadingState />;
+		return (
+			<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+				{Array.from({ length: 10 }).map((_, index) => (
+					<TransactionSkeleton key={index} />
+				))}
+			</View>
+		);
 	}
 
 	if (error) {

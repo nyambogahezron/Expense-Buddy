@@ -77,7 +77,7 @@ export default function MenuNav() {
 		{ icon: ShoppingCart, label: 'Shopping List', route: '/shopping' },
 		{ icon: Bell, label: 'Notifications', route: '/notifications' },
 		{ icon: PaintBucket, label: 'Theme', route: '/settings/theme' },
-		{ icon: Settings, label: 'Settings', route: '/settings/' },
+		{ icon: Settings, label: 'Settings', route: '/settings/index' },
 		{ icon: LogOut, label: 'Logout', action: () => handleLogout() },
 	];
 

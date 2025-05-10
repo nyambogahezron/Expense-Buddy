@@ -14,8 +14,11 @@ import AppOverlay from '@/components/AppOverlay';
 import { useState, useEffect } from 'react';
 import { AppState } from 'react-native';
 import * as SystemUI from 'expo-system-ui';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 SystemUI.setBackgroundColorAsync('transparent');
+
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
 	const { theme } = useThemeStore();
@@ -52,46 +55,48 @@ export default function RootLayout() {
 	}
 
 	return (
-		<GestureHandlerRootView style={{ flex: 1, backgroundColor: '#111827' }}>
-			<Stack
-				screenOptions={{
-					headerShown: false,
-					statusBarStyle:
-						theme.name.toLocaleLowerCase() === 'light' ? 'dark' : 'light',
-					statusBarBackgroundColor: theme.colors.primary,
-				}}
-				initialRouteName='onboarding'
-			>
-				<Stack.Screen name='onboarding' options={{ headerShown: false }} />
-				<Stack.Screen name='(auth)' options={{ headerShown: false }} />
-				<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-				<Stack.Screen name='budgets' options={{ headerShown: false }} />
-				<Stack.Screen name='transactions' options={{ headerShown: false }} />
-				<Stack.Screen name='categories' options={{ headerShown: false }} />
-				<Stack.Screen
-					name='shopping'
-					options={{ headerShown: false, animation: 'slide_from_right' }}
-				/>
-				<Stack.Screen
-					name='settings'
-					options={{ headerShown: true, animation: 'slide_from_right' }}
-				/>
-				<Stack.Screen
-					name='profile'
-					options={{ headerShown: true, animation: 'slide_from_right' }}
-				/>
-				<Stack.Screen
-					name='settings/authentication'
-					options={{
-						title: 'Authentication',
-						headerShown: true,
+		<QueryClientProvider client={queryClient}>
+			<GestureHandlerRootView style={{ flex: 1, backgroundColor: '#111827' }}>
+				<Stack
+					screenOptions={{
+						headerShown: false,
+						statusBarStyle:
+							theme.name.toLocaleLowerCase() === 'light' ? 'dark' : 'light',
+						statusBarBackgroundColor: theme.colors.primary,
 					}}
-				/>
+					initialRouteName='onboarding'
+				>
+					<Stack.Screen name='onboarding' options={{ headerShown: false }} />
+					<Stack.Screen name='(auth)' options={{ headerShown: false }} />
+					<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+					<Stack.Screen name='budgets' options={{ headerShown: false }} />
+					<Stack.Screen name='transactions' options={{ headerShown: false }} />
+					<Stack.Screen name='categories' options={{ headerShown: false }} />
+					<Stack.Screen
+						name='shopping'
+						options={{ headerShown: false, animation: 'slide_from_right' }}
+					/>
+					<Stack.Screen
+						name='settings'
+						options={{ headerShown: true, animation: 'slide_from_right' }}
+					/>
+					<Stack.Screen
+						name='profile'
+						options={{ headerShown: true, animation: 'slide_from_right' }}
+					/>
+					<Stack.Screen
+						name='settings/authentication'
+						options={{
+							title: 'Authentication',
+							headerShown: true,
+						}}
+					/>
 
-				<Stack.Screen name='+not-found' />
-			</Stack>
-			<LockScreen visible={isLocked} onUnlock={unlock} />
-			<AppOverlay visible={showOverlay} />
-		</GestureHandlerRootView>
+					<Stack.Screen name='+not-found' />
+				</Stack>
+				<LockScreen visible={isLocked} onUnlock={unlock} />
+				<AppOverlay visible={showOverlay} />
+			</GestureHandlerRootView>
+		</QueryClientProvider>
 	);
 }

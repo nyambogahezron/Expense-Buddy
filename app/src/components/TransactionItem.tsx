@@ -2,7 +2,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Transaction } from '@/types/transaction';
 import { format } from 'date-fns';
 import { CATEGORIES } from '@/types/transaction';
-import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
+import Animated, {
+	FadeInRight,
+	FadeOutLeft,
+	withRepeat,
+	withTiming,
+	useAnimatedStyle,
+} from 'react-native-reanimated';
 import { useThemeStore } from '@/store/theme';
 
 interface TransactionItemProps {
@@ -41,13 +47,41 @@ export function TransactionItem({ transaction }: TransactionItemProps) {
 	);
 }
 
+export function TransactionSkeleton() {
+	const { theme } = useThemeStore();
+	const animatedStyle = useAnimatedStyle(() => ({
+		opacity: withRepeat(withTiming(0.5, { duration: 1000 }), -1, true),
+	}));
+
+	return (
+		<Animated.View
+			style={[
+				styles.container,
+				{ backgroundColor: theme.colors.surface },
+				animatedStyle,
+			]}
+		>
+			<View style={styles.left}>
+				<View style={[styles.categoryDot, { backgroundColor: '#E5E7EB' }]} />
+				<View>
+					<View style={[styles.skeletonText, { width: 120 }]} />
+					<View style={[styles.skeletonText, { width: 80, marginTop: 4 }]} />
+				</View>
+			</View>
+			<View style={[styles.skeletonText, { width: 60 }]} />
+		</Animated.View>
+	);
+}
+
 const styles = StyleSheet.create({
 	container: {
+		width: '100%',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		padding: 16,
+		paddingVertical: 16,
 		backgroundColor: '#FFFFFF',
+		paddingHorizontal: 20,
 		marginHorizontal: 20,
 		marginBottom: 12,
 		borderRadius: 12,
@@ -84,5 +118,10 @@ const styles = StyleSheet.create({
 	amount: {
 		fontSize: 16,
 		fontFamily: 'Inter-SemiBold',
+	},
+	skeletonText: {
+		height: 16,
+		backgroundColor: '#E5E7EB',
+		borderRadius: 4,
 	},
 });
