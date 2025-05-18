@@ -1,6 +1,8 @@
 
 expo-env.d.ts
 dist/
+android/
+ios/
 .env
 node_modules
 npm-debug.log
