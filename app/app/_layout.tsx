@@ -15,10 +15,16 @@ import { useState, useEffect } from 'react';
 import { AppState } from 'react-native';
 import * as SystemUI from 'expo-system-ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import * as SQLite from 'expo-sqlite';
+import { drizzle } from 'drizzle-orm/expo-sqlite';
 
 SystemUI.setBackgroundColorAsync('transparent');
 
 const queryClient = new QueryClient();
+
+const expo = SQLite.openDatabaseSync('db.db');
+
+const db = drizzle(expo);
 
 export default function RootLayout() {
 	const { theme } = useThemeStore();
@@ -94,8 +100,8 @@ export default function RootLayout() {
 
 					<Stack.Screen name='+not-found' />
 				</Stack>
-				<LockScreen visible={isLocked} onUnlock={unlock} />
-				<AppOverlay visible={showOverlay} />
+				{/* <LockScreen visible={isLocked} onUnlock={unlock} />
+				<AppOverlay visible={showOverlay} /> */}
 			</GestureHandlerRootView>
 		</QueryClientProvider>
 	);

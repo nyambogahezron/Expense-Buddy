@@ -9,6 +9,9 @@ module.exports = function (api) {
 				},
 			],
 		],
-		plugins: ['react-native-reanimated/plugin'],
+		plugins: [
+			['inline-import', { extensions: ['.sql'] }],
+			'react-native-reanimated/plugin',
+		],
 	};
 };
